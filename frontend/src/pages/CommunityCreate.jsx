@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ArrowLeft, Save, Plus, Trash2 } from 'lucide-react';
-import axios from 'axios';
+import api from '../api/client';
 
 export default function CommunityCreate() {
   const navigate = useNavigate();
@@ -11,7 +11,7 @@ export default function CommunityCreate() {
   const [formData, setFormData] = useState({
     title: '',
     difficulty: 'Easy',
-    description: '# Problem Statement\\n\\nWrite a program that...\\n\\n## Input Format\\n\\n## Output Format\\n',
+    description: '# Problem Statement\n\nWrite a program that...\n\n## Input Format\n\n## Output Format\n',
     testCases: [
       { input: '', expectedOutput: '', label: 'Sample 1', isHidden: false }
     ]
@@ -46,9 +46,7 @@ export default function CommunityCreate() {
     setError(null);
 
     try {
-      const res = await axios.post(`${import.meta.env.VITE_API_URL}/api/community/problems`, formData, {
-        withCredentials: true
-      });
+      const res = await api.post('/community/problems', formData);
       if (res.data.success) {
         navigate('/community');
       }

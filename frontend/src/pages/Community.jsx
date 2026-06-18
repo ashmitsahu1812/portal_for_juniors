@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Users, Plus, Code2, AlertTriangle } from 'lucide-react';
-import axios from 'axios';
+import api from '../api/client';
 
 export default function Community() {
   const [problems, setProblems] = useState([]);
@@ -14,9 +14,7 @@ export default function Community() {
 
   const fetchCommunityProblems = async () => {
     try {
-      const res = await axios.get(`${import.meta.env.VITE_API_URL}/api/community/problems`, {
-        withCredentials: true
-      });
+      const res = await api.get('/community/problems');
       if (res.data.success) {
         setProblems(res.data.problems);
       }
