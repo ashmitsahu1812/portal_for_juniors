@@ -43,6 +43,13 @@ export const compileCode = (payload) =>
 export const fetchLeaderboard = () =>
   api.get('/progress/leaderboard').then((r) => r.data.data);
 
+// ── Pathways ──────────────────────────────────────────────────────────────────
+export const fetchPathways = () =>
+  api.get('/pathways').then((r) => r.data.data);
+
+export const fetchPathway = (id) =>
+  api.get(`/pathways/${id}`).then((r) => r.data.data);
+
 // ── Google Auth ───────────────────────────────────────────────────────────────
 export const googleAuth = (credential) =>
   api.post('/auth/google', { credential }).then((r) => r.data);

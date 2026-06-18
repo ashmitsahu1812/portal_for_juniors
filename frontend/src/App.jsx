@@ -8,6 +8,8 @@ import QuizPage from './pages/QuizPage';
 import CodingArena from './pages/CodingArena';
 import ProgressTracker from './pages/ProgressTracker';
 import Leaderboard from './pages/Leaderboard';
+import Pathways from './pages/Pathways';
+import PathwayDetail from './pages/PathwayDetail';
 import Login from './pages/Login';
 import Register from './pages/Register';
 import { AuthProvider, useAuth } from './context/AuthContext';
@@ -64,6 +66,10 @@ export default function App() {
 
                   {/* Leaderboard */}
                   <Route path="/leaderboard" element={<Leaderboard />} />
+
+                  {/* Pathways */}
+                  <Route path="/paths" element={<Pathways />} />
+                  <Route path="/paths/:id" element={<PathwayDetail />} />
 
                   {/* 404 */}
                   <Route path="*" element={
