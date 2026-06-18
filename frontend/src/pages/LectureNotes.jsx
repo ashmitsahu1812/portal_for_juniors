@@ -123,6 +123,54 @@ export default function LectureNotes() {
                 </div>
               </section>
             )}
+
+            {/* System and Web Essentials YouTube link */}
+            {(!searchQuery || 'System and Web Essentials'.toLowerCase().includes(searchQuery.toLowerCase())) && (
+              <section className="card" style={{ padding: '1.5rem' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', marginBottom: '1.25rem' }}>
+                  <div style={{
+                    width: 40, height: 40, borderRadius: 10, flexShrink: 0,
+                    background: 'linear-gradient(135deg, rgba(255,255,255,0.2), rgba(34,211,238,0.1))',
+                    border: '1px solid rgba(255,255,255,0.2)', display: 'flex', alignItems: 'center', justifyContent: 'center'
+                  }}>
+                    <PlayCircle size={18} color="var(--text-primary)" />
+                  </div>
+                  <div>
+                    <h3 style={{ fontSize: '1.1rem', fontWeight: 700 }}>System and Web Essentials</h3>
+                    <div style={{ fontSize: '0.8rem', color: 'var(--text-secondary)', marginTop: '0.2rem' }}>
+                      External Resource · 1 Video
+                    </div>
+                  </div>
+                </div>
+
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: '1rem' }}>
+                  <a
+                    href="https://youtu.be/HcOc7P5BMi4?si=5GQgxHxIz9706mJB"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="pdf-item"
+                    style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', padding: '0.75rem', background: 'var(--bg-elevated)', border: '1px solid var(--border)', borderRadius: 10, textDecoration: 'none', transition: 'all 0.2s' }}
+                  >
+                    <div style={{
+                      width: 36, height: 36, borderRadius: 8, flexShrink: 0,
+                      background: 'rgba(255,255,255,0.12)', border: '1px solid rgba(255,255,255,0.2)',
+                      display: 'flex', alignItems: 'center', justifyContent: 'center',
+                    }}>
+                      <PlayCircle size={16} color="var(--text-primary)" />
+                    </div>
+                    <div style={{ flex: 1, minWidth: 0 }}>
+                      <div style={{ fontWeight: 500, fontSize: '0.875rem', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', color: 'var(--text-primary)' }}>
+                        Watch Video
+                      </div>
+                      <div style={{ fontSize: '0.7rem', color: 'var(--text-muted)', marginTop: '0.1rem' }}>
+                        YouTube
+                      </div>
+                    </div>
+                    <Download size={14} color="var(--text-muted)" style={{ flexShrink: 0, opacity: 0 }} />
+                  </a>
+                </div>
+              </section>
+            )}
             
             {modulesWithNotes.map((mod) => (
               <section key={mod._id} className="card" style={{ padding: '1.5rem' }}>

@@ -1,19 +1,33 @@
 import { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
-import { LogIn, User, Lock, Mail } from 'lucide-react';
+import { GoogleLogin } from '@react-oauth/google';
+import { LogIn, Lock, Mail } from 'lucide-react';
 
 export default function Login() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
-  const { login } = useAuth();
+  const [loading, setLoading] = useState(false);
+  const { login, googleLogin } = useAuth();
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError('');
+    setLoading(true);
     const res = await login(email, password);
+    setLoading(false);
+    if (res.success) {
+      navigate('/');
+    } else {
+      setError(res.message);
+    }
+  };
+
+  const handleGoogle = async (credentialResponse) => {
+    setError('');
+    const res = await googleLogin(credentialResponse.credential);
     if (res.success) {
       navigate('/');
     } else {
@@ -49,8 +63,29 @@ export default function Login() {
               <input type="password" value={password} onChange={e => setPassword(e.target.value)} required placeholder="••••••••" style={{ background: 'none', border: 'none', outline: 'none', color: 'var(--text-primary)', width: '100%', fontSize: '0.9rem' }} />
             </div>
           </div>
-          <button type="submit" className="btn btn-primary" style={{ width: '100%', justifyContent: 'center', marginTop: '0.5rem', padding: '0.7rem' }}>Log In</button>
+          <button type="submit" disabled={loading} className="btn btn-primary" style={{ width: '100%', justifyContent: 'center', marginTop: '0.5rem', padding: '0.7rem' }}>
+            {loading ? 'Logging in...' : 'Log In'}
+          </button>
         </form>
+
+        {/* Divider */}
+        <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', margin: '1.25rem 0' }}>
+          <div style={{ flex: 1, height: 1, background: 'var(--border)' }} />
+          <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>or continue with</span>
+          <div style={{ flex: 1, height: 1, background: 'var(--border)' }} />
+        </div>
+
+        {/* Google Sign-In */}
+        <div style={{ display: 'flex', justifyContent: 'center' }}>
+          <GoogleLogin
+            onSuccess={handleGoogle}
+            onError={() => setError('Google Sign-In failed. Please try again.')}
+            theme="filled_black"
+            shape="rectangular"
+            width="352"
+            text="signin_with"
+          />
+        </div>
 
         <div style={{ textAlign: 'center', marginTop: '1.5rem', fontSize: '0.85rem', color: 'var(--text-secondary)' }}>
           Don't have an account? <Link to="/register" style={{ color: 'var(--accent-blue)', textDecoration: 'none', fontWeight: 500 }}>Sign up</Link>
@@ -59,3 +94,4 @@ export default function Login() {
     </div>
   );
 }
+

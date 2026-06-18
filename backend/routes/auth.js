@@ -1,8 +1,11 @@
 import express from 'express';
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
+import { OAuth2Client } from 'google-auth-library';
 import User from '../models/User.js';
 import { protect } from '../middleware/auth.js';
+
+const googleClient = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
 
 const router = express.Router();
 
@@ -75,6 +78,49 @@ router.post('/login', async (req, res, next) => {
     } else {
       res.status(401).json({ success: false, message: 'Invalid credentials' });
     }
+  } catch (error) {
+    next(error);
+  }
+});
+
+// ── POST /api/auth/google ─────────────────────────────────────────────────────
+router.post('/google', async (req, res, next) => {
+  try {
+    const { credential } = req.body;
+    if (!credential) {
+      return res.status(400).json({ success: false, message: 'Google credential missing' });
+    }
+
+    // Verify the Google ID token
+    const ticket = await googleClient.verifyIdToken({
+      idToken: credential,
+      audience: process.env.GOOGLE_CLIENT_ID,
+    });
+    const payload = ticket.getPayload();
+    const { sub: googleId, email, name } = payload;
+
+    // Find existing user by googleId or email
+    let user = await User.findOne({ $or: [{ googleId }, { email }] });
+
+    if (!user) {
+      // Create new user — no password for Google users
+      user = await User.create({ name, email, googleId });
+    } else if (!user.googleId) {
+      // Link Google ID to existing email account
+      user.googleId = googleId;
+      await user.save();
+    }
+
+    res.json({
+      success: true,
+      data: {
+        _id: user._id,
+        name: user.name,
+        email: user.email,
+        role: user.role,
+        token: generateToken(user._id),
+      },
+    });
   } catch (error) {
     next(error);
   }

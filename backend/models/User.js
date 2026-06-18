@@ -12,7 +12,11 @@ const UserSchema = new mongoose.Schema({
   },
   password: {
     type: String,
-    required: true,
+    required: false, // Optional — Google Sign-In users won't have a password
+  },
+  googleId: {
+    type: String,
+    default: null,
   },
   role: {
     type: String,

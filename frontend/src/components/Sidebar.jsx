@@ -1,15 +1,16 @@
 import { NavLink, useLocation } from 'react-router-dom';
 import {
-  LayoutDashboard, BookOpen, Code2, BarChart3, Zap, GraduationCap, FileText, LogOut
+  LayoutDashboard, BookOpen, Code2, BarChart3, Zap, GraduationCap, FileText, LogOut, Trophy
 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 
 const navItems = [
-  { to: '/',         icon: LayoutDashboard, label: 'Dashboard'       },
-  { to: '/modules',  icon: BookOpen,        label: 'Syllabus Modules' },
-  { to: '/notes',    icon: FileText,        label: 'Lecture Notes'   },
-  { to: '/arena',    icon: Code2,           label: 'Coding Arena'    },
-  { to: '/progress', icon: BarChart3,       label: 'Progress Tracker' },
+  { to: '/',            icon: LayoutDashboard, label: 'Dashboard'        },
+  { to: '/modules',     icon: BookOpen,        label: 'Syllabus Modules' },
+  { to: '/notes',       icon: FileText,        label: 'Lecture Notes'   },
+  { to: '/arena',       icon: Code2,           label: 'Coding Arena'    },
+  { to: '/progress',   icon: BarChart3,        label: 'Progress Tracker' },
+  { to: '/leaderboard', icon: Trophy,          label: 'Leaderboard'     },
 ];
 
 export default function Sidebar() {

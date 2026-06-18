@@ -52,6 +52,20 @@ export const AuthProvider = ({ children }) => {
     return { success: false, message: res.data?.message || 'Registration failed' };
   };
 
+  const googleLogin = async (credential) => {
+    try {
+      const res = await api.post('/auth/google', { credential });
+      if (res.data?.success) {
+        localStorage.setItem('token', res.data.data.token);
+        setUser(res.data.data);
+        return { success: true };
+      }
+      return { success: false, message: res.data?.message || 'Google login failed' };
+    } catch (err) {
+      return { success: false, message: err.response?.data?.message || 'Google login failed' };
+    }
+  };
+
   const logout = () => {
     localStorage.removeItem('token');
     setUser(null);
@@ -64,7 +78,7 @@ export const AuthProvider = ({ children }) => {
   };
 
   return (
-    <AuthContext.Provider value={{ user, loading, login, register, logout, updateProgress }}>
+    <AuthContext.Provider value={{ user, loading, login, register, googleLogin, logout, updateProgress }}>
       {children}
     </AuthContext.Provider>
   );

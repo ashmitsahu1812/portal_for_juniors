@@ -39,4 +39,12 @@ export const fetchProblem = (id) =>
 export const compileCode = (payload) =>
   api.post('/compile', payload).then((r) => r.data);
 
+// ── Leaderboard ───────────────────────────────────────────────────────────────
+export const fetchLeaderboard = () =>
+  api.get('/progress/leaderboard').then((r) => r.data.data);
+
+// ── Google Auth ───────────────────────────────────────────────────────────────
+export const googleAuth = (credential) =>
+  api.post('/auth/google', { credential }).then((r) => r.data);
+
 export default api;

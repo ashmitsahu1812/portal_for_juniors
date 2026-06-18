@@ -4,6 +4,45 @@ import User from '../models/User.js';
 
 const router = express.Router();
 
+// ── GET /api/progress/leaderboard ─────────────────────────────────────────────
+// Public — returns all students ranked by total score
+router.get('/leaderboard', async (req, res, next) => {
+  try {
+    const users = await User.find({ role: 'student' })
+      .select('name email progress')
+      .lean();
+
+    const ranked = users.map(u => {
+      const solvedCount = (u.progress?.solvedProblems || [])
+        .filter(p => p.verdict === 'Accepted').length;
+
+      const quizScores = u.progress?.quizScores || [];
+      const totalQuizScore = quizScores.reduce((sum, q) => sum + (q.score || 0), 0);
+      const totalQuizMax = quizScores.reduce((sum, q) => sum + (q.totalMarks || 0), 0);
+      const quizPct = totalQuizMax > 0 ? (totalQuizScore / totalQuizMax) * 100 : 0;
+
+      // Combined score: 50% quiz percentage + 50% problems solved (out of 76 max)
+      const totalScore = Math.round((quizPct * 0.5) + (Math.min(solvedCount, 76) / 76) * 100 * 0.5);
+
+      return {
+        name: u.name,
+        email: u.email,
+        solvedCount,
+        quizScore: totalQuizScore,
+        quizMax: totalQuizMax,
+        totalScore,
+      };
+    });
+
+    // Sort by totalScore desc, then solvedCount desc as tiebreaker
+    ranked.sort((a, b) => b.totalScore - a.totalScore || b.solvedCount - a.solvedCount);
+
+    res.json({ success: true, count: ranked.length, data: ranked });
+  } catch (err) {
+    next(err);
+  }
+});
+
 // ── POST /api/progress/quiz ───────────────────────────────────────────────────
 // Body: { moduleId, score, totalMarks }
 router.post('/quiz', protect, async (req, res, next) => {

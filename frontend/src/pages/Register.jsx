@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
+import { GoogleLogin } from '@react-oauth/google';
 import { UserPlus, User, Lock, Mail } from 'lucide-react';
 
 export default function Register() {
@@ -8,13 +9,23 @@ export default function Register() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
-  const { register } = useAuth();
+  const { register, googleLogin } = useAuth();
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError('');
     const res = await register(name, email, password);
+    if (res.success) {
+      navigate('/');
+    } else {
+      setError(res.message);
+    }
+  };
+
+  const handleGoogle = async (credentialResponse) => {
+    setError('');
+    const res = await googleLogin(credentialResponse.credential);
     if (res.success) {
       navigate('/');
     } else {
@@ -34,6 +45,25 @@ export default function Register() {
         </div>
 
         {error && <div style={{ background: 'rgba(255,255,255,0.1)', color: 'var(--accent-red)', padding: '0.75rem', borderRadius: 8, fontSize: '0.875rem', marginBottom: '1rem', border: '1px solid rgba(255,255,255,0.2)' }}>{error}</div>}
+
+        {/* Google Sign-Up — fastest way to join */}
+        <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '1.25rem' }}>
+          <GoogleLogin
+            onSuccess={handleGoogle}
+            onError={() => setError('Google Sign-In failed. Please try again.')}
+            theme="filled_black"
+            shape="rectangular"
+            width="352"
+            text="signup_with"
+          />
+        </div>
+
+        {/* Divider */}
+        <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', marginBottom: '1.25rem' }}>
+          <div style={{ flex: 1, height: 1, background: 'var(--border)' }} />
+          <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>or register with email</span>
+          <div style={{ flex: 1, height: 1, background: 'var(--border)' }} />
+        </div>
 
         <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
           <div>

@@ -7,6 +7,7 @@ import LectureNotes from './pages/LectureNotes';
 import QuizPage from './pages/QuizPage';
 import CodingArena from './pages/CodingArena';
 import ProgressTracker from './pages/ProgressTracker';
+import Leaderboard from './pages/Leaderboard';
 import Login from './pages/Login';
 import Register from './pages/Register';
 import { AuthProvider, useAuth } from './context/AuthContext';
@@ -60,6 +61,9 @@ export default function App() {
 
                   {/* Progress */}
                   <Route path="/progress" element={<ProgressTracker />} />
+
+                  {/* Leaderboard */}
+                  <Route path="/leaderboard" element={<Leaderboard />} />
 
                   {/* 404 */}
                   <Route path="*" element={
