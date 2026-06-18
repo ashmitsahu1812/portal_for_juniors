@@ -1,4 +1,6 @@
-import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
+import { useState } from 'react';
+import { BrowserRouter, Routes, Route, Navigate, useLocation } from 'react-router-dom';
+import { Menu, Terminal } from 'lucide-react';
 import Sidebar from './components/Sidebar';
 import Dashboard from './pages/Dashboard';
 import ModulesPage from './pages/ModulesPage';
@@ -24,11 +26,39 @@ function ProtectedRoute({ children }) {
 
 function MainLayout({ children }) {
   const { user } = useAuth();
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const location = useLocation();
+
+  // Close sidebar on route change on mobile
+  useState(() => {
+    setIsSidebarOpen(false);
+  }, [location.pathname]);
+
   if (!user) return <>{children}</>;
   return (
     <div className="app-shell">
-      <Sidebar />
+      <Sidebar isOpen={isSidebarOpen} onClose={() => setIsSidebarOpen(false)} />
+      
       <main className="main-content">
+        {/* Mobile Top Bar */}
+        <div className="mobile-topbar">
+          <div className="mobile-topbar-brand">
+            <div style={{
+              width: 28, height: 28,
+              background: 'var(--accent-purple)',
+              border: '2px solid #000',
+              boxShadow: '2px 2px 0px 0px #000',
+              display: 'flex', alignItems: 'center', justifyContent: 'center',
+            }}>
+              <Terminal size={14} color="#fff" strokeWidth={2.5} />
+            </div>
+            <h1>FreshmanPortal</h1>
+          </div>
+          <button className="mobile-menu-btn" onClick={() => setIsSidebarOpen(true)}>
+            <Menu size={20} />
+          </button>
+        </div>
+
         {children}
       </main>
     </div>

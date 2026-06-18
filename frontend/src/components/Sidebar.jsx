@@ -15,12 +15,14 @@ const navItems = [
   { to: '/leaderboard', icon: Trophy,          label: 'Leaderboard'     },
 ];
 
-export default function Sidebar() {
+export default function Sidebar({ isOpen, onClose }) {
   const { user, logout } = useAuth();
   const { isDarkMode, toggleTheme } = useTheme();
 
   return (
-    <aside className="sidebar">
+    <>
+      <div className={`sidebar-overlay ${isOpen ? 'open' : ''}`} onClick={onClose} />
+      <aside className={`sidebar ${isOpen ? 'open' : ''}`}>
       {/* Logo */}
       <div className="sidebar-logo">
         <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem', marginBottom: '0.15rem' }}>
@@ -79,6 +81,7 @@ export default function Sidebar() {
           </div>
         )}
       </div>
-    </aside>
+      </aside>
+    </>
   );
 }
