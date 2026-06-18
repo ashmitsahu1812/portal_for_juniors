@@ -25,6 +25,18 @@ export default function LectureNotes() {
       );
   }, [modules, searchQuery]);
 
+  const getPdfUrl = (url) => {
+    if (!url) return '#';
+    if (url.startsWith('http://localhost:5001')) {
+      const apiBase = import.meta.env.VITE_API_URL;
+      if (apiBase && apiBase !== '/api') {
+        const backendHost = apiBase.replace(/\/api$/, '');
+        return url.replace('http://localhost:5001', backendHost);
+      }
+    }
+    return url;
+  };
+
   return (
     <>
       <div className="page-header">
@@ -136,7 +148,7 @@ export default function LectureNotes() {
                     .map((pdf, i) => (
                       <a
                         key={i}
-                        href={pdf.url}
+                        href={getPdfUrl(pdf.url)}
                         target="_blank"
                         rel="noopener noreferrer"
                         className="pdf-item"
