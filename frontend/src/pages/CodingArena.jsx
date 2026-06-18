@@ -103,10 +103,16 @@ export default function CodingArena() {
     fetchProblem(problemId)
       .then((p) => {
         setProblem(p);
+        if (p.isCommunity || !p.moduleId) {
+          return [];
+        }
         return fetchProblemsByModule(p.moduleId);
       })
       .then(setAllProbs)
-      .catch(() => setProblem(null))
+      .catch((err) => {
+        console.error("Failed to load problem:", err);
+        setProblem(null);
+      })
       .finally(() => setLoading(false));
   }, [problemId]);
 
