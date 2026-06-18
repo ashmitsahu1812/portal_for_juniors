@@ -50,12 +50,15 @@ const allowedOrigins = process.env.CLIENT_ORIGIN
 app.use(
   cors({
     origin: (origin, callback) => {
-      // Allow server-to-server requests (no origin) or whitelisted origins
-      if (!origin || allowedOrigins.includes(origin)) {
-        callback(null, true);
-      } else {
-        callback(new Error(`CORS policy does not allow origin: ${origin}`));
+      // Allow server-to-server requests (no origin)
+      if (!origin) return callback(null, true);
+      // Allow explicitly whitelisted origins
+      if (allowedOrigins.includes(origin)) return callback(null, true);
+      // Allow all vercel.app preview/production deployments for this project
+      if (/^https:\/\/frontend(-[a-z0-9]+)*(-ashmit-sahus-projects)?\.vercel\.app$/.test(origin)) {
+        return callback(null, true);
       }
+      callback(new Error(`CORS policy does not allow origin: ${origin}`));
     },
     credentials: true,
   })

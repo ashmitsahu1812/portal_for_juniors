@@ -11,6 +11,6 @@ services:
       - key: JWT_SECRET
         sync: false
       - key: CLIENT_ORIGIN
-        value: https://frontend-xi-nine-84.vercel.app
+        value: https://frontend-xi-nine-84.vercel.app,https://frontend-5i2jmdhm3-ashmit-sahus-projects.vercel.app
       - key: NODE_ENV
         value: production
