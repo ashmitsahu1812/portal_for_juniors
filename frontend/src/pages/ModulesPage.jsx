@@ -26,7 +26,7 @@ export default function ModulesPage() {
       <div className="page-header">
         <h2>
           <BookOpen size={20} style={{ display: 'inline', marginRight: '0.5rem', color: 'var(--accent-blue)' }} />
-          Syllabus Modules
+          Quizzes
         </h2>
         <p>Browse lectures, PDFs, quizzes, and coding problems for each topic.</p>
 
