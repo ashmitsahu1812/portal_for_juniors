@@ -5,7 +5,12 @@ import Pathway from '../models/Pathway.js';
 
 dotenv.config();
 
-const MONGO_URI = "mongodb+srv://ashmitsahu181207_db_user:dbGUgyDEE6nBtbgr@cluster0.wbh1ahx.mongodb.net/lms_db?retryWrites=true&w=majority&appName=Cluster0";
+const MONGO_URI = process.env.MONGODB_URI;
+
+if (!MONGO_URI) {
+  console.error("Missing MONGODB_URI in environment variables.");
+  process.exit(1);
+}
 
 async function seed() {
   try {
