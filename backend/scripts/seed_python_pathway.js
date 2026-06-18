@@ -76,42 +76,42 @@ async function seed() {
         {
           levelNumber: 1,
           title: "Variables, Math & I/O",
-          theoryText: "### Welcome to Python!\nIn Python, you don't need to declare types explicitly. You simply assign a value: `x = 5` or `name = 'Alice'`.\n\n**Taking Input:** Use `input()` to get text from the user. Because `input()` always returns a string, you must *cast* it if you need a number: `age = int(input())`.\n\n**Basic Math:** Python supports standard operations: `+` (add), `-` (subtract), `*` (multiply), `/` (float division), `//` (integer division), and `%` (modulo - gives the remainder). \n\n**Output:** Use `print(x)` to display results.",
+          theoryText: "Variables in Python are dynamically typed, meaning explicit type declaration is not required. Assignment is performed using the `=` operator. Standard input is handled via the `input()` function, which returns a string by default. Type casting, such as `int()`, is required for numerical operations. Standard arithmetic operators include `+`, `-`, `*`, `/`, `//` (floor division), and `%` (modulo). Output is directed to stdout using `print()`.",
           youtubeUrl: "https://www.youtube.com/embed/kqtD5dpn9C8", // Mosh Python Basics
           problems: level1
         },
         {
           levelNumber: 2,
           title: "Conditionals & Logic",
-          theoryText: "### Making Decisions\nPrograms need to make choices based on data. In Python, we use `if`, `elif` (else if), and `else` statements.\n\n**Indentation is Law:** Python uses spaces (usually 4) to define code blocks instead of curly braces `{}`. If you don't indent correctly, you will get an `IndentationError`.\n\n**Operators:**\n- Comparison: `==` (equal), `!=` (not equal), `>`, `<`, `>=`, `<=`\n- Logical: `and` (both true), `or` (at least one true), `not` (reverses truth)\n\nExample:\n```python\nif score >= 90:\n    print('A')\nelif score >= 80:\n    print('B')\nelse:\n    print('C')\n```",
+          theoryText: "Control flow is managed using `if`, `elif`, and `else` statements. Python enforces block structure through strict indentation rather than braces. Conditional logic relies on comparison operators (`==`, `!=`, `<`, `>`) and boolean operators (`and`, `or`, `not`). Accurate indentation is required to prevent syntax errors.",
           youtubeUrl: "https://www.youtube.com/embed/Zp5MuPOtsME", // Mosh If Statements
           problems: level2
         },
         {
           levelNumber: 3,
           title: "Loops & Iteration",
-          theoryText: "### Repeating Actions\nInstead of copy-pasting code, we use loops to iterate over data.\n\n**For Loops & Range:**\nUse `for` when you know exactly how many times to repeat. `range(start, stop, step)` generates numbers. For example, `for i in range(5):` runs 5 times (0 to 4).\n\n**While Loops:**\nUse `while` when you want to repeat code until a condition becomes false. \n\n**Loop Control:**\n- `break`: Immediately exits the entire loop.\n- `continue`: Skips the rest of the current iteration and jumps to the next one.",
+          theoryText: "Iteration in Python is achieved through `for` and `while` loops. The `for` loop is typically used in conjunction with the `range()` function or to iterate over iterables. The `while` loop executes as long as its condition evaluates to true. Loop execution can be modified using `break` to exit entirely, or `continue` to skip to the next iteration.",
           youtubeUrl: "https://www.youtube.com/embed/94UHCEmprCY", // Mosh For Loops
           problems: level3
         },
         {
           levelNumber: 4,
           title: "Strings & Indexing",
-          theoryText: "### Text Manipulation\nStrings are sequences of characters. Python makes string manipulation incredibly easy.\n\n**Indexing:** Access characters using zero-based indexing. `s[0]` is the first character. Python also supports *negative indexing*: `s[-1]` is the last character!\n\n**Slicing:** Extract a substring using `s[start:stop:step]`. For example, `s[1:4]` gets characters from index 1 up to (but not including) 4.\n\n**Useful Methods:**\n- `s.lower()` / `s.upper()`: Change case.\n- `s.replace('a', 'b')`: Replace characters.\n- `s.split(' ')`: Splits a sentence into a list of words.",
+          theoryText: "Strings are immutable sequences of Unicode characters. Individual characters are accessed via zero-based indexing (`s[0]`), while negative indexing accesses characters from the end (`s[-1]`). Substrings can be extracted using slicing syntax (`s[start:stop:step]`). Common string methods include `.lower()`, `.upper()`, `.replace()`, and `.split()`.",
           youtubeUrl: "https://www.youtube.com/embed/k9TUPpGqYTo", // Mosh Strings
           problems: level4
         },
         {
           levelNumber: 5,
           title: "Lists, Arrays & Matrices",
-          theoryText: "### Storing Collections\nLists are ordered, mutable (changeable) collections of items. Define them using square brackets: `arr = [10, 20, 30]`.\n\n**Operations:**\n- Add items: `arr.append(40)`\n- Remove items: `arr.pop()` (removes last) or `arr.remove(20)`\n- Get length: `len(arr)`\n\n**Matrices (2D Lists):**\nA matrix is simply a list inside another list: `matrix = [[1, 2], [3, 4]]`. To access the number 3, you would use `matrix[1][0]` (Row 1, Column 0).",
+          theoryText: "Lists are ordered, mutable sequences capable of storing heterogeneous data types. They are defined using square brackets. Items can be appended using `.append()`, removed using `.pop()`, and the total length is retrieved with `len()`. Multi-dimensional arrays (matrices) are implemented as nested lists and accessed via multiple indices (e.g., `matrix[row][col]`).",
           youtubeUrl: "https://www.youtube.com/embed/9OeznAkyQz4", // Mosh Lists
           problems: level5
         },
         {
           levelNumber: 6,
           title: "Recursion & Advanced Logic",
-          theoryText: "### The Inception of Coding\nRecursion happens when a function calls *itself* to solve a smaller instance of the same problem.\n\n**The Two Rules of Recursion:**\n1. **The Base Case:** The condition that tells the function to *stop* calling itself. Without this, your program will crash with a `RecursionError`.\n2. **The Recursive Step:** The part where the function calls itself with a slightly modified (smaller) input.\n\nExample (Factorial):\n```python\ndef fact(n):\n    if n == 1: return 1 # Base case\n    return n * fact(n-1) # Recursive step\n```",
+          theoryText: "Recursion is a programming technique where a function calls itself to solve smaller instances of a problem. A well-formed recursive function requires a base case to terminate the recursion and a recursive step to progress toward the base case. Failure to implement a proper base case will result in a runtime exception.",
           youtubeUrl: "https://www.youtube.com/embed/wMNrSM5RFMc", // FreeCodeCamp Recursion
           problems: level6
         }
