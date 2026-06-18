@@ -1,6 +1,6 @@
 import express from 'express';
 import Problem from '../models/Problem.js';
-import { requireAuth } from '../middleware/auth.js';
+import { protect } from '../middleware/auth.js';
 
 const router = express.Router();
 
@@ -20,7 +20,7 @@ router.get('/problems', async (req, res, next) => {
 
 // POST /api/community/problems
 // Create a new community problem
-router.post('/problems', requireAuth, async (req, res, next) => {
+router.post('/problems', protect, async (req, res, next) => {
   try {
     const { title, description, difficulty, testCases } = req.body;
     
