@@ -29,6 +29,22 @@
   --sidebar-w: 260px;
 }
 
+.dark {
+  --bg-base:       #111111; /* Very dark background */
+  --bg-surface:    #181818; /* Darker surface */
+  --bg-elevated:   #222222;
+  --bg-card:       #222222;
+  --border:        #FFFFFF; /* White borders */
+  --border-bright: #FFFFFF;
+
+  --text-primary:   #FFFFFF;
+  --text-secondary: #CCCCCC;
+  --text-muted:     #888888;
+
+  --shadow-hard:    4px 4px 0px 0px #FFFFFF;
+  --shadow-hard-sm: 2px 2px 0px 0px #FFFFFF;
+}
+
 /* ── Base Reset ─────────────────────────────────────────────────────────────── */
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 

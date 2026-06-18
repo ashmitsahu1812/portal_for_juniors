@@ -1,8 +1,9 @@
 import { NavLink, useLocation } from 'react-router-dom';
 import {
-  LayoutDashboard, BookOpen, Code2, BarChart3, Zap, GraduationCap, FileText, LogOut, Trophy, Milestone
+  LayoutDashboard, BookOpen, Code2, BarChart3, Zap, Terminal, FileText, LogOut, Trophy, Milestone, Moon, Sun
 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
+import { useTheme } from '../context/ThemeContext';
 
 const navItems = [
   { to: '/',            icon: LayoutDashboard, label: 'Dashboard'        },
@@ -16,6 +17,7 @@ const navItems = [
 
 export default function Sidebar() {
   const { user, logout } = useAuth();
+  const { isDarkMode, toggleTheme } = useTheme();
 
   return (
     <aside className="sidebar">
@@ -23,11 +25,13 @@ export default function Sidebar() {
       <div className="sidebar-logo">
         <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem', marginBottom: '0.15rem' }}>
           <div style={{
-            width: 32, height: 32, borderRadius: 8,
-            background: 'linear-gradient(135deg, #6382ff, #22d3ee)',
+            width: 32, height: 32, borderRadius: 0,
+            background: 'var(--accent-purple)',
+            border: '2px solid #000',
+            boxShadow: '2px 2px 0px 0px #000',
             display: 'flex', alignItems: 'center', justifyContent: 'center',
           }}>
-            <GraduationCap size={18} color="#fff" strokeWidth={2.5} />
+            <Terminal size={18} color="#fff" strokeWidth={2.5} />
           </div>
           <h1>FreshmanPortal</h1>
         </div>
@@ -64,9 +68,14 @@ export default function Sidebar() {
               <span style={{ fontSize: '0.85rem', fontWeight: 600, color: 'var(--text-primary)' }}>{user.name}</span>
               <span style={{ fontSize: '0.75rem', color: 'var(--text-secondary)' }}>{user.email}</span>
             </div>
-            <button onClick={logout} className="btn" style={{ padding: '0.4rem', background: 'var(--bg-elevated)', border: '1px solid var(--border)', cursor: 'pointer' }} title="Log out">
-              <LogOut size={16} color="var(--text-secondary)" />
-            </button>
+            <div style={{ display: 'flex', gap: '0.5rem' }}>
+              <button onClick={toggleTheme} className="btn" style={{ padding: '0.4rem', background: '#FFF', border: '2px solid var(--border)', boxShadow: '2px 2px 0px 0px var(--border)', cursor: 'pointer' }} title="Toggle Theme">
+                {isDarkMode ? <Sun size={16} color="#000" /> : <Moon size={16} color="#000" />}
+              </button>
+              <button onClick={logout} className="btn" style={{ padding: '0.4rem', background: '#FFF', border: '2px solid var(--border)', boxShadow: '2px 2px 0px 0px var(--border)', cursor: 'pointer' }} title="Log out">
+                <LogOut size={16} color="#000" />
+              </button>
+            </div>
           </div>
         )}
       </div>
