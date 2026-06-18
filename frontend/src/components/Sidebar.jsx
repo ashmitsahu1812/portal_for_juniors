@@ -69,9 +69,6 @@ export default function Sidebar() {
             </button>
           </div>
         )}
-        <div style={{ fontSize: '0.65rem', color: 'var(--text-muted)' }}>
-          Powered by <span style={{ color: 'var(--accent-blue)' }}>Piston API</span>
-        </div>
       </div>
     </aside>
   );
