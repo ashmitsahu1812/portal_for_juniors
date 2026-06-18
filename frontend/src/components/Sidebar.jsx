@@ -1,6 +1,6 @@
 import { NavLink, useLocation } from 'react-router-dom';
 import {
-  LayoutDashboard, BookOpen, Code2, BarChart3, Zap, Terminal, FileText, LogOut, Trophy, Milestone, Moon, Sun
+  LayoutDashboard, BookOpen, Code2, BarChart3, Zap, Terminal, FileText, LogOut, Trophy, Milestone, Moon, Sun, Users
 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { useTheme } from '../context/ThemeContext';
@@ -13,6 +13,7 @@ const navItems = [
   { to: '/arena',       icon: Code2,           label: 'Coding Arena'    },
   { to: '/progress',   icon: BarChart3,        label: 'Progress Tracker' },
   { to: '/leaderboard', icon: Trophy,          label: 'Leaderboard'     },
+  { to: '/community',   icon: Users,           label: 'Community Hub'   },
 ];
 
 export default function Sidebar({ isOpen, onClose }) {

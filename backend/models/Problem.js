@@ -47,11 +47,23 @@ const TestCaseSchema = new mongoose.Schema(
 // ── Main Problem schema ───────────────────────────────────────────────────────
 const ProblemSchema = new mongoose.Schema(
   {
-    // Reference to the parent Module document
+    // Reference to the parent Module document (optional for community problems)
     moduleId: {
       type: mongoose.Schema.Types.ObjectId,
       ref: 'Module',
-      required: [true, 'Module reference is required.'],
+      index: true,
+    },
+
+    // Identifies if this is a student-submitted problem
+    isCommunity: {
+      type: Boolean,
+      default: false,
+    },
+
+    // The user who created the problem (if it's a community problem)
+    authorId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'User',
       index: true,
     },
 

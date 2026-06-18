@@ -12,6 +12,8 @@ import ProgressTracker from './pages/ProgressTracker';
 import Leaderboard from './pages/Leaderboard';
 import Pathways from './pages/Pathways';
 import PathwayDetail from './pages/PathwayDetail';
+import Community from './pages/Community';
+import CommunityCreate from './pages/CommunityCreate';
 import Login from './pages/Login';
 import Register from './pages/Register';
 import { AuthProvider, useAuth } from './context/AuthContext';
@@ -29,8 +31,7 @@ function MainLayout({ children }) {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const location = useLocation();
 
-  // Close sidebar on route change on mobile
-  useState(() => {
+  useEffect(() => {
     setIsSidebarOpen(false);
   }, [location.pathname]);
 
@@ -98,6 +99,10 @@ export default function App() {
 
                   {/* Leaderboard */}
                   <Route path="/leaderboard" element={<Leaderboard />} />
+
+                  {/* Community */}
+                  <Route path="/community" element={<Community />} />
+                  <Route path="/community/create" element={<CommunityCreate />} />
 
                   {/* Pathways */}
                   <Route path="/paths" element={<Pathways />} />

@@ -28,6 +28,7 @@ import compileRoutes from './routes/compile.js';
 import authRoutes from './routes/auth.js';
 import progressRoutes from './routes/progress.js';
 import pathwayRoutes from './routes/pathways.js';
+import communityRoutes from './routes/community.js';
 
 // ── Bootstrap ─────────────────────────────────────────────────────────────────
 dotenv.config();
@@ -108,6 +109,7 @@ app.use('/api/compile', compileLimiter, compileRoutes); // rate-limited separate
 app.use('/api/auth', authRoutes);
 app.use('/api/progress', progressRoutes);
 app.use('/api/pathways', pathwayRoutes);
+app.use('/api/community', communityRoutes);
 
 // ── Health Check ──────────────────────────────────────────────────────────────
 app.get('/api/health', (_req, res) => {
