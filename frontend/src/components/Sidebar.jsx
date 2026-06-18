@@ -63,17 +63,17 @@ export default function Sidebar() {
       {/* Footer / User Profile */}
       <div className="sidebar-footer" style={{ borderTop: '1px solid var(--border)', paddingTop: '1rem', marginTop: 'auto', display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
         {user && (
-          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-            <div style={{ display: 'flex', flexDirection: 'column' }}>
-              <span style={{ fontSize: '0.85rem', fontWeight: 600, color: 'var(--text-primary)' }}>{user.name}</span>
-              <span style={{ fontSize: '0.75rem', color: 'var(--text-secondary)' }}>{user.email}</span>
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '0.5rem' }}>
+            <div style={{ display: 'flex', flexDirection: 'column', minWidth: 0, overflow: 'hidden' }}>
+              <span style={{ fontSize: '0.85rem', fontWeight: 600, color: 'var(--text-primary)', whiteSpace: 'nowrap', textOverflow: 'ellipsis', overflow: 'hidden' }}>{user.name}</span>
+              <span style={{ fontSize: '0.75rem', color: 'var(--text-secondary)', whiteSpace: 'nowrap', textOverflow: 'ellipsis', overflow: 'hidden' }}>{user.email}</span>
             </div>
-            <div style={{ display: 'flex', gap: '0.5rem' }}>
-              <button onClick={toggleTheme} className="btn" style={{ padding: '0.4rem', background: '#FFF', border: '2px solid var(--border)', boxShadow: '2px 2px 0px 0px var(--border)', cursor: 'pointer' }} title="Toggle Theme">
-                {isDarkMode ? <Sun size={16} color="#000" /> : <Moon size={16} color="#000" />}
+            <div style={{ display: 'flex', gap: '0.35rem', flexShrink: 0 }}>
+              <button onClick={toggleTheme} className="btn" style={{ padding: '0.4rem', background: 'var(--bg-elevated)', border: '2px solid var(--border)', boxShadow: '2px 2px 0px 0px var(--border)', cursor: 'pointer', color: 'var(--text-primary)' }} title="Toggle Theme">
+                {isDarkMode ? <Sun size={16} /> : <Moon size={16} />}
               </button>
-              <button onClick={logout} className="btn" style={{ padding: '0.4rem', background: '#FFF', border: '2px solid var(--border)', boxShadow: '2px 2px 0px 0px var(--border)', cursor: 'pointer' }} title="Log out">
-                <LogOut size={16} color="#000" />
+              <button onClick={logout} className="btn" style={{ padding: '0.4rem', background: 'var(--bg-elevated)', border: '2px solid var(--border)', boxShadow: '2px 2px 0px 0px var(--border)', cursor: 'pointer', color: 'var(--text-primary)' }} title="Log out">
+                <LogOut size={16} />
               </button>
             </div>
           </div>
