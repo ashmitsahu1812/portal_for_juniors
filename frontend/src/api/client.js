@@ -54,4 +54,7 @@ export const fetchPathway = (id) =>
 export const googleAuth = (credential) =>
   api.post('/auth/google', { credential }).then((r) => r.data);
 
+export const deleteAccount = () =>
+  api.delete('/auth/me').then((r) => r.data);
+
 export default api;

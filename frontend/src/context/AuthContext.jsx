@@ -80,8 +80,22 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
+  const deleteUserAccount = async () => {
+    try {
+      const res = await api.delete('/auth/me');
+      if (res.data?.success) {
+        logout();
+        return { success: true };
+      }
+      return { success: false, message: 'Failed to delete account' };
+    } catch (error) {
+      console.error('Delete account error:', error);
+      return { success: false, message: 'An error occurred while deleting account' };
+    }
+  };
+
   return (
-    <AuthContext.Provider value={{ user, loading, login, register, googleLogin, logout, updateProgress }}>
+    <AuthContext.Provider value={{ user, loading, login, register, googleLogin, logout, updateProgress, deleteUserAccount }}>
       {children}
     </AuthContext.Provider>
   );

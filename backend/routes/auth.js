@@ -139,4 +139,19 @@ router.get('/me', protect, async (req, res, next) => {
   }
 });
 
+// ── DELETE /api/auth/me ───────────────────────────────────────────────────────
+router.delete('/me', protect, async (req, res, next) => {
+  try {
+    const user = await User.findById(req.user.id);
+    if (!user) {
+      return res.status(404).json({ success: false, message: 'User not found' });
+    }
+    
+    await User.findByIdAndDelete(req.user.id);
+    res.json({ success: true, message: 'User account deleted successfully' });
+  } catch (error) {
+    next(error);
+  }
+});
+
 export default router;

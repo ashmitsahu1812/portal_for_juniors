@@ -4,7 +4,7 @@ import { fetchModules } from '../api/client';
 import { useAuth } from '../context/AuthContext';
 import {
   BookOpen, Code2, CheckCircle, Clock, Zap, ArrowRight,
-  TrendingUp, Star,
+  TrendingUp, Star, UserX
 } from 'lucide-react';
 
 /* ── Quick-stat card ──────────────────────────────────────────────────────── */
@@ -28,7 +28,16 @@ function StatCard({ value, label, color, icon: Icon }) {
 export default function Dashboard() {
   const [modules, setModules] = useState([]);
   const [loading, setLoading] = useState(true);
-  const { user } = useAuth();
+  const { user, deleteUserAccount } = useAuth();
+
+  const handleDeleteAccount = async () => {
+    if (window.confirm('Are you absolutely sure you want to delete your account? This action cannot be undone and all your progress will be lost.')) {
+      const res = await deleteUserAccount();
+      if (!res.success) {
+        alert(res.message || 'Failed to delete account');
+      }
+    }
+  };
 
   useEffect(() => {
     fetchModules(1).then(setModules).finally(() => setLoading(false));
@@ -142,6 +151,22 @@ export default function Dashboard() {
             ))}
           </div>
         )}
+
+        {/* ── Danger Zone ─────────────────────────────────────────────────── */}
+        <div style={{ marginTop: '3rem', borderTop: '2px dashed var(--border)', paddingTop: '2rem' }}>
+          <h3 style={{ fontSize: '1rem', fontWeight: 700, color: 'var(--accent-red)', display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '1rem' }}>
+            <UserX size={18} /> Danger Zone
+          </h3>
+          <div className="card" style={{ border: '2px solid var(--accent-red)', display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '1rem' }}>
+            <div>
+              <h4 style={{ fontSize: '0.95rem', fontWeight: 700, marginBottom: '0.2rem' }}>Delete Account</h4>
+              <p style={{ fontSize: '0.85rem', color: 'var(--text-secondary)' }}>Permanently delete your account and all of your progress. This action cannot be undone.</p>
+            </div>
+            <button onClick={handleDeleteAccount} className="btn btn-danger btn-sm" style={{ padding: '0.6rem 1rem' }}>
+              Delete Account
+            </button>
+          </div>
+        </div>
       </div>
     </>
   );
