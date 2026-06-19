@@ -33,7 +33,7 @@ function TestCasePanel({ testCases }) {
       {/* Input */}
       <div style={{ marginBottom: '0.75rem' }}>
         <div style={{ fontSize: '0.72rem', color: 'var(--text-muted)', marginBottom: '0.35rem', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Input</div>
-        <div className="console-box" style={{ minHeight: 'auto', padding: '0.65rem 0.9rem' }}>
+        <div className="console-box" style={{ minHeight: 'auto', padding: '0.65rem 0.9rem', whiteSpace: 'pre-wrap' }}>
           {tc.input || <span style={{ fontStyle: 'italic', color: 'var(--text-muted)' }}>(empty)</span>}
         </div>
       </div>
@@ -41,7 +41,7 @@ function TestCasePanel({ testCases }) {
       {/* Expected Output */}
       <div>
         <div style={{ fontSize: '0.72rem', color: 'var(--text-muted)', marginBottom: '0.35rem', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Expected Output</div>
-        <div className="console-box" style={{ minHeight: 'auto', padding: '0.65rem 0.9rem' }}>
+        <div className="console-box" style={{ minHeight: 'auto', padding: '0.65rem 0.9rem', whiteSpace: 'pre-wrap' }}>
           {tc.expectedOutput}
         </div>
       </div>
@@ -186,7 +186,7 @@ export default function BattleArena() {
               <div style={{ fontSize: '0.75rem', color: 'var(--accent-purple)', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: '0.4rem' }}>
                 Constraints
               </div>
-              <p style={{ fontSize: '0.82rem', color: 'var(--text-secondary)', fontFamily: 'JetBrains Mono, monospace', lineHeight: 1.7 }}>
+              <p style={{ fontSize: '0.82rem', color: 'var(--text-secondary)', fontFamily: 'JetBrains Mono, monospace', lineHeight: 1.7, whiteSpace: 'pre-wrap' }}>
                 {problem.constraints}
               </p>
             </div>
