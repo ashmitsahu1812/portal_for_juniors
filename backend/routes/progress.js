@@ -25,8 +25,10 @@ router.get('/leaderboard', async (req, res, next) => {
       const totalQuizMax = quizScores.reduce((sum, q) => sum + (q.totalMarks || 0), 0);
       const quizPct = totalQuizMax > 0 ? (totalQuizScore / totalQuizMax) * 100 : 0;
 
-      // Combined score: 50% quiz percentage + 50% problems solved ratio
-      const totalScore = Math.round((quizPct * 0.5) + (Math.min(solvedCount, totalProblems) / totalProblems) * 100 * 0.5);
+      const battleRating = u.progress?.rating || 0;
+
+      // Combined score: 50% quiz percentage + 50% problems solved ratio + battle rating
+      const totalScore = Math.round((quizPct * 0.5) + (Math.min(solvedCount, totalProblems) / totalProblems) * 100 * 0.5) + battleRating;
 
       return {
         _id: u._id,
@@ -34,6 +36,7 @@ router.get('/leaderboard', async (req, res, next) => {
         solvedCount,
         quizScore: totalQuizScore,
         quizMax: totalQuizMax,
+        battleRating,
         totalScore,
         totalProblems,
       };

@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { fetchLeaderboard } from '../api/client';
 import { useAuth } from '../context/AuthContext';
-import { Trophy, Medal, Star, Search, TrendingUp, Code2, BookOpen } from 'lucide-react';
+import { Trophy, Medal, Star, Search, TrendingUp, Code2, BookOpen, Swords } from 'lucide-react';
 
 const medalColors = ['#FFD700', '#C0C0C0', '#CD7F32'];
 const medalLabels = ['🥇', '🥈', '🥉'];
@@ -110,7 +110,7 @@ export default function Leaderboard() {
           <div className="card" style={{ padding: '1.5rem' }}>
             {/* Header */}
             <div style={{
-              display: 'grid', gridTemplateColumns: '52px 1fr 120px 120px 90px',
+              display: 'grid', gridTemplateColumns: '52px 1fr 120px 120px 120px 90px',
               gap: '0.5rem', padding: '0 0.75rem 0.75rem',
               borderBottom: '1px solid var(--border)',
               fontSize: '0.75rem', fontWeight: 700, color: 'var(--text-muted)',
@@ -123,6 +123,9 @@ export default function Leaderboard() {
               </div>
               <div style={{ textAlign: 'center', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.3rem' }}>
                 <BookOpen size={12} /> Quiz Score
+              </div>
+              <div style={{ textAlign: 'center', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.3rem' }}>
+                <Swords size={12} /> Battle Rating
               </div>
               <div style={{ textAlign: 'center', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.3rem' }}>
                 <Star size={12} /> Total
@@ -140,7 +143,7 @@ export default function Leaderboard() {
                   key={student._id}
                   style={{
                     display: 'grid',
-                    gridTemplateColumns: '52px 1fr 120px 120px 90px',
+                    gridTemplateColumns: '52px 1fr 120px 120px 120px 90px',
                     gap: '0.5rem',
                     padding: '0.85rem 0.75rem',
                     borderRadius: 10,
@@ -178,6 +181,11 @@ export default function Leaderboard() {
                     {student.quizMax > 0 && <span style={{ fontSize: '0.72rem', color: 'var(--text-muted)' }}> / {student.quizMax}</span>}
                   </div>
 
+                  {/* Battle Rating */}
+                  <div style={{ textAlign: 'center' }}>
+                    <span style={{ fontWeight: 700, fontSize: '1rem', color: 'var(--accent-red)' }}>{student.battleRating || 0}</span>
+                  </div>
+
                   {/* Total Score */}
                   <div style={{ textAlign: 'center' }}>
                     <div style={{
@@ -197,7 +205,7 @@ export default function Leaderboard() {
         {/* Score formula note */}
         <div style={{ marginTop: '1rem', fontSize: '0.75rem', color: 'var(--text-muted)', textAlign: 'center' }}>
           <TrendingUp size={12} style={{ display: 'inline', marginRight: '0.3rem' }} />
-          Score = 50% quiz percentage + 50% problems solved ratio (out of {totalProblems} problems)
+          Score = 50% quiz percentage + 50% problems solved ratio + Battle Rating
         </div>
       </div>
     </>
