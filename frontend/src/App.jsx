@@ -53,7 +53,12 @@ function MainLayout({ children }) {
             }}>
               <Terminal size={14} color="#fff" strokeWidth={2.5} />
             </div>
-            <h1>FreshmanPortal</h1>
+            <div style={{ display: 'flex', flexDirection: 'column' }}>
+              <h1 style={{ lineHeight: '1' }}>Kick Start</h1>
+              <span style={{ fontSize: '0.65rem', fontWeight: 600, letterSpacing: '0.5px' }}>
+                by <span style={{ color: '#007AFF', fontWeight: 800 }}>RE</span><span style={{ color: 'var(--text-primary)', fontWeight: 800 }}>start</span>
+              </span>
+            </div>
           </div>
           <button className="mobile-menu-btn" onClick={() => setIsSidebarOpen(true)}>
             <Menu size={20} />
