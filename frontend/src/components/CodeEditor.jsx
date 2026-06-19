@@ -229,20 +229,22 @@ export default function CodeEditor({ problem }) {
       </div>
 
       {/* ── Verdict Banner ────────────────────────────────────────────────── */}
-      {verdict && vm && (
-        <div className={`verdict-banner ${vm.cls}`} style={{ margin: '0.5rem 1rem 0' }}>
-          <vm.Icon size={18} />
-          <span>{vm.text}</span>
-          {testResults.length > 0 && (
-            <span style={{ marginLeft: 'auto', fontSize: '0.82rem', fontWeight: 500 }}>
-              {testResults.filter(r => r.verdict === 'Accepted').length}/{testResults.length} passed
-            </span>
-          )}
-        </div>
-      )}
+      <div style={{ minHeight: '80px', padding: '0 1rem', display: 'flex', flexDirection: 'column', justifyContent: 'flex-end' }}>
+        {verdict && vm && (
+          <div className={`verdict-banner ${vm.cls}`} style={{ margin: '0.5rem 0' }}>
+            <vm.Icon size={18} />
+            <span>{vm.text}</span>
+            {testResults.length > 0 && (
+              <span style={{ marginLeft: 'auto', fontSize: '0.82rem', fontWeight: 500 }}>
+                {testResults.filter(r => r.verdict === 'Accepted').length}/{testResults.length} passed
+              </span>
+            )}
+          </div>
+        )}
+      </div>
 
       {/* ── Console Output ────────────────────────────────────────────────── */}
-      <div style={{ padding: '0.5rem 1rem 1rem', flexShrink: 0 }}>
+      <div style={{ padding: '0 1rem 1rem', flexShrink: 0 }}>
         <div style={{
           display: 'flex', alignItems: 'center', gap: '0.5rem',
           marginBottom: '0.5rem', color: 'var(--text-muted)', fontSize: '0.75rem',
@@ -250,7 +252,7 @@ export default function CodeEditor({ problem }) {
           <Terminal size={12} />
           <span>OUTPUT CONSOLE</span>
         </div>
-        <div className="console-box">
+        <div className="console-box" style={{ height: '220px', minHeight: '220px', maxHeight: '220px' }}>
           {consoleLines.length === 0 ? (
             <span style={{ color: 'var(--text-muted)', fontStyle: 'italic' }}>
               Run or submit your code to see output here…
