@@ -14,6 +14,7 @@ import Pathways from './pages/Pathways';
 import PathwayDetail from './pages/PathwayDetail';
 import Community from './pages/Community';
 import CommunityCreate from './pages/CommunityCreate';
+import Settings from './pages/Settings';
 import Login from './pages/Login';
 import Register from './pages/Register';
 import { AuthProvider, useAuth } from './context/AuthContext';
@@ -112,6 +113,9 @@ export default function App() {
                   {/* Pathways */}
                   <Route path="/paths" element={<Pathways />} />
                   <Route path="/paths/:id" element={<PathwayDetail />} />
+
+                  {/* Settings */}
+                  <Route path="/settings" element={<Settings />} />
 
                   {/* 404 */}
                   <Route path="*" element={
