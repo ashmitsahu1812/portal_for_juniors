@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { fetchModules } from '../api/client';
 import { useAuth } from '../context/AuthContext';
-import { BookOpen, Code2, CheckCircle, Clock, Zap, ArrowRight, TrendingUp, Star } from 'lucide-react';
+import { BookOpen, Code2, CheckCircle, Clock, Zap, ArrowRight, TrendingUp, Star, Target } from 'lucide-react';
 
 /* ── Quick-stat card ──────────────────────────────────────────────────────── */
 function StatCard({ value, label, color, icon: Icon }) {
@@ -31,6 +31,11 @@ export default function Dashboard() {
     fetchModules(1).then(setModules).finally(() => setLoading(false));
   }, []);
 
+  const quizScores = user?.progress?.quizScores || [];
+  const earnedMarks = quizScores.reduce((sum, q) => sum + (q.score || 0), 0);
+  const totalMarks = quizScores.reduce((sum, q) => sum + (q.totalMarks || 0), 0);
+  const quizAccuracy = totalMarks > 0 ? Math.round((earnedMarks / totalMarks) * 100) + '%' : '0%';
+
   return (
     <>
       {/* ── Page Header ─────────────────────────────────────────────────── */}
@@ -55,7 +60,7 @@ export default function Dashboard() {
           <StatCard value={loading ? '…' : modules.length} label="Modules Available" color="blue"   icon={BookOpen}    />
           <StatCard value={user?.progress?.quizScores?.length || 0}  label="Quizzes Completed" color="purple" icon={CheckCircle}  />
           <StatCard value={user?.progress?.solvedProblems?.filter(p => p.verdict === 'Accepted').length || 0}  label="Problems Solved"   color="green"  icon={Code2}        />
-          <StatCard value="0"  label="Hours Studied"     color="red"    icon={Clock}        />
+          <StatCard value={quizAccuracy} label="Quiz Accuracy" color="red" icon={Target} />
         </div>
 
         {/* ── Hero banner ─────────────────────────────────────────────────── */}
