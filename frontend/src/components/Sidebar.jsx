@@ -40,7 +40,7 @@ export default function Sidebar({ isOpen, onClose }) {
           <div style={{ display: 'flex', flexDirection: 'column' }}>
             <h1 style={{ lineHeight: '1', fontSize: '1.4rem' }}>Kick Start</h1>
             <span style={{ fontSize: '0.85rem', fontWeight: 600, letterSpacing: '0.5px' }}>
-              by <span style={{ color: '#007AFF', fontWeight: 800 }}>RE</span><span style={{ color: 'var(--text-primary)', fontWeight: 800 }}>start</span>
+              by <span style={{ color: 'var(--logo-blue)', fontWeight: 800 }}>RE</span><span style={{ color: 'var(--text-primary)', fontWeight: 800 }}>start</span>
             </span>
           </div>
         </div>

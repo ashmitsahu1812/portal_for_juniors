@@ -8,20 +8,23 @@
   --bg-surface:    #F4EEDF; /* Slightly darker cream for sidebar */
   --bg-elevated:   #FFFFFF;
   --bg-card:       #FFFFFF;
-  --border:        #000000;
-  --border-bright: #000000;
-
+  
   --accent-blue:   #00E5FF; /* Cyan */
   --accent-cyan:   #00C2D8;
-  --accent-purple: #B200FF; /* Neon Purple */
   --accent-green:  #00FF66; /* Neon Green */
-  --accent-red:    #FF007F; /* Hot Pink */
-  --accent-yellow: #FFD500; /* Mustard Yellow */
-  --accent-orange: #FF5E00;
+  --accent-purple: #B026FF; /* Electric Purple */
+  --accent-yellow: #FFEA00; /* Bright Yellow */
+  --accent-red:    #FF3366; /* Hot Pink/Red */
+  
+  /* Brand */
+  --logo-blue:     #007AFF; /* Classic Blue */
 
+  /* Text & Border */
   --text-primary:   #000000;
-  --text-secondary: #222222;
+  --text-secondary: #4A4A4A;
   --text-muted:     #555555;
+  --border:         #000000;
+  --border-bright:  #000000;
 
   --shadow-hard:    4px 4px 0px 0px #000000;
   --shadow-hard-sm: 2px 2px 0px 0px #000000;
@@ -30,16 +33,20 @@
 }
 
 .dark {
-  --bg-base:       #111111; /* Very dark background */
-  --bg-surface:    #181818; /* Darker surface */
-  --bg-elevated:   #222222;
-  --bg-card:       #222222;
-  --border:        #FFFFFF; /* White borders */
-  --border-bright: #FFFFFF;
+  /* Theme Overrides for Dark Mode */
+  --bg-base:        #0D0D0D; 
+  --bg-surface:     #1A1A1A;
+  --bg-elevated:    #2A2A2A;
+  --bg-card:        #2A2A2A;
+
+  /* Adjust brand color for dark mode contrast */
+  --logo-blue:      #60A5FA; /* Lighter Blue */
 
   --text-primary:   #FFFFFF;
-  --text-secondary: #CCCCCC;
+  --text-secondary: #A0A0A0;
   --text-muted:     #888888;
+  --border:         #333333;
+  --border-bright:  #FFFFFF;
 
   --shadow-hard:    4px 4px 0px 0px #FFFFFF;
   --shadow-hard-sm: 2px 2px 0px 0px #FFFFFF;
