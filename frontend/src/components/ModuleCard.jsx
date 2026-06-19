@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom';
-import { BookOpen, FileText, Code2, ChevronRight } from 'lucide-react';
+import { BookOpen, FileText, Code2, ChevronRight, CheckCircle } from 'lucide-react';
+import { useAuth } from '../context/AuthContext';
 
 const difficultyBadge = { Easy: 'badge-easy', Medium: 'badge-medium', Hard: 'badge-hard' };
 
@@ -8,9 +9,15 @@ const difficultyBadge = { Easy: 'badge-easy', Medium: 'badge-medium', Hard: 'bad
  * Shows module metadata and quick-action buttons for Quiz and Coding problems.
  */
 export default function ModuleCard({ module }) {
+  const { user } = useAuth();
+  const isCompleted = user?.progress?.quizScores?.some(q => q.moduleId === module._id);
 
   return (
-    <div className="card" style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+    <div className="card" style={{ 
+      display: 'flex', flexDirection: 'column', gap: '1rem',
+      background: isCompleted ? 'rgba(0, 255, 102, 0.05)' : 'var(--bg-card)',
+      borderColor: isCompleted ? 'var(--accent-green)' : 'var(--border)',
+    }}>
       {/* Header */}
       <div>
         <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: '0.5rem' }}>
@@ -33,10 +40,10 @@ export default function ModuleCard({ module }) {
       </div>
 
       {/* Meta row */}
-      <div style={{ display: 'flex', gap: '0.75rem', flexWrap: 'wrap' }}>
-        <span style={{ display: 'flex', alignItems: 'center', gap: '0.3rem', fontSize: '0.75rem', color: 'var(--text-muted)' }}>
-          <BookOpen size={12} />
-          Module Quiz
+      <div style={{ display: 'flex', gap: '0.75rem', flexWrap: 'wrap', alignItems: 'center' }}>
+        <span style={{ display: 'flex', alignItems: 'center', gap: '0.3rem', fontSize: '0.75rem', color: isCompleted ? 'var(--accent-green)' : 'var(--text-muted)', fontWeight: isCompleted ? 700 : 500 }}>
+          {isCompleted ? <CheckCircle size={14} /> : <BookOpen size={12} />}
+          {isCompleted ? 'Quiz Completed' : 'Module Quiz'}
         </span>
       </div>
 
@@ -46,18 +53,11 @@ export default function ModuleCard({ module }) {
       {/* Actions */}
       <div style={{ display: 'flex', gap: '0.6rem' }}>
         <Link
-          to={`/modules/${module._id}`}
-          className="btn btn-ghost btn-sm"
-          style={{ flex: 1, justifyContent: 'center' }}
-        >
-          View Module
-        </Link>
-        <Link
           to={`/modules/${module._id}/quiz`}
-          className="btn btn-primary btn-sm"
+          className={isCompleted ? "btn btn-success btn-sm" : "btn btn-primary btn-sm"}
           style={{ flex: 1, justifyContent: 'center' }}
         >
-          Take Quiz
+          {isCompleted ? 'Retake Quiz' : 'Take Quiz'}
           <ChevronRight size={13} />
         </Link>
       </div>
