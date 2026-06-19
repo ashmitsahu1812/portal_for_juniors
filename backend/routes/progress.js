@@ -13,7 +13,7 @@ router.get('/leaderboard', async (req, res, next) => {
     const totalProblems = await Problem.countDocuments({ isPublished: true }) || 1;
 
     const users = await User.find({ role: 'student' })
-      .select('name email progress')
+      .select('name progress')
       .lean();
 
     const ranked = users.map(u => {
@@ -30,7 +30,6 @@ router.get('/leaderboard', async (req, res, next) => {
 
       return {
         name: u.name,
-        email: u.email,
         solvedCount,
         quizScore: totalQuizScore,
         quizMax: totalQuizMax,
