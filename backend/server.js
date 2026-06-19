@@ -56,8 +56,8 @@ app.use(
       if (!origin) return callback(null, true);
       // Allow explicitly whitelisted origins
       if (allowedOrigins.includes(origin)) return callback(null, true);
-      // Allow all vercel.app preview/production deployments for this project
-      if (/^https:\/\/frontend(-[a-z0-9]+)*(-ashmit-sahus-projects)?\.vercel\.app$/.test(origin)) {
+      // Allow all vercel.app preview/production deployments
+      if (origin.endsWith('.vercel.app')) {
         return callback(null, true);
       }
       callback(new Error(`CORS policy does not allow origin: ${origin}`));

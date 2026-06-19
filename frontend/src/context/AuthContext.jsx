@@ -62,6 +62,9 @@ export const AuthProvider = ({ children }) => {
       }
       return { success: false, message: res.data?.message || 'Google login failed' };
     } catch (err) {
+      if (err.code === 'ECONNABORTED' || !err.response) {
+        return { success: false, message: 'Server is waking up. Please try again in 30 seconds.' };
+      }
       return { success: false, message: err.response?.data?.message || 'Google login failed' };
     }
   };
