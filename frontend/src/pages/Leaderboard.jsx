@@ -30,8 +30,8 @@ export default function Leaderboard() {
     s.name.toLowerCase().includes(search.toLowerCase())
   );
 
-  const myRank = data.findIndex(s => s.email === user?.email) + 1;
-  const myData = data.find(s => s.email === user?.email);
+  const myRank = data.findIndex(s => s._id === user?._id) + 1;
+  const myData = data.find(s => s._id === user?._id);
 
   return (
     <>
@@ -131,13 +131,13 @@ export default function Leaderboard() {
 
             {/* Rows */}
             {filtered.map((student, idx) => {
-              const rank = data.findIndex(s => s.email === student.email) + 1;
-              const isMe = student.email === user?.email;
+              const rank = data.indexOf(student) + 1;
+              const isMe = student._id === user?._id;
               const isTop3 = rank <= 3;
 
               return (
                 <div
-                  key={student.email}
+                  key={student._id}
                   style={{
                     display: 'grid',
                     gridTemplateColumns: '52px 1fr 120px 120px 90px',
@@ -159,13 +159,12 @@ export default function Leaderboard() {
                   </div>
 
                   {/* Name */}
-                  <div>
-                    <div style={{ fontWeight: 600, fontSize: '0.9rem', color: 'var(--text-primary)', display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
-                      {student.name}
-                      {isMe && <span style={{ fontSize: '0.65rem', background: 'rgba(99,130,255,0.2)', color: 'var(--accent-blue)', padding: '0.1rem 0.4rem', borderRadius: 4, fontWeight: 700 }}>YOU</span>}
+                    <div>
+                      <div style={{ fontWeight: 600, fontSize: '0.9rem', color: 'var(--text-primary)', display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
+                        {student.name}
+                        {isMe && <span style={{ fontSize: '0.65rem', background: 'rgba(99,130,255,0.2)', color: 'var(--accent-blue)', padding: '0.1rem 0.4rem', borderRadius: 4, fontWeight: 700 }}>YOU</span>}
+                      </div>
                     </div>
-                    <div style={{ fontSize: '0.72rem', color: 'var(--text-muted)', marginTop: '0.1rem' }}>{student.email}</div>
-                  </div>
 
                   {/* Problems Solved */}
                   <div style={{ textAlign: 'center' }}>

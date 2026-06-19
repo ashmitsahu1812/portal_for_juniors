@@ -13,7 +13,7 @@ router.get('/leaderboard', async (req, res, next) => {
     const totalProblems = await Problem.countDocuments({ isPublished: true }) || 1;
 
     const users = await User.find({ role: 'student' })
-      .select('name progress')
+      .select('_id name progress')
       .lean();
 
     const ranked = users.map(u => {
@@ -29,6 +29,7 @@ router.get('/leaderboard', async (req, res, next) => {
       const totalScore = Math.round((quizPct * 0.5) + (Math.min(solvedCount, totalProblems) / totalProblems) * 100 * 0.5);
 
       return {
+        _id: u._id,
         name: u.name,
         solvedCount,
         quizScore: totalQuizScore,
