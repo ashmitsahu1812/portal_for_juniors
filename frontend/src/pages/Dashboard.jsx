@@ -1,8 +1,8 @@
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { fetchModules } from '../api/client';
+import { fetchModules, fetchPathways } from '../api/client';
 import { useAuth } from '../context/AuthContext';
-import { BookOpen, Code2, CheckCircle, Clock, Zap, ArrowRight, TrendingUp, Star, Target } from 'lucide-react';
+import { BookOpen, Code2, CheckCircle, Clock, Zap, ArrowRight, TrendingUp, Star, Target, Milestone } from 'lucide-react';
 
 /* ── Quick-stat card ──────────────────────────────────────────────────────── */
 function StatCard({ value, label, color, icon: Icon }) {
@@ -24,11 +24,15 @@ function StatCard({ value, label, color, icon: Icon }) {
 
 export default function Dashboard() {
   const [modules, setModules] = useState([]);
+  const [pathways, setPathways] = useState([]);
   const [loading, setLoading] = useState(true);
   const { user } = useAuth();
 
   useEffect(() => {
-    fetchModules(1).then(setModules).finally(() => setLoading(false));
+    Promise.all([
+      fetchModules(1).then(setModules),
+      fetchPathways().then(setPathways)
+    ]).finally(() => setLoading(false));
   }, []);
 
   const quizScores = user?.progress?.quizScores || [];
@@ -96,49 +100,53 @@ export default function Dashboard() {
           </div>
         </div>
 
-        {/* ── Recent modules ──────────────────────────────────────────────── */}
+        {/* ── Learning Paths ──────────────────────────────────────────────── */}
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '1rem' }}>
           <h3 style={{ fontSize: '1rem', fontWeight: 700 }}>
-            <TrendingUp size={16} style={{ display: 'inline', marginRight: '0.4rem', color: 'var(--accent-blue)' }} />
-            Semester 1 Modules
+            <TrendingUp size={16} style={{ display: 'inline', marginRight: '0.4rem', color: 'var(--accent-purple)' }} />
+            Learning Paths
           </h3>
-          <Link to="/modules" style={{ fontSize: '0.82rem', color: 'var(--accent-blue)', textDecoration: 'none' }}>
+          <Link to="/paths" style={{ fontSize: '0.82rem', color: 'var(--accent-purple)', textDecoration: 'none' }}>
             View all →
           </Link>
         </div>
 
         {loading ? (
           <div className="card-grid">
-            {[1, 2, 3].map((i) => (
-              <div key={i} className="skeleton" style={{ height: 160 }} />
-            ))}
+            <div className="skeleton" style={{ height: 160 }} />
+            <div className="skeleton" style={{ height: 160 }} />
           </div>
-        ) : modules.length === 0 ? (
+        ) : pathways.length === 0 ? (
           <div className="empty-state">
-            <BookOpen size={48} />
-            <p>No modules published yet. Run <code>npm run seed</code> in the backend.</p>
+            <Milestone size={48} />
+            <p>No learning paths available.</p>
           </div>
         ) : (
           <div className="card-grid">
-            {modules.slice(0, 3).map((mod) => (
-              <div key={mod._id} className="card" style={{ position: 'relative' }}>
+            {pathways.slice(0, 3).map((path) => (
+              <div key={path._id} className="card" style={{ display: 'flex', flexDirection: 'column', padding: '1.5rem', transition: 'transform 0.2s', position: 'relative' }}
+                   onMouseOver={e => e.currentTarget.style.transform = 'translateY(-4px)'}
+                   onMouseOut={e => e.currentTarget.style.transform = 'none'}>
                 <div style={{
                   position: 'absolute', top: 0, left: 0, right: 0, height: 2, borderRadius: '12px 12px 0 0',
-                  background: 'linear-gradient(90deg, var(--accent-blue), var(--accent-cyan))',
+                  background: 'linear-gradient(90deg, var(--accent-purple), var(--accent-cyan))',
                 }} />
-                <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem', marginBottom: '0.6rem' }}>
-                  <BookOpen size={16} color="var(--accent-blue)" />
-                  <span className="badge badge-blue">Sem {mod.semester}</span>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', marginBottom: '1rem' }}>
+                  <div style={{ width: 40, height: 40, borderRadius: 10, background: 'rgba(168, 85, 247, 0.1)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                    <Milestone color="var(--accent-purple)" size={20} />
+                  </div>
+                  <div>
+                    <h3 style={{ fontSize: '1rem', margin: 0 }}>{path.title}</h3>
+                    <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>{path.levels?.length || 0} Levels</span>
+                  </div>
                 </div>
-                <h4 style={{ fontSize: '0.95rem', fontWeight: 600, marginBottom: '0.4rem' }}>{mod.title}</h4>
-                <p style={{ color: 'var(--text-secondary)', fontSize: '0.8rem', lineHeight: 1.5 }}>
-                  {mod.description.slice(0, 90)}…
+                
+                <p style={{ color: 'var(--text-secondary)', fontSize: '0.82rem', flex: 1, marginBottom: '1.25rem', lineHeight: 1.5 }}>
+                  {path.description}
                 </p>
-                <Link
-                  to={`/modules/${mod._id}`}
-                  style={{ display: 'inline-flex', alignItems: 'center', gap: '0.3rem', marginTop: '0.9rem', fontSize: '0.82rem', color: 'var(--accent-blue)', textDecoration: 'none' }}
-                >
-                  Open Module <ArrowRight size={13} />
+
+                <Link to={`/paths/${path._id}`} className="btn btn-primary btn-sm" style={{ width: '100%', justifyContent: 'center', gap: '0.5rem' }}>
+                  Start Learning <ArrowRight size={14} />
                 </Link>
               </div>
             ))}
