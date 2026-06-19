@@ -73,7 +73,7 @@ app.use(cors(corsOptions));
 const server = http.createServer(app);
 const io = new SocketIOServer(server, {
   cors: {
-    origin: allowedOrigins,
+    origin: corsOptions.origin,
     methods: ['GET', 'POST'],
     credentials: true,
   }

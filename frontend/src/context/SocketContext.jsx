@@ -24,7 +24,10 @@ export function SocketProvider({ children }) {
 
     // Connect to the backend
     // In production, this falls back to the window origin if VITE_API_URL isn't set
-    const backendUrl = import.meta.env.VITE_API_URL || '';
+    let backendUrl = import.meta.env.VITE_API_URL || '';
+    if (backendUrl.endsWith('/api')) {
+      backendUrl = backendUrl.slice(0, -4);
+    }
     
     const newSocket = io(backendUrl, {
       withCredentials: true,
