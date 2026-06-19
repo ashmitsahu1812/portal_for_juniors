@@ -57,6 +57,11 @@ async function executeLocally(language, sourceCode, stdinStr, timeLimitSeconds) 
       child.stdout.on('data', (data) => { out += data.toString(); });
       child.stderr.on('data', (data) => { err += data.toString(); });
 
+      child.on('error', (error) => {
+        clearTimeout(timer);
+        resolve({ code: 1, signal: null, stdout: out, stderr: err + `\nProcess execution failed: ${error.message}` });
+      });
+
       child.on('close', (exitCode, exitSignal) => {
         clearTimeout(timer);
         resolve({ code: exitCode, signal: exitSignal, stdout: out, stderr: err });

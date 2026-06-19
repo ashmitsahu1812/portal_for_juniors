@@ -7,6 +7,7 @@
 
 import express from 'express';
 import Quiz from '../models/Quiz.js';
+import { protect } from '../middleware/auth.js';
 
 const router = express.Router();
 
@@ -92,7 +93,7 @@ router.post('/:id/submit', async (req, res, next) => {
 });
 
 // ── POST /api/quizzes ─────────────────────────────────────────────────────────
-router.post('/', async (req, res, next) => {
+router.post('/', protect, async (req, res, next) => {
   try {
     const quiz = await Quiz.create(req.body);
     res.status(201).json({ success: true, data: quiz });

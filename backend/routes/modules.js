@@ -8,6 +8,7 @@
 
 import express from 'express';
 import Module from '../models/Module.js';
+import { protect } from '../middleware/auth.js';
 
 const router = express.Router();
 
@@ -42,7 +43,7 @@ router.get('/:id', async (req, res, next) => {
 });
 
 // ── POST /api/modules ─────────────────────────────────────────────────────────
-router.post('/', async (req, res, next) => {
+router.post('/', protect, async (req, res, next) => {
   try {
     const module = await Module.create(req.body);
     res.status(201).json({ success: true, data: module });

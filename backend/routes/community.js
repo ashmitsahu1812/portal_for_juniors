@@ -11,9 +11,15 @@ router.get('/problems', async (req, res, next) => {
     const problems = await Problem.find({ isCommunity: true })
       .populate('authorId', 'name')
       .populate('solvedBy', 'name')
-      .sort({ createdAt: -1 });
+      .sort({ createdAt: -1 })
+      .lean();
       
-    res.json({ success: true, problems });
+    const safeProblems = problems.map(p => ({
+      ...p,
+      testCases: p.testCases.filter(tc => !tc.isHidden)
+    }));
+      
+    res.json({ success: true, problems: safeProblems });
   } catch (err) {
     next(err);
   }

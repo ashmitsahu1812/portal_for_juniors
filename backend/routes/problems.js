@@ -8,6 +8,7 @@
 
 import express from 'express';
 import Problem from '../models/Problem.js';
+import { protect } from '../middleware/auth.js';
 
 const router = express.Router();
 
@@ -47,7 +48,7 @@ router.get('/:id', async (req, res, next) => {
 });
 
 // ── POST /api/problems ────────────────────────────────────────────────────────
-router.post('/', async (req, res, next) => {
+router.post('/', protect, async (req, res, next) => {
   try {
     const problem = await Problem.create(req.body);
     res.status(201).json({ success: true, data: problem });
