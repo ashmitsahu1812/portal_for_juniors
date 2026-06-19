@@ -371,7 +371,7 @@ code, pre, .mono { font-family: 'JetBrains Mono', monospace; }
   border-radius: 0px;
   cursor: pointer;
   transition: all 0.1s;
-  background: #FFF;
+  background: var(--bg-card);
   font-family: 'Space Grotesk', sans-serif;
   font-size: 1rem;
   font-weight: 500;
@@ -381,11 +381,11 @@ code, pre, .mono { font-family: 'JetBrains Mono', monospace; }
 
 .quiz-option:hover {
   transform: translate(-2px, -2px);
-  box-shadow: 4px 4px 0px 0px #000;
+  box-shadow: var(--shadow-hard);
 }
 
-.quiz-option.selected { background: var(--accent-blue); }
-.quiz-option.correct { background: var(--accent-green); }
+.quiz-option.selected { background: var(--accent-blue); color: #000; }
+.quiz-option.correct { background: var(--accent-green); color: #000; }
 .quiz-option.incorrect { background: var(--accent-red); color: #FFF; }
 
 .option-marker {
