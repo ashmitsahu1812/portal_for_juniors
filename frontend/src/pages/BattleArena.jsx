@@ -10,6 +10,45 @@ import { Swords, Clock, Cpu, Trophy, Frown } from 'lucide-react';
 
 const diffClass = { Easy: 'badge-easy', Medium: 'badge-medium', Hard: 'badge-hard' };
 
+function TestCasePanel({ testCases }) {
+  const [activeIdx, setActiveIdx] = useState(0);
+  if (!testCases || testCases.length === 0) return null;
+
+  const tc = testCases[activeIdx];
+  return (
+    <div style={{ marginTop: '1.5rem' }}>
+      <h4 style={{ fontSize: '0.82rem', fontWeight: 700, color: 'var(--text-secondary)', textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: '0.6rem' }}>
+        Sample Test Cases
+      </h4>
+
+      {/* Tabs */}
+      <div className="tab-bar" style={{ padding: '0.4rem 0', background: 'none', border: 'none', marginBottom: '0.75rem' }}>
+        {testCases.map((_, i) => (
+          <button key={i} className={`tab ${activeIdx === i ? 'active' : ''}`} onClick={() => setActiveIdx(i)}>
+            Case {i + 1}
+          </button>
+        ))}
+      </div>
+
+      {/* Input */}
+      <div style={{ marginBottom: '0.75rem' }}>
+        <div style={{ fontSize: '0.72rem', color: 'var(--text-muted)', marginBottom: '0.35rem', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Input</div>
+        <div className="console-box" style={{ minHeight: 'auto', padding: '0.65rem 0.9rem' }}>
+          {tc.input || <span style={{ fontStyle: 'italic', color: 'var(--text-muted)' }}>(empty)</span>}
+        </div>
+      </div>
+
+      {/* Expected Output */}
+      <div>
+        <div style={{ fontSize: '0.72rem', color: 'var(--text-muted)', marginBottom: '0.35rem', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Expected Output</div>
+        <div className="console-box" style={{ minHeight: 'auto', padding: '0.65rem 0.9rem' }}>
+          {tc.expectedOutput}
+        </div>
+      </div>
+    </div>
+  );
+}
+
 export default function BattleArena() {
   const { roomId } = useParams();
   const location = useLocation();
@@ -152,6 +191,9 @@ export default function BattleArena() {
               </p>
             </div>
           )}
+
+          {/* Sample test cases */}
+          <TestCasePanel testCases={problem.testCases} />
         </div>
       </div>
 
