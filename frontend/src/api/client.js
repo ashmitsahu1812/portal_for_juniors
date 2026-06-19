@@ -14,6 +14,14 @@ api.interceptors.request.use((config) => {
   return config;
 });
 
+api.interceptors.response.use(
+  (response) => response,
+  (error) => {
+    const message = error.response?.data?.message || error.message;
+    return Promise.reject(new Error(message));
+  }
+);
+
 // ── Modules ──────────────────────────────────────────────────────────────────
 export const fetchModules = (semester) =>
   api.get('/modules', { params: semester ? { semester } : {} }).then((r) => r.data.data);

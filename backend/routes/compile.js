@@ -110,7 +110,19 @@ async function executeLocally(language, sourceCode, stdinStr, timeLimitSeconds) 
         signal = runRes.signal;
       }
     } else if (language === 'Java') {
-      throw new Error('Java is not installed on the local server environment.');
+      const file = path.join(dirPath, 'Main.java');
+      await fs.writeFile(file, sourceCode);
+      const compileRes = await runWithTimeout('javac', [file], '');
+      if (compileRes.code !== 0) {
+        compile_output = compileRes.stderr || compileRes.stdout;
+        code = compileRes.code;
+      } else {
+        const runRes = await runWithTimeout('java', ['-cp', dirPath, 'Main'], stdinStr);
+        stdout = runRes.stdout;
+        stderr = runRes.stderr;
+        code = runRes.code;
+        signal = runRes.signal;
+      }
     } else {
       throw new Error(`Unsupported language: ${language}`);
     }
