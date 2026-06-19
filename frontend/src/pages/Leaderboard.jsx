@@ -9,12 +9,19 @@ const medalLabels = ['🥇', '🥈', '🥉'];
 export default function Leaderboard() {
   const { user } = useAuth();
   const [data, setData] = useState([]);
+  const [totalProblems, setTotalProblems] = useState(76);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState('');
 
   useEffect(() => {
     fetchLeaderboard()
-      .then(setData)
+      .then(result => {
+        // result is the data array from the API client, but we need totalProblems from the raw response
+        setData(result);
+        if (result.length > 0 && result[0].totalProblems) {
+          setTotalProblems(result[0].totalProblems);
+        }
+      })
       .catch(() => setData([]))
       .finally(() => setLoading(false));
   }, []);
@@ -163,7 +170,7 @@ export default function Leaderboard() {
                   {/* Problems Solved */}
                   <div style={{ textAlign: 'center' }}>
                     <span style={{ fontWeight: 700, fontSize: '1rem', color: 'var(--accent-blue)' }}>{student.solvedCount}</span>
-                    <span style={{ fontSize: '0.72rem', color: 'var(--text-muted)' }}> / 76</span>
+                    <span style={{ fontSize: '0.72rem', color: 'var(--text-muted)' }}> / {totalProblems}</span>
                   </div>
 
                   {/* Quiz Score */}
@@ -191,7 +198,7 @@ export default function Leaderboard() {
         {/* Score formula note */}
         <div style={{ marginTop: '1rem', fontSize: '0.75rem', color: 'var(--text-muted)', textAlign: 'center' }}>
           <TrendingUp size={12} style={{ display: 'inline', marginRight: '0.3rem' }} />
-          Score = 50% quiz percentage + 50% problems solved ratio
+          Score = 50% quiz percentage + 50% problems solved ratio (out of {totalProblems} problems)
         </div>
       </div>
     </>

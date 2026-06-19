@@ -10,6 +10,7 @@ router.get('/problems', async (req, res, next) => {
   try {
     const problems = await Problem.find({ isCommunity: true })
       .populate('authorId', 'name')
+      .populate('solvedBy', 'name')
       .sort({ createdAt: -1 });
       
     res.json({ success: true, problems });

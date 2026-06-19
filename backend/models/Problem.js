@@ -156,6 +156,12 @@ const ProblemSchema = new mongoose.Schema(
       default: [],
     },
 
+    // Users who have successfully solved this problem (verdict: Accepted)
+    solvedBy: [{
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'User',
+    }],
+
     // Publish toggle
     isPublished: {
       type: Boolean,

@@ -1,6 +1,7 @@
 import express from 'express';
 import { protect } from '../middleware/auth.js';
 import User from '../models/User.js';
+import Problem from '../models/Problem.js';
 
 const router = express.Router();
 
@@ -8,6 +9,9 @@ const router = express.Router();
 // Public — returns all students ranked by total score
 router.get('/leaderboard', async (req, res, next) => {
   try {
+    // Dynamically count total available problems (curriculum + community)
+    const totalProblems = await Problem.countDocuments({ isPublished: true }) || 1;
+
     const users = await User.find({ role: 'student' })
       .select('name email progress')
       .lean();
@@ -21,8 +25,8 @@ router.get('/leaderboard', async (req, res, next) => {
       const totalQuizMax = quizScores.reduce((sum, q) => sum + (q.totalMarks || 0), 0);
       const quizPct = totalQuizMax > 0 ? (totalQuizScore / totalQuizMax) * 100 : 0;
 
-      // Combined score: 50% quiz percentage + 50% problems solved (out of 76 max)
-      const totalScore = Math.round((quizPct * 0.5) + (Math.min(solvedCount, 76) / 76) * 100 * 0.5);
+      // Combined score: 50% quiz percentage + 50% problems solved ratio
+      const totalScore = Math.round((quizPct * 0.5) + (Math.min(solvedCount, totalProblems) / totalProblems) * 100 * 0.5);
 
       return {
         name: u.name,
@@ -31,13 +35,14 @@ router.get('/leaderboard', async (req, res, next) => {
         quizScore: totalQuizScore,
         quizMax: totalQuizMax,
         totalScore,
+        totalProblems,
       };
     });
 
     // Sort by totalScore desc, then solvedCount desc as tiebreaker
     ranked.sort((a, b) => b.totalScore - a.totalScore || b.solvedCount - a.solvedCount);
 
-    res.json({ success: true, count: ranked.length, data: ranked });
+    res.json({ success: true, count: ranked.length, totalProblems, data: ranked });
   } catch (err) {
     next(err);
   }
@@ -102,19 +107,28 @@ router.post('/problem', protect, async (req, res, next) => {
       sp => sp.problemId.toString() === problemId
     );
 
+    let isNewAccept = false;
+
     if (existingIndex !== -1) {
-      // Only update if previously wasn't Accepted and now is, or just keep latest?
-      // Let's just track successful solves for simplicity, but if they want all attempts, we can update.
-      // Usually we just want to know if they solved it.
       if (user.progress.solvedProblems[existingIndex].verdict !== 'Accepted' && verdict === 'Accepted') {
         user.progress.solvedProblems[existingIndex].verdict = verdict;
         user.progress.solvedProblems[existingIndex].solvedAt = Date.now();
+        isNewAccept = true;
       }
     } else {
       user.progress.solvedProblems.push({ problemId, verdict });
+      if (verdict === 'Accepted') isNewAccept = true;
     }
 
     await user.save();
+
+    // Also record the solver on the Problem document (for community solver display)
+    if (isNewAccept) {
+      await Problem.findByIdAndUpdate(problemId, {
+        $addToSet: { solvedBy: user._id }
+      });
+    }
+
     res.json({ success: true, data: user.progress });
   } catch (err) {
     next(err);
