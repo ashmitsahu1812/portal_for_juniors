@@ -45,17 +45,17 @@ function MainLayout({ children }) {
         <div className="mobile-topbar">
           <div className="mobile-topbar-brand">
             <div style={{
-              width: 28, height: 28,
+              width: 22, height: 22,
               background: 'var(--accent-purple)',
               border: '2px solid #000',
               boxShadow: '2px 2px 0px 0px #000',
               display: 'flex', alignItems: 'center', justifyContent: 'center',
             }}>
-              <Terminal size={14} color="#fff" strokeWidth={2.5} />
+              <Terminal size={12} color="#fff" strokeWidth={2.5} />
             </div>
             <div style={{ display: 'flex', flexDirection: 'column' }}>
-              <h1 style={{ lineHeight: '1' }}>Kick Start</h1>
-              <span style={{ fontSize: '0.65rem', fontWeight: 600, letterSpacing: '0.5px' }}>
+              <h1 style={{ lineHeight: '1', fontSize: '1.25rem' }}>Kick Start</h1>
+              <span style={{ fontSize: '0.75rem', fontWeight: 600, letterSpacing: '0.5px' }}>
                 by <span style={{ color: '#007AFF', fontWeight: 800 }}>RE</span><span style={{ color: 'var(--text-primary)', fontWeight: 800 }}>start</span>
               </span>
             </div>
