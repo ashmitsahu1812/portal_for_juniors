@@ -2,6 +2,7 @@ import { useState, useCallback, useRef } from 'react';
 import { submitQuiz } from '../api/client';
 import api from '../api/client';
 import { useTimer } from '../hooks/useTimer';
+import { useAuth } from '../context/AuthContext';
 import {
   Clock, CheckCircle, XCircle, ChevronLeft, ChevronRight,
   AlertCircle, Lightbulb, Trophy,
@@ -18,6 +19,7 @@ export default function QuizPlayer({ quiz, onClose }) {
   const [phase, setPhase]             = useState('quiz'); // 'quiz' | 'submitting' | 'results'
   const [results, setResults]         = useState(null);
   const [error, setError]             = useState('');
+  const { refreshUser }               = useAuth();
   const startTimeRef                  = useRef(Date.now());
 
   const totalQuestions = quiz.questions.length;
@@ -59,6 +61,7 @@ export default function QuizPlayer({ quiz, onClose }) {
     try {
       const data = await submitQuiz(quiz._id, payload);
       setResults(data);
+      if (refreshUser) refreshUser();
       setPhase('results');
 
       // Record progress if user is authenticated

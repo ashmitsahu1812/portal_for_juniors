@@ -6,6 +6,7 @@ import {
   Play, Send, ChevronDown, Terminal, CheckCircle, XCircle,
   AlertTriangle, Clock, Loader, RotateCcw,
 } from 'lucide-react';
+import { useAuth } from '../context/AuthContext';
 
 /* ─── Language config ─────────────────────────────────────────────────────── */
 const LANGUAGE_CONFIG = {
@@ -39,6 +40,7 @@ export default function CodeEditor({ problem }) {
   const [testResults, setTestResults] = useState([]);
   const [activeTab, setActiveTab]     = useState(0);
   const editorRef                     = useRef(null);
+  const { refreshUser }               = useAuth();
 
   /* Language switch */
   const switchLanguage = (lang) => {
@@ -141,6 +143,7 @@ export default function CodeEditor({ problem }) {
             problemId: problem._id,
             verdict: res.overallVerdict,
           });
+          if (refreshUser) refreshUser(); // Update the global progress context
         } catch (err) {
           console.error('Failed to update problem progress', err);
         }

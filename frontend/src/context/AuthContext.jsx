@@ -80,6 +80,17 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
+  const refreshUser = async () => {
+    try {
+      const res = await api.get('/auth/me');
+      if (res.data?.success) {
+        setUser(res.data.data);
+      }
+    } catch (error) {
+      console.error('Failed to refresh user:', error);
+    }
+  };
+
   const deleteUserAccount = async () => {
     try {
       const res = await api.delete('/auth/me');
@@ -95,7 +106,7 @@ export const AuthProvider = ({ children }) => {
   };
 
   return (
-    <AuthContext.Provider value={{ user, loading, login, register, googleLogin, logout, updateProgress, deleteUserAccount }}>
+    <AuthContext.Provider value={{ user, loading, login, register, googleLogin, logout, updateProgress, refreshUser, deleteUserAccount }}>
       {children}
     </AuthContext.Provider>
   );
