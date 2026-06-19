@@ -16,6 +16,9 @@ import rateLimit from 'express-rate-limit';
 import { connectDB } from './config/db.js';
 import path from 'path';
 import { fileURLToPath } from 'url';
+import http from 'http';
+import { Server as SocketIOServer } from 'socket.io';
+import { initBattleManager } from './sockets/battleManager.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -49,22 +52,34 @@ const allowedOrigins = process.env.CLIENT_ORIGIN
   ? process.env.CLIENT_ORIGIN.split(',')
   : ['http://localhost:5173', 'http://localhost:3000'];
 
-app.use(
-  cors({
-    origin: (origin, callback) => {
-      // Allow server-to-server requests (no origin)
-      if (!origin) return callback(null, true);
-      // Allow explicitly whitelisted origins
-      if (allowedOrigins.includes(origin)) return callback(null, true);
-      // Allow all vercel.app preview/production deployments
-      if (origin.endsWith('.vercel.app')) {
-        return callback(null, true);
-      }
-      callback(new Error(`CORS policy does not allow origin: ${origin}`));
-    },
+const corsOptions = {
+  origin: (origin, callback) => {
+    // Allow server-to-server requests (no origin)
+    if (!origin) return callback(null, true);
+    // Allow explicitly whitelisted origins
+    if (allowedOrigins.includes(origin)) return callback(null, true);
+    // Allow all vercel.app preview/production deployments
+    if (origin.endsWith('.vercel.app')) {
+      return callback(null, true);
+    }
+    callback(new Error(`CORS policy does not allow origin: ${origin}`));
+  },
+  credentials: true,
+};
+
+app.use(cors(corsOptions));
+
+// ── WebSockets Setup ──────────────────────────────────────────────────────────
+const server = http.createServer(app);
+const io = new SocketIOServer(server, {
+  cors: {
+    origin: allowedOrigins,
+    methods: ['GET', 'POST'],
     credentials: true,
-  })
-);
+  }
+});
+
+initBattleManager(io);
 
 // ── General Middleware ────────────────────────────────────────────────────────
 
@@ -141,8 +156,8 @@ app.use((err, _req, res, _next) => {
 });
 
 // ── Start Server ──────────────────────────────────────────────────────────────
-app.listen(PORT, () => {
-  console.log(`\n🚀  LMS Backend running on http://localhost:${PORT}`);
+server.listen(PORT, () => {
+  console.log(`\n🚀  LMS Backend (HTTP & WebSockets) running on http://localhost:${PORT}`);
   console.log(`    Environment : ${process.env.NODE_ENV || 'development'}`);
   console.log(`    DB URI      : ${process.env.MONGO_URI ? '✓ connected' : '✗ MONGO_URI not set'}\n`);
 });

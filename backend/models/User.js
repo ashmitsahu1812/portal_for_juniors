@@ -39,6 +39,7 @@ const UserSchema = new mongoose.Schema({
       verdict: { type: String, required: true },
       solvedAt: { type: Date, default: Date.now },
     }],
+    rating: { type: Number, default: 0 },
   }
 }, { timestamps: true });
 

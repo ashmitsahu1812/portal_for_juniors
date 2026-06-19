@@ -28,7 +28,7 @@ const verdictMeta = {
 /* ─────────────────────────────────────────────────────────────────────────────
    CodeEditor — Monaco + terminal console + verdict banner
 ───────────────────────────────────────────────────────────────────────────── */
-export default function CodeEditor({ problem }) {
+export default function CodeEditor({ problem, onSuccess }) {
   const allowedLangs  = problem?.allowedLanguages ?? Object.keys(LANGUAGE_CONFIG);
   const [language, setLanguage]       = useState(allowedLangs[0] || 'Python');
   const [code, setCode]               = useState(
@@ -138,6 +138,7 @@ export default function CodeEditor({ problem }) {
 
       // Record progress if user is authenticated and submission is Accepted
       if (res.overallVerdict === 'Accepted') {
+        if (onSuccess) onSuccess();
         try {
           await api.post('/progress/problem', {
             problemId: problem._id,
@@ -207,7 +208,12 @@ export default function CodeEditor({ problem }) {
           height="100%"
           language={langCfg.monacoId ?? 'plaintext'}
           value={code}
-          onChange={(val) => setCode(val ?? '')}
+          onChange={(val) => {
+            setCode(val ?? '');
+            if (problem && problem.isBattle) {
+              // Custom battle logic could be passed, but we'll let BattleArena handle socket typing via a wrapper or we don't strictly need real-time typing events yet, just compiling status.
+            }
+          }}
           onMount={(editor) => { editorRef.current = editor; }}
           theme="vs-dark"
           options={{

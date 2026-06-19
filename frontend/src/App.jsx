@@ -14,11 +14,14 @@ import Pathways from './pages/Pathways';
 import PathwayDetail from './pages/PathwayDetail';
 import Community from './pages/Community';
 import CommunityCreate from './pages/CommunityCreate';
+import BattleLobby from './pages/BattleLobby';
+import BattleArena from './pages/BattleArena';
 import Settings from './pages/Settings';
 import Login from './pages/Login';
 import Register from './pages/Register';
 import { AuthProvider, useAuth } from './context/AuthContext';
 import { ThemeProvider } from './context/ThemeContext';
+import { SocketProvider } from './context/SocketContext';
 
 function ProtectedRoute({ children }) {
   const { user, loading } = useAuth();
@@ -76,7 +79,8 @@ export default function App() {
   return (
     <ThemeProvider>
       <AuthProvider>
-        <BrowserRouter>
+        <SocketProvider>
+          <BrowserRouter>
           <Routes>
           {/* Public Auth Routes */}
           <Route path="/login" element={<Login />} />
@@ -117,6 +121,10 @@ export default function App() {
                   {/* Settings */}
                   <Route path="/settings" element={<Settings />} />
 
+                  {/* 1v1 Battle */}
+                  <Route path="/battle" element={<BattleLobby />} />
+                  <Route path="/battle/:roomId" element={<BattleArena />} />
+
                   {/* 404 */}
                   <Route path="*" element={
                     <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', height: '100vh', gap: '1rem' }}>
@@ -130,8 +138,9 @@ export default function App() {
             </ProtectedRoute>
           } />
         </Routes>
-      </BrowserRouter>
-    </AuthProvider>
+        </BrowserRouter>
+        </SocketProvider>
+      </AuthProvider>
     </ThemeProvider>
   );
 }
