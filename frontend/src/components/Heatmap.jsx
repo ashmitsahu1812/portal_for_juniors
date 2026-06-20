@@ -4,22 +4,34 @@ import { useTheme } from '../context/ThemeContext';
 export default function Heatmap({ activeDays = [] }) {
   const { isDarkMode } = useTheme();
 
-  // Generate the last 364 days (52 weeks * 7 days)
+  // Generate the last 364 days (52 weeks * 7 days) aligned to UTC
   const today = new Date();
-  today.setHours(0, 0, 0, 0); // Normalize today
   
   const days = [];
   for (let i = 364; i >= 0; i--) {
     const d = new Date(today);
-    d.setDate(today.getDate() - i);
+    d.setUTCDate(today.getUTCDate() - i);
     days.push(d);
   }
 
-  // Group by weeks
+  // Group into weeks
   const weeks = [];
-  for (let i = 0; i < days.length; i += 7) {
-    weeks.push(days.slice(i, i + 7));
+  let currentWeek = [];
+
+  // Pad the first week using UTC day
+  const firstDayOfWeek = days[0].getUTCDay();
+  for (let i = 0; i < firstDayOfWeek; i++) {
+    currentWeek.push(null);
   }
+
+  for (const day of days) {
+    currentWeek.push(day);
+    if (currentWeek.length === 7) {
+      weeks.push(currentWeek);
+      currentWeek = [];
+    }
+  }
+  if (currentWeek.length > 0) weeks.push(currentWeek);
 
   return (
     <div className="heatmap-container" style={{
