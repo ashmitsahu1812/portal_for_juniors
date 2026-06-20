@@ -112,12 +112,26 @@ async function executeLocally(language, sourceCode, stdinStr, timeLimitSeconds) 
     } else if (language === 'Java') {
       const file = path.join(dirPath, 'Main.java');
       await fs.writeFile(file, sourceCode);
-      const compileRes = await runWithTimeout('javac', [file], '');
+      
+      const homebrewJavac = '/opt/homebrew/opt/openjdk/bin/javac';
+      const homebrewJava = '/opt/homebrew/opt/openjdk/bin/java';
+      let javacCmd = 'javac';
+      let javaCmd = 'java';
+      
+      try {
+        await fs.access(homebrewJavac);
+        javacCmd = homebrewJavac;
+        javaCmd = homebrewJava;
+      } catch (e) {
+        // Fallback to 'javac'/'java' in PATH
+      }
+      
+      const compileRes = await runWithTimeout(javacCmd, [file], '');
       if (compileRes.code !== 0) {
         compile_output = compileRes.stderr || compileRes.stdout;
         code = compileRes.code;
       } else {
-        const runRes = await runWithTimeout('java', ['-cp', dirPath, 'Main'], stdinStr);
+        const runRes = await runWithTimeout(javaCmd, ['-cp', dirPath, 'Main'], stdinStr);
         stdout = runRes.stdout;
         stderr = runRes.stderr;
         code = runRes.code;

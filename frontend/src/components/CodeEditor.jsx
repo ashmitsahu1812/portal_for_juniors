@@ -289,7 +289,10 @@ export default function CodeEditor({ problem, onSuccess }) {
 const DEFAULT_CODE = {
   Python: `# Write your solution here
 `,
-  'C++': `#include <bits/stdc++.h>
+  'C++': `#include <iostream>
+#include <vector>
+#include <string>
+#include <algorithm>
 using namespace std;
 
 int main() {
