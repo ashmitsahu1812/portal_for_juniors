@@ -88,7 +88,7 @@ export default function BattleArena() {
     socket.on('game_over', (data) => {
       setGameOver(true);
       setWinnerName(data.winnerName);
-      setDidIWin(data.winnerId === user._id);
+      setDidIWin(data.winnerId === (user.id || user._id));
       setPoints(data.pointsAwarded);
     });
 
@@ -100,7 +100,7 @@ export default function BattleArena() {
       socket.off('game_over');
       socket.off('opponent_disconnected');
     };
-  }, [socket, location, navigate, user._id]);
+  }, [socket, location, navigate, user]);
 
   // Timer logic
   useEffect(() => {

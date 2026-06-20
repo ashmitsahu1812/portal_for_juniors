@@ -30,8 +30,8 @@ export default function Leaderboard() {
     s.name.toLowerCase().includes(search.toLowerCase())
   );
 
-  const myRank = data.findIndex(s => s._id === user?._id) + 1;
-  const myData = data.find(s => s._id === user?._id);
+  const myRank = data.findIndex(s => s._id === (user?.id || user?._id)) + 1;
+  const myData = data.find(s => s._id === (user?.id || user?._id));
 
   return (
     <>
@@ -135,7 +135,7 @@ export default function Leaderboard() {
             {/* Rows */}
             {filtered.map((student, idx) => {
               const rank = data.indexOf(student) + 1;
-              const isMe = student._id === user?._id;
+              const isMe = student._id === (user?.id || user?._id);
               const isTop3 = rank <= 3;
 
               return (

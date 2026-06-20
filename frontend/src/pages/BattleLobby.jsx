@@ -61,7 +61,7 @@ export default function BattleLobby() {
 
   const handleCreateRoom = () => {
     if (!socket) return;
-    socket.emit('create_room', { userName: user.name, userId: user._id, difficulty });
+    socket.emit('create_room', { userName: user.name, userId: (user.id || user._id), difficulty });
   };
 
   const handleJoinRoom = (e) => {
@@ -70,7 +70,7 @@ export default function BattleLobby() {
     const code = joinCode.toUpperCase().trim();
     setRoomId(code);
     setIsCreator(false);
-    socket.emit('join_room', { roomId: code, userName: user.name, userId: user._id });
+    socket.emit('join_room', { roomId: code, userName: user.name, userId: (user.id || user._id) });
   };
 
   const handleStartBattle = () => {
