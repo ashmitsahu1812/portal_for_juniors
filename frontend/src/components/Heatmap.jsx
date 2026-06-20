@@ -49,8 +49,10 @@ export default function Heatmap({ activeDays = [] }) {
         {weeks.map((week, wIdx) => (
           <div key={wIdx} style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
             {week.map((day, dIdx) => {
-              // Format date cleanly, accounting for local timezone shifts to match server UTC assumption simply
-              const dateStr = day.toLocaleDateString('en-CA'); // e.g. YYYY-MM-DD
+              if (!day) return <div key={dIdx} style={{ width: '12px', height: '12px' }} />;
+
+              // Format date cleanly using UTC to match the server's UTC assumption
+              const dateStr = day.toISOString().split('T')[0];
               
               // We compare against the activeDays array
               const isActive = activeDays.includes(dateStr);
