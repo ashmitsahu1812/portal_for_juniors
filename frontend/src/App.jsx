@@ -17,6 +17,7 @@ import CommunityCreate from './pages/CommunityCreate';
 import BattleLobby from './pages/BattleLobby';
 import BattleArena from './pages/BattleArena';
 import Settings from './pages/Settings';
+import Profile from './pages/Profile';
 import Login from './pages/Login';
 import Register from './pages/Register';
 import { AuthProvider, useAuth } from './context/AuthContext';
@@ -120,6 +121,9 @@ export default function App() {
 
                   {/* Settings */}
                   <Route path="/settings" element={<Settings />} />
+
+                  {/* Profile */}
+                  <Route path="/profile" element={<Profile />} />
 
                   {/* 1v1 Battle */}
                   <Route path="/battle" element={<BattleLobby />} />

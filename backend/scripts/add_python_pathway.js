@@ -3,7 +3,12 @@ import dotenv from 'dotenv';
 import Pathway from '../models/Pathway.js';
 import Problem from '../models/Problem.js';
 
-dotenv.config();
+import path from 'path';
+import { fileURLToPath } from 'url';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+dotenv.config({ path: path.resolve(__dirname, '../.env') });
 
 const run = async () => {
   await mongoose.connect(process.env.MONGO_URI);
