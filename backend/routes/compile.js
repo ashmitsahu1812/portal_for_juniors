@@ -136,12 +136,12 @@ async function executeLocally(language, sourceCode, stdinStr, timeLimitSeconds) 
         // Fallback to 'javac'/'java' in PATH
       }
       
-      const compileRes = await runWithTimeout(javacCmd, [file], '');
+      const compileRes = await runWithTimeout(javacCmd, ['-J-Xmx128m', '-J-Xms64m', file], '');
       if (compileRes.code !== 0) {
         compile_output = compileRes.stderr || compileRes.stdout;
         code = compileRes.code;
       } else {
-        const runRes = await runWithTimeout(javaCmd, ['-cp', dirPath, 'Main'], stdinStr);
+        const runRes = await runWithTimeout(javaCmd, ['-Xmx128m', '-Xms64m', '-cp', dirPath, 'Main'], stdinStr);
         stdout = runRes.stdout;
         stderr = runRes.stderr;
         code = runRes.code;
