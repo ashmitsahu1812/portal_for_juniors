@@ -96,7 +96,17 @@ async function executeLocally(language, sourceCode, stdinStr, timeLimitSeconds) 
     } else if (language === 'C++') {
       const file = path.join(dirPath, 'main.cpp');
       const outExe = path.join(dirPath, 'a.out');
-      await fs.writeFile(file, sourceCode);
+      
+      // Prevent OOM crashes on free-tier 512MB RAM servers by removing mega-header
+      let safeSourceCode = sourceCode;
+      if (safeSourceCode.includes('<bits/stdc++.h>')) {
+        safeSourceCode = safeSourceCode.replace(
+          /#include\s*<bits\/stdc\+\+\.h>/g,
+          '#include <iostream>\n#include <vector>\n#include <string>\n#include <algorithm>\n#include <cmath>\n#include <map>\n#include <set>'
+        );
+      }
+      
+      await fs.writeFile(file, safeSourceCode);
       // Disable some warnings to keep output clean, enable basic C++
       const compileRes = await runWithTimeout('clang++', ['-std=c++17', file, '-o', outExe], '');
       if (compileRes.code !== 0) {
