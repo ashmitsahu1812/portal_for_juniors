@@ -1,6 +1,9 @@
 import React from 'react';
+import { useTheme } from '../context/ThemeContext';
 
 export default function Heatmap({ activeDays = [] }) {
+  const { isDarkMode } = useTheme();
+
   // Generate the last 364 days (52 weeks * 7 days)
   const today = new Date();
   today.setHours(0, 0, 0, 0); // Normalize today
@@ -21,10 +24,11 @@ export default function Heatmap({ activeDays = [] }) {
   return (
     <div className="heatmap-container" style={{
       display: 'flex', flexDirection: 'column',
-      background: 'linear-gradient(135deg, rgba(255,255,255,0.03), rgba(255,255,255,0.01))',
+      background: isDarkMode ? 'linear-gradient(135deg, rgba(255,255,255,0.03), rgba(255,255,255,0.01))' : 'var(--bg-card)',
       border: '1px solid var(--border)',
       borderRadius: '16px', padding: '1.5rem', width: '100%', overflowX: 'auto',
-      marginBottom: '2.5rem'
+      marginBottom: '2.5rem',
+      boxShadow: 'var(--shadow-hard)'
     }}>
       <h3 style={{ fontSize: '1.1rem', fontWeight: 700, marginBottom: '1.25rem', color: 'var(--text-primary)', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
         Contribution Activity
@@ -44,7 +48,7 @@ export default function Heatmap({ activeDays = [] }) {
                   title={`${isActive ? 'Activity on ' : 'No activity on '}${dateStr}`}
                   style={{
                     width: '12px', height: '12px', borderRadius: '3px',
-                    background: isActive ? 'var(--accent-green, #10b981)' : 'rgba(255,255,255,0.06)',
+                    background: isActive ? 'var(--accent-green, #10b981)' : (isDarkMode ? 'rgba(255,255,255,0.06)' : 'rgba(0,0,0,0.06)'),
                     transition: 'all 0.15s ease',
                     cursor: 'pointer'
                   }}
@@ -58,7 +62,7 @@ export default function Heatmap({ activeDays = [] }) {
       </div>
       <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginTop: '1.25rem', fontSize: '0.8rem', color: 'var(--text-secondary)' }}>
         <span>Less</span>
-        <div style={{ width: '12px', height: '12px', borderRadius: '3px', background: 'rgba(255,255,255,0.06)' }} />
+        <div style={{ width: '12px', height: '12px', borderRadius: '3px', background: isDarkMode ? 'rgba(255,255,255,0.06)' : 'rgba(0,0,0,0.06)' }} />
         <div style={{ width: '12px', height: '12px', borderRadius: '3px', background: 'var(--accent-green, #10b981)' }} />
         <span>More</span>
       </div>
