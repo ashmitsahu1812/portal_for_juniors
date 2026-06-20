@@ -3,10 +3,11 @@ import { useParams, useNavigate, Link } from 'react-router-dom';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import { fetchProblem, fetchProblemsByModule, fetchModules } from '../api/client';
+import { useAuth } from '../context/AuthContext';
 import CodeEditor from '../components/CodeEditor';
 import {
   ArrowLeft, Code2, BookOpen, ChevronRight, Clock, Cpu,
-  Eye, EyeOff, LayoutPanelLeft,
+  Eye, EyeOff, LayoutPanelLeft, CheckCircle
 } from 'lucide-react';
 
 const diffClass = { Easy: 'badge-easy', Medium: 'badge-medium', Hard: 'badge-hard' };
@@ -54,25 +55,29 @@ function TestCasePanel({ testCases }) {
 
 /* ── Problem list sidebar (for arena index) ──────────────────────────────────── */
 function ProblemList({ currentId, problems }) {
+  const { user } = useAuth();
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '0.4rem' }}>
-      {problems.map((p) => (
-        <Link
-          key={p._id}
-          to={`/arena/${p._id}`}
-          style={{
-            display: 'flex', alignItems: 'center', gap: '0.6rem',
-            padding: '0.6rem 0.8rem', borderRadius: 8, textDecoration: 'none',
-            background: p._id === currentId ? 'rgba(255,255,255,0.12)' : 'var(--bg-elevated)',
-            border: `1px solid ${p._id === currentId ? 'rgba(255,255,255,0.3)' : 'var(--border)'}`,
-            color: 'var(--text-primary)', fontSize: '0.82rem', fontWeight: 500,
-          }}
-        >
-          <Code2 size={13} color={p._id === currentId ? 'var(--accent-blue)' : 'var(--text-muted)'} />
-          <span style={{ flex: 1, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{p.title}</span>
-          <span className={`badge ${diffClass[p.difficulty] ?? ''}`}>{p.difficulty}</span>
-        </Link>
-      ))}
+      {problems.map((p) => {
+        const isSolved = user?.progress?.solvedProblems?.some(sp => sp.problemId === p._id && sp.verdict === 'Accepted');
+        return (
+          <Link
+            key={p._id}
+            to={`/arena/${p._id}`}
+            style={{
+              display: 'flex', alignItems: 'center', gap: '0.6rem',
+              padding: '0.6rem 0.8rem', borderRadius: 8, textDecoration: 'none',
+              background: p._id === currentId ? 'rgba(255,255,255,0.12)' : 'var(--bg-elevated)',
+              border: `1px solid ${isSolved ? 'var(--accent-green, #10b981)' : (p._id === currentId ? 'var(--border-bright)' : 'var(--border)')}`,
+              color: 'var(--text-primary)', fontSize: '0.82rem', fontWeight: 500,
+            }}
+          >
+            {isSolved ? <CheckCircle size={13} color="var(--accent-green, #10b981)" /> : <Code2 size={13} color={p._id === currentId ? 'var(--accent-blue)' : 'var(--text-muted)'} />}
+            <span style={{ flex: 1, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{p.title}</span>
+            <span className={`badge ${diffClass[p.difficulty] ?? ''}`}>{p.difficulty}</span>
+          </Link>
+        );
+      })}
     </div>
   );
 }
@@ -83,6 +88,7 @@ function ProblemList({ currentId, problems }) {
 export default function CodingArena() {
   const { problemId } = useParams();
   const navigate = useNavigate();
+  const { user } = useAuth();
 
   const [problem,  setProblem]  = useState(null);
   const [allProbs, setAllProbs] = useState([]);
@@ -139,15 +145,21 @@ export default function CodingArena() {
             </div>
           ) : (
             <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
-              {allProbs.map((p) => (
+              {allProbs.map((p) => {
+                const isSolved = user?.progress?.solvedProblems?.some(sp => sp.problemId === p._id && sp.verdict === 'Accepted');
+                return (
                 <Link key={p._id} to={`/arena/${p._id}`} style={{ textDecoration: 'none' }}>
-                  <div className="card" style={{ display: 'flex', alignItems: 'center', gap: '1rem', padding: '1rem' }}>
+                  <div className="card" style={{ 
+                    display: 'flex', alignItems: 'center', gap: '1rem', padding: '1rem',
+                    border: isSolved ? '3px solid var(--accent-green, #10b981)' : '3px solid var(--border)'
+                  }}>
                     <div style={{
                       width: 40, height: 40, borderRadius: 10,
-                      background: 'rgba(255,255,255,0.08)', border: '1px solid rgba(255,255,255,0.15)',
+                      background: isSolved ? 'rgba(16, 185, 129, 0.1)' : 'rgba(255,255,255,0.08)', 
+                      border: isSolved ? '1px solid rgba(16, 185, 129, 0.3)' : '1px solid rgba(255,255,255,0.15)',
                       display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0,
                     }}>
-                      <Code2 size={18} color="var(--accent-blue)" />
+                      {isSolved ? <CheckCircle size={18} color="var(--accent-green, #10b981)" /> : <Code2 size={18} color="var(--accent-blue)" />}
                     </div>
                     <div style={{ flex: 1 }}>
                       <div style={{ fontWeight: 600 }}>{p.title}</div>
@@ -161,7 +173,8 @@ export default function CodingArena() {
                     <ChevronRight size={16} color="var(--text-muted)" />
                   </div>
                 </Link>
-              ))}
+                );
+              })}
             </div>
           )}
         </div>
