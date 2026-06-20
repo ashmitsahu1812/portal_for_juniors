@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { fetchModules, fetchPathways } from '../api/client';
 import { useAuth } from '../context/AuthContext';
 import { BookOpen, Code2, CheckCircle, Clock, Zap, ArrowRight, TrendingUp, Star, Target, Milestone } from 'lucide-react';
+import Heatmap from '../components/Heatmap';
 
 /* ── Quick-stat card ──────────────────────────────────────────────────────── */
 function StatCard({ value, label, color, icon: Icon }) {
@@ -66,6 +67,9 @@ export default function Dashboard() {
           <StatCard value={user?.progress?.solvedProblems?.filter(p => p.verdict === 'Accepted').length || 0}  label="Problems Solved"   color="green"  icon={Code2}        />
           <StatCard value={quizAccuracy} label="Quiz Accuracy" color="red" icon={Target} />
         </div>
+
+        {/* ── Heatmap ─────────────────────────────────────────────────────── */}
+        <Heatmap activeDays={user?.progress?.activity?.activeDays || []} />
 
         {/* ── Hero banner ─────────────────────────────────────────────────── */}
         <div style={{

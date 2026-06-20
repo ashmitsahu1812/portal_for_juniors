@@ -40,6 +40,11 @@ const UserSchema = new mongoose.Schema({
       solvedAt: { type: Date, default: Date.now },
     }],
     rating: { type: Number, default: 0 },
+    activity: {
+      streak: { type: Number, default: 0 },
+      lastActiveDate: { type: String, default: null },
+      activeDays: [{ type: String }]
+    }
   }
 }, { timestamps: true });
 

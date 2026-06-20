@@ -5,6 +5,32 @@ import Problem from '../models/Problem.js';
 
 const router = express.Router();
 
+// Helper to record activity (streaks and active days)
+function recordUserActivity(user) {
+  if (!user.progress.activity) {
+    user.progress.activity = { streak: 0, lastActiveDate: null, activeDays: [] };
+  }
+  const activity = user.progress.activity;
+  
+  const today = new Date().toISOString().split('T')[0];
+  if (activity.lastActiveDate === today) return;
+  
+  const yesterdayDate = new Date();
+  yesterdayDate.setDate(yesterdayDate.getDate() - 1);
+  const yesterday = yesterdayDate.toISOString().split('T')[0];
+  
+  if (activity.lastActiveDate === yesterday) {
+    activity.streak += 1;
+  } else {
+    activity.streak = 1;
+  }
+  
+  activity.lastActiveDate = today;
+  if (!activity.activeDays.includes(today)) {
+    activity.activeDays.push(today);
+  }
+}
+
 // ── GET /api/progress/leaderboard ─────────────────────────────────────────────
 // Public — returns all students ranked by total score
 router.get('/leaderboard', async (req, res, next) => {
@@ -85,6 +111,9 @@ router.post('/quiz', protect, async (req, res, next) => {
       }
     }
 
+    recordUserActivity(user);
+    user.markModified('progress.activity');
+
     await user.save();
     
     res.json({ success: true, data: user.progress });
@@ -121,6 +150,11 @@ router.post('/problem', protect, async (req, res, next) => {
     } else {
       user.progress.solvedProblems.push({ problemId, verdict });
       if (verdict === 'Accepted') isNewAccept = true;
+    }
+
+    if (verdict === 'Accepted') {
+      recordUserActivity(user);
+      user.markModified('progress.activity');
     }
 
     await user.save();
