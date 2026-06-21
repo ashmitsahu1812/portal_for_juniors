@@ -13,7 +13,7 @@ const router = express.Router();
 router.post('/score', protect, async (req, res, next) => {
   try {
     const { gameType, timeTakenSeconds } = req.body;
-    const userId = req.user._id;
+    const userId = req.user.id;
 
     if (!['memory', 'sudoku'].includes(gameType)) {
       return res.status(400).json({ success: false, message: 'Invalid game type' });
