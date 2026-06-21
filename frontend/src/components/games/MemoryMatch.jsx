@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { ArrowLeft, Trophy } from 'lucide-react';
+import api from '../../api/client';
 
 const ICONS = ['🚀', '💻', '🧠', '⚡', '🔥', '🎮', '💡', '🌟'];
 
@@ -36,14 +37,9 @@ export default function MemoryMatch({ onBack }) {
 
   const fetchLeaderboard = async () => {
     try {
-      const res = await fetch(`${import.meta.env.VITE_API_URL}/api/games/leaderboard/memory`, {
-        headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }
-      });
-      const data = await res.json();
-      if (data.success) {
-        setLeaderboard(data.leaderboard);
-        // Check if current user is in leaderboard (simple check)
-        // Alternatively, backend would tell us if we already played.
+      const res = await api.get('/games/leaderboard/memory');
+      if (res.data.success) {
+        setLeaderboard(res.data.leaderboard);
       }
     } catch (err) {
       console.error('Failed to fetch leaderboard');
@@ -52,22 +48,13 @@ export default function MemoryMatch({ onBack }) {
 
   const submitScore = async (timeTaken) => {
     try {
-      const res = await fetch(`${import.meta.env.VITE_API_URL}/api/games/score`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${localStorage.getItem('token')}`
-        },
-        body: JSON.stringify({ gameType: 'memory', timeTakenSeconds: timeTaken })
-      });
-      const data = await res.json();
-      if (!data.success) {
-        alert(data.message || 'Error submitting score');
-      } else {
+      const res = await api.post('/games/score', { gameType: 'memory', timeTakenSeconds: timeTaken });
+      if (res.data.success) {
         setHasPlayed(true);
       }
       fetchLeaderboard();
     } catch (err) {
+      alert(err.message || 'Error submitting score');
       console.error('Failed to submit score');
     }
   };

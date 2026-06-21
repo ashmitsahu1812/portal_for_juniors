@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { ArrowLeft, Trophy } from 'lucide-react';
+import api from '../../api/client';
 
 const getDailyRNG = () => {
   const d = new Date();
@@ -64,12 +65,9 @@ export default function MiniSudoku({ onBack }) {
 
   const fetchLeaderboard = async () => {
     try {
-      const res = await fetch(`${import.meta.env.VITE_API_URL}/api/games/leaderboard/sudoku`, {
-        headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }
-      });
-      const data = await res.json();
-      if (data.success) {
-        setLeaderboard(data.leaderboard);
+      const res = await api.get('/games/leaderboard/sudoku');
+      if (res.data.success) {
+        setLeaderboard(res.data.leaderboard);
       }
     } catch (err) {
       console.error('Failed to fetch leaderboard');
@@ -78,20 +76,10 @@ export default function MiniSudoku({ onBack }) {
 
   const submitScore = async (timeTaken) => {
     try {
-      const res = await fetch(`${import.meta.env.VITE_API_URL}/api/games/score`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${localStorage.getItem('token')}`
-        },
-        body: JSON.stringify({ gameType: 'sudoku', timeTakenSeconds: timeTaken })
-      });
-      const data = await res.json();
-      if (!data.success) {
-        alert(data.message || 'Error submitting score');
-      }
+      await api.post('/games/score', { gameType: 'sudoku', timeTakenSeconds: timeTaken });
       fetchLeaderboard();
     } catch (err) {
+      alert(err.message || 'Error submitting score');
       console.error('Failed to submit score');
     }
   };
