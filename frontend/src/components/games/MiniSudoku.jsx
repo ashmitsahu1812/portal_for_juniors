@@ -209,15 +209,16 @@ export default function MiniSudoku({ onBack }) {
                 const isError = errors.includes(`${r},${c}`);
                 
                 return (
-                  <input
-                    key={`${r}-${c}`}
-                    type="text"
-                    className={`sudoku-cell ${isFixed ? 'fixed' : ''} ${isError ? 'error' : ''}`}
-                    value={cell === 0 ? '' : cell}
-                    readOnly={isFixed || !isPlaying}
-                    onChange={(e) => handleCellChange(r, c, e.target.value)}
-                    maxLength={1}
-                  />
+                  <div key={`${r}-${c}`} className="sudoku-cell-wrapper">
+                    <input
+                      type="text"
+                      className={`sudoku-cell ${isFixed ? 'fixed' : ''} ${isError ? 'error' : ''}`}
+                      value={cell === 0 ? '' : cell}
+                      readOnly={isFixed || !isPlaying}
+                      onChange={(e) => handleCellChange(r, c, e.target.value)}
+                      maxLength={1}
+                    />
+                  </div>
                 );
               })
             )}
