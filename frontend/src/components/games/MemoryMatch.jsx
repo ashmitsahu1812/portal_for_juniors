@@ -1,0 +1,174 @@
+import { useState, useEffect } from 'react';
+import { ArrowLeft, Trophy } from 'lucide-react';
+
+const ICONS = ['🚀', '💻', '🧠', '⚡', '🔥', '🎮', '💡', '🌟'];
+
+const getDailyRNG = () => {
+  const d = new Date();
+  let seed = d.getFullYear() * 10000 + (d.getMonth() + 1) * 100 + d.getDate();
+  return function() {
+    seed = (seed * 9301 + 49297) % 233280;
+    return seed / 233280;
+  };
+};
+
+export default function MemoryMatch({ onBack }) {
+  const [cards, setCards] = useState([]);
+  const [flipped, setFlipped] = useState([]);
+  const [matched, setMatched] = useState([]);
+  const [time, setTime] = useState(0);
+  const [isPlaying, setIsPlaying] = useState(false);
+  const [leaderboard, setLeaderboard] = useState([]);
+  const [hasPlayed, setHasPlayed] = useState(false);
+
+  useEffect(() => {
+    fetchLeaderboard();
+    startNewGame();
+  }, []);
+
+  useEffect(() => {
+    let interval;
+    if (isPlaying && !hasPlayed) {
+      interval = setInterval(() => setTime((t) => t + 1), 1000);
+    }
+    return () => clearInterval(interval);
+  }, [isPlaying, hasPlayed]);
+
+  const fetchLeaderboard = async () => {
+    try {
+      const res = await fetch(`${import.meta.env.VITE_API_URL}/api/games/leaderboard/memory`, {
+        headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }
+      });
+      const data = await res.json();
+      if (data.success) {
+        setLeaderboard(data.leaderboard);
+        // Check if current user is in leaderboard (simple check)
+        // Alternatively, backend would tell us if we already played.
+      }
+    } catch (err) {
+      console.error('Failed to fetch leaderboard');
+    }
+  };
+
+  const submitScore = async (timeTaken) => {
+    try {
+      const res = await fetch(`${import.meta.env.VITE_API_URL}/api/games/score`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${localStorage.getItem('token')}`
+        },
+        body: JSON.stringify({ gameType: 'memory', timeTakenSeconds: timeTaken })
+      });
+      const data = await res.json();
+      if (!data.success) {
+        alert(data.message || 'Error submitting score');
+      } else {
+        setHasPlayed(true);
+      }
+      fetchLeaderboard();
+    } catch (err) {
+      console.error('Failed to submit score');
+    }
+  };
+
+  const startNewGame = () => {
+    const random = getDailyRNG();
+    const shuffled = [...ICONS, ...ICONS]
+      .sort(() => random() - 0.5)
+      .map((icon, id) => ({ id, icon }));
+    setCards(shuffled);
+    setFlipped([]);
+    setMatched([]);
+    setTime(0);
+    setIsPlaying(true);
+  };
+
+  const handleCardClick = (index) => {
+    if (!isPlaying || flipped.length === 2 || flipped.includes(index) || matched.includes(index)) return;
+
+    const newFlipped = [...flipped, index];
+    setFlipped(newFlipped);
+
+    if (newFlipped.length === 2) {
+      const [first, second] = newFlipped;
+      if (cards[first].icon === cards[second].icon) {
+        setMatched((prev) => {
+          const newMatched = [...prev, first, second];
+          if (newMatched.length === cards.length) {
+            setIsPlaying(false);
+            submitScore(time); // Wait for state to settle, then submit
+          }
+          return newMatched;
+        });
+        setFlipped([]);
+      } else {
+        setTimeout(() => setFlipped([]), 1000);
+      }
+    }
+  };
+
+  const formatTime = (seconds) => {
+    const m = Math.floor(seconds / 60);
+    const s = seconds % 60;
+    return `${m}:${s.toString().padStart(2, '0')}`;
+  };
+
+  return (
+    <div className="game-container">
+      <div className="game-header">
+        <button className="btn" onClick={onBack}>
+          <ArrowLeft size={16} /> Back to Hub
+        </button>
+        <div className="game-timer">{formatTime(time)}</div>
+        <button className="btn btn-primary" onClick={startNewGame}>
+          Restart
+        </button>
+      </div>
+
+      <div className="memory-grid">
+        {cards.map((card, index) => {
+          const isFlipped = flipped.includes(index) || matched.includes(index);
+          const isMatched = matched.includes(index);
+          
+          return (
+            <div
+              key={card.id}
+              className={`memory-card ${isFlipped ? 'flipped' : ''} ${isMatched ? 'matched' : ''}`}
+              onClick={() => handleCardClick(index)}
+            >
+              <div className="memory-card-inner">
+                <div className="memory-card-front">{card.icon}</div>
+                <div className="memory-card-back">?</div>
+              </div>
+            </div>
+          );
+        })}
+      </div>
+
+      {!isPlaying && matched.length === cards.length && (
+        <div style={{ marginTop: '2rem', textAlign: 'center', color: '#10b981' }}>
+          <h2>🎉 You finished in {formatTime(time)}!</h2>
+        </div>
+      )}
+
+      {/* Leaderboard */}
+      <div className="leaderboard-panel">
+        <h3><Trophy size={20} color="#eab308" /> Today's Top Times</h3>
+        {leaderboard.length === 0 ? (
+          <p style={{ textAlign: 'center', color: 'var(--text-secondary)' }}>No scores yet today. Be the first!</p>
+        ) : (
+          <div className="leaderboard-list">
+            {leaderboard.map((entry, idx) => (
+              <div key={idx} className={`leaderboard-item top-${idx + 1}`}>
+                <span className="rank">#{idx + 1}</span>
+                <span className="name">{entry.name}</span>
+                <span className="time">{formatTime(entry.timeTakenSeconds)}</span>
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}

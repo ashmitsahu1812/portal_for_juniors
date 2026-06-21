@@ -16,6 +16,7 @@ import Community from './pages/Community';
 import CommunityCreate from './pages/CommunityCreate';
 import BattleLobby from './pages/BattleLobby';
 import BattleArena from './pages/BattleArena';
+import MindGamesHub from './pages/MindGamesHub';
 import Settings from './pages/Settings';
 import Profile from './pages/Profile';
 import Login from './pages/Login';
@@ -128,6 +129,9 @@ export default function App() {
                   {/* 1v1 Battle */}
                   <Route path="/battle" element={<BattleLobby />} />
                   <Route path="/battle/:roomId" element={<BattleArena />} />
+
+                  {/* Mind Games */}
+                  <Route path="/games" element={<MindGamesHub />} />
 
                   {/* 404 */}
                   <Route path="*" element={
