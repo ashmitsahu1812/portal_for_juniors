@@ -49,10 +49,11 @@ export default function MiniSudoku({ onBack }) {
   const [isPlaying, setIsPlaying] = useState(false);
   const [leaderboard, setLeaderboard] = useState([]);
   const [errors, setErrors] = useState([]);
+  const [hasPlayed, setHasPlayed] = useState(false);
 
   useEffect(() => {
+    fetchStatus();
     fetchLeaderboard();
-    startNewGame();
   }, []);
 
   useEffect(() => {
@@ -62,6 +63,20 @@ export default function MiniSudoku({ onBack }) {
     }
     return () => clearInterval(interval);
   }, [isPlaying]);
+
+  const fetchStatus = async () => {
+    try {
+      const res = await api.get('/games/status');
+      if (res.data.success) {
+        setHasPlayed(res.data.status.sudoku);
+        if (!res.data.status.sudoku) {
+          startNewGame();
+        }
+      }
+    } catch (err) {
+      console.error('Failed to fetch status');
+    }
+  };
 
   const fetchLeaderboard = async () => {
     try {
@@ -171,37 +186,49 @@ export default function MiniSudoku({ onBack }) {
         <button className="btn" onClick={onBack}>
           <ArrowLeft size={16} /> Back to Hub
         </button>
-        <div className="game-timer">{formatTime(time)}</div>
-        <button className="btn btn-primary" onClick={startNewGame}>
-          Restart
-        </button>
-      </div>
-
-      <div className="sudoku-grid">
-        {grid.map((row, r) => 
-          row.map((cell, c) => {
-            const isFixed = initialGrid[r] && initialGrid[r][c] !== 0;
-            const isError = errors.includes(`${r},${c}`);
-            
-            return (
-              <input
-                key={`${r}-${c}`}
-                type="text"
-                className={`sudoku-cell ${isFixed ? 'fixed' : ''} ${isError ? 'error' : ''}`}
-                value={cell === 0 ? '' : cell}
-                readOnly={isFixed || !isPlaying}
-                onChange={(e) => handleCellChange(r, c, e.target.value)}
-                maxLength={1}
-              />
-            );
-          })
+        {!hasPlayed && <div className="game-timer">{formatTime(time)}</div>}
+        {!hasPlayed && (
+          <button className="btn btn-primary" onClick={startNewGame}>
+            Restart
+          </button>
         )}
       </div>
 
-      {!isPlaying && errors.length === 0 && grid.length > 0 && grid[0][0] !== 0 && (
-        <div style={{ marginTop: '2rem', textAlign: 'center', color: '#10b981' }}>
-          <h2>🎉 Solved in {formatTime(time)}!</h2>
+      {hasPlayed ? (
+        <div style={{ padding: '3rem', textAlign: 'center', backgroundColor: 'var(--bg-secondary)', borderRadius: '12px', border: '1px solid var(--border)' }}>
+          <Trophy size={48} color="#eab308" style={{ margin: '0 auto 1rem' }} />
+          <h2 style={{ marginBottom: '1rem' }}>You've already solved today's puzzle!</h2>
+          <p style={{ color: 'var(--text-secondary)' }}>Great job! Come back tomorrow for a new Mini Sudoku challenge.</p>
         </div>
+      ) : (
+        <>
+          <div className="sudoku-grid">
+            {grid.map((row, r) => 
+              row.map((cell, c) => {
+                const isFixed = initialGrid[r] && initialGrid[r][c] !== 0;
+                const isError = errors.includes(`${r},${c}`);
+                
+                return (
+                  <input
+                    key={`${r}-${c}`}
+                    type="text"
+                    className={`sudoku-cell ${isFixed ? 'fixed' : ''} ${isError ? 'error' : ''}`}
+                    value={cell === 0 ? '' : cell}
+                    readOnly={isFixed || !isPlaying}
+                    onChange={(e) => handleCellChange(r, c, e.target.value)}
+                    maxLength={1}
+                  />
+                );
+              })
+            )}
+          </div>
+
+          {!isPlaying && errors.length === 0 && grid.length > 0 && grid[0][0] !== 0 && (
+            <div style={{ marginTop: '2rem', textAlign: 'center', color: '#10b981' }}>
+              <h2>🎉 Solved in {formatTime(time)}!</h2>
+            </div>
+          )}
+        </>
       )}
 
       {/* Leaderboard */}

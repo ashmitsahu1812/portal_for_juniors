@@ -23,8 +23,8 @@ export default function MemoryMatch({ onBack }) {
   const [hasPlayed, setHasPlayed] = useState(false);
 
   useEffect(() => {
+    fetchStatus();
     fetchLeaderboard();
-    startNewGame();
   }, []);
 
   useEffect(() => {
@@ -34,6 +34,20 @@ export default function MemoryMatch({ onBack }) {
     }
     return () => clearInterval(interval);
   }, [isPlaying, hasPlayed]);
+
+  const fetchStatus = async () => {
+    try {
+      const res = await api.get('/games/status');
+      if (res.data.success) {
+        setHasPlayed(res.data.status.memory);
+        if (!res.data.status.memory) {
+          startNewGame();
+        }
+      }
+    } catch (err) {
+      console.error('Failed to fetch status');
+    }
+  };
 
   const fetchLeaderboard = async () => {
     try {
@@ -107,36 +121,48 @@ export default function MemoryMatch({ onBack }) {
         <button className="btn" onClick={onBack}>
           <ArrowLeft size={16} /> Back to Hub
         </button>
-        <div className="game-timer">{formatTime(time)}</div>
-        <button className="btn btn-primary" onClick={startNewGame}>
-          Restart
-        </button>
+        {!hasPlayed && <div className="game-timer">{formatTime(time)}</div>}
+        {!hasPlayed && (
+          <button className="btn btn-primary" onClick={startNewGame}>
+            Restart
+          </button>
+        )}
       </div>
 
-      <div className="memory-grid">
-        {cards.map((card, index) => {
-          const isFlipped = flipped.includes(index) || matched.includes(index);
-          const isMatched = matched.includes(index);
-          
-          return (
-            <div
-              key={card.id}
-              className={`memory-card ${isFlipped ? 'flipped' : ''} ${isMatched ? 'matched' : ''}`}
-              onClick={() => handleCardClick(index)}
-            >
-              <div className="memory-card-inner">
-                <div className="memory-card-front">{card.icon}</div>
-                <div className="memory-card-back">?</div>
-              </div>
-            </div>
-          );
-        })}
-      </div>
-
-      {!isPlaying && matched.length === cards.length && (
-        <div style={{ marginTop: '2rem', textAlign: 'center', color: '#10b981' }}>
-          <h2>🎉 You finished in {formatTime(time)}!</h2>
+      {hasPlayed ? (
+        <div style={{ padding: '3rem', textAlign: 'center', backgroundColor: 'var(--bg-secondary)', borderRadius: '12px', border: '1px solid var(--border)' }}>
+          <Trophy size={48} color="#eab308" style={{ margin: '0 auto 1rem' }} />
+          <h2 style={{ marginBottom: '1rem' }}>You've already solved today's puzzle!</h2>
+          <p style={{ color: 'var(--text-secondary)' }}>Great job! Come back tomorrow for a new Memory Match challenge.</p>
         </div>
+      ) : (
+        <>
+          <div className="memory-grid">
+            {cards.map((card, index) => {
+              const isFlipped = flipped.includes(index) || matched.includes(index);
+              const isMatched = matched.includes(index);
+              
+              return (
+                <div
+                  key={card.id}
+                  className={`memory-card ${isFlipped ? 'flipped' : ''} ${isMatched ? 'matched' : ''}`}
+                  onClick={() => handleCardClick(index)}
+                >
+                  <div className="memory-card-inner">
+                    <div className="memory-card-front">{card.icon}</div>
+                    <div className="memory-card-back">?</div>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+
+          {!isPlaying && matched.length === cards.length && (
+            <div style={{ marginTop: '2rem', textAlign: 'center', color: '#10b981' }}>
+              <h2>🎉 You finished in {formatTime(time)}!</h2>
+            </div>
+          )}
+        </>
       )}
 
       {/* Leaderboard */}

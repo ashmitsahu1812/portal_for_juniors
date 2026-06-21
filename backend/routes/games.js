@@ -91,4 +91,30 @@ router.get('/leaderboard/:gameType', async (req, res, next) => {
   }
 });
 
+/**
+ * GET /api/games/status
+ * Check if the user has already played today's games
+ */
+router.get('/status', protect, async (req, res, next) => {
+  try {
+    const userId = req.user.id;
+    const startOfDay = new Date();
+    startOfDay.setHours(0, 0, 0, 0);
+
+    const scores = await GameScore.find({
+      user: userId,
+      createdAt: { $gte: startOfDay }
+    });
+
+    const status = {
+      memory: scores.some(s => s.gameType === 'memory'),
+      sudoku: scores.some(s => s.gameType === 'sudoku')
+    };
+
+    res.json({ success: true, status });
+  } catch (err) {
+    next(err);
+  }
+});
+
 export default router;
