@@ -153,11 +153,34 @@ export default function WordGuess({ onBack }) {
     return `${m}:${s.toString().padStart(2, '0')}`;
   };
 
-  const getLetterStatus = (letter, i, guessRow) => {
-    if (guessRow === targetWord) return 'correct';
-    if (targetWord[i] === letter) return 'correct';
-    if (targetWord.includes(letter)) return 'present';
-    return 'absent';
+  const getGuessStatuses = (guess, target) => {
+    if (!guess || !target || guess.length !== 5) return Array(5).fill('absent');
+    
+    const statuses = Array(5).fill('absent');
+    const targetCounts = {};
+    
+    // Count occurrences of each letter in the target word
+    for (const char of target) {
+      targetCounts[char] = (targetCounts[char] || 0) + 1;
+    }
+    
+    // First pass: find all 'correct' (green) matches
+    for (let i = 0; i < 5; i++) {
+      if (guess[i] === target[i]) {
+        statuses[i] = 'correct';
+        targetCounts[guess[i]]--;
+      }
+    }
+    
+    // Second pass: find all 'present' (yellow) matches
+    for (let i = 0; i < 5; i++) {
+      if (statuses[i] !== 'correct' && targetCounts[guess[i]] > 0) {
+        statuses[i] = 'present';
+        targetCounts[guess[i]]--;
+      }
+    }
+    
+    return statuses;
   };
 
   const renderGrid = () => {
@@ -167,13 +190,16 @@ export default function WordGuess({ onBack }) {
           const isCurrentRow = i === currentRow;
           const word = isCurrentRow ? currentGuess.padEnd(5, ' ') : guess.padEnd(5, ' ');
           
+          const rowStatuses = (!isCurrentRow && i < currentRow) 
+            ? getGuessStatuses(guess, targetWord) 
+            : Array(5).fill('empty');
+
           return (
             <div key={i} className="word-row">
               {word.split('').map((letter, j) => {
                 let statusClass = 'empty';
-                if (letter !== ' ') statusClass = 'filled';
-                if (!isCurrentRow && i < currentRow) {
-                  statusClass = getLetterStatus(letter, j, guess);
+                if (letter !== ' ') {
+                  statusClass = (!isCurrentRow && i < currentRow) ? rowStatuses[j] : 'filled';
                 }
                 
                 return (
@@ -211,11 +237,18 @@ export default function WordGuess({ onBack }) {
               let status = '';
               for (let r = 0; r < currentRow; r++) {
                 const g = guesses[r];
+                const rowStatuses = getGuessStatuses(g, targetWord);
                 for (let c = 0; c < 5; c++) {
                   if (g[c] === key) {
-                    if (targetWord[c] === key) status = 'correct';
-                    else if (status !== 'correct' && targetWord.includes(key)) status = 'present';
-                    else if (status === '') status = 'absent';
+                    const charStatus = rowStatuses[c];
+                    // 'correct' > 'present' > 'absent'
+                    if (charStatus === 'correct') {
+                      status = 'correct';
+                    } else if (charStatus === 'present' && status !== 'correct') {
+                      status = 'present';
+                    } else if (charStatus === 'absent' && status === '') {
+                      status = 'absent';
+                    }
                   }
                 }
               }
