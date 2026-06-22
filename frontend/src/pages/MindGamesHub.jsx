@@ -56,11 +56,11 @@ export default function MindGamesHub() {
             <Grid3X3 size={32} />
           </div>
           <div className="game-card-content">
-            <h3>Mini Sudoku</h3>
-            <p>A quick 6x6 logic puzzle. Fill the grid so every row, column, and 2x3 box has numbers 1-6.</p>
+            <h3>Daily Sudoku</h3>
+            <p>Challenge your logic with a classic 9x9 Sudoku puzzle. One uniquely solvable puzzle every day.</p>
             <div className="game-stats">
               <span>Time limit: None</span>
-              <span>Grid: 6x6</span>
+              <span>Grid: 9x9</span>
             </div>
           </div>
         </div>

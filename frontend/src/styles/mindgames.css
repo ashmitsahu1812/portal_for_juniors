@@ -213,7 +213,7 @@
 /* Mini Sudoku Specific */
 .sudoku-grid {
   display: grid;
-  grid-template-columns: repeat(6, 1fr);
+  grid-template-columns: repeat(9, 1fr);
   gap: 0;
   background: var(--border);
   padding: 4px;
@@ -266,15 +266,15 @@
   background: rgba(16, 185, 129, 0.1);
 }
 
-/* 2x3 Subgrid borders */
+/* 3x3 Subgrid borders */
 .sudoku-cell-wrapper:nth-child(3n) .sudoku-cell {
   border-right: 3px solid var(--border);
 }
-.sudoku-cell-wrapper:nth-child(6n) .sudoku-cell {
+.sudoku-cell-wrapper:nth-child(9n) .sudoku-cell {
   border-right: 1px solid var(--border); /* outer edge */
 }
-.sudoku-cell-wrapper:nth-child(n+7):nth-child(-n+12) .sudoku-cell,
-.sudoku-cell-wrapper:nth-child(n+19):nth-child(-n+24) .sudoku-cell {
+.sudoku-cell-wrapper:nth-child(n+19):nth-child(-n+27) .sudoku-cell,
+.sudoku-cell-wrapper:nth-child(n+46):nth-child(-n+54) .sudoku-cell {
   border-bottom: 3px solid var(--border);
 }
 

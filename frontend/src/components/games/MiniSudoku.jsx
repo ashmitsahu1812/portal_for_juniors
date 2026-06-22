@@ -11,36 +11,99 @@ const getDailyRNG = () => {
   };
 };
 
-// Generates a valid 6x6 Sudoku board
+// Generates a valid 9x9 Sudoku board with a unique solution
 function generateBoard() {
   const random = getDailyRNG();
   
-  // A simple hardcoded valid 6x6 board for generation logic
-  const base = [
-    [1, 2, 3, 4, 5, 6],
-    [4, 5, 6, 1, 2, 3],
-    [2, 3, 1, 5, 6, 4],
-    [5, 6, 4, 2, 3, 1],
-    [3, 1, 2, 6, 4, 5],
-    [6, 4, 5, 3, 1, 2]
+  // A base fully solved 9x9 board
+  const baseSolution = [
+    [5,3,4, 6,7,8, 9,1,2],
+    [6,7,2, 1,9,5, 3,4,8],
+    [1,9,8, 3,4,2, 5,6,7],
+    [8,5,9, 7,6,1, 4,2,3],
+    [4,2,6, 8,5,3, 7,9,1],
+    [7,1,3, 9,2,4, 8,5,6],
+    [9,6,1, 5,3,7, 2,8,4],
+    [2,8,7, 4,1,9, 6,3,5],
+    [3,4,5, 2,8,6, 1,7,9]
   ];
-  
-  // Randomly map 1-6 to a different permutation
-  const perm = [1, 2, 3, 4, 5, 6].sort(() => random() - 0.5);
-  const board = base.map(row => row.map(cell => perm[cell - 1]));
-  
-  // Remove some numbers to create a puzzle (remove ~18 cells)
-  const puzzle = board.map(row => [...row]);
-  let removed = 0;
-  while (removed < 18) {
-    const r = Math.floor(random() * 6);
-    const c = Math.floor(random() * 6);
-    if (puzzle[r][c] !== 0) {
-      puzzle[r][c] = 0;
-      removed++;
+
+  // A base puzzle with exactly one unique solution
+  const basePuzzle = [
+    [5,3,0, 0,7,0, 0,0,0],
+    [6,0,0, 1,9,5, 0,0,0],
+    [0,9,8, 0,0,0, 0,6,0],
+    [8,0,0, 0,6,0, 0,0,3],
+    [4,0,0, 8,0,3, 0,0,1],
+    [7,0,0, 0,2,0, 0,0,6],
+    [0,6,0, 0,0,0, 2,8,0],
+    [0,0,0, 4,1,9, 0,0,5],
+    [0,0,0, 0,8,0, 0,7,9]
+  ];
+
+  // Apply Isomorphic Transformations to safely shuffle the board without breaking uniqueness
+  let sol = baseSolution.map(r => [...r]);
+  let puz = basePuzzle.map(r => [...r]);
+
+  // 1. Permute digits
+  const perm = [1, 2, 3, 4, 5, 6, 7, 8, 9].sort(() => random() - 0.5);
+  sol = sol.map(row => row.map(cell => perm[cell - 1]));
+  puz = puz.map(row => row.map(cell => cell === 0 ? 0 : perm[cell - 1]));
+
+  // Helper for shuffling array elements
+  const shuffle = (arr) => arr.sort(() => random() - 0.5);
+
+  // 2. Shuffle rows within bands
+  for (let band = 0; band < 3; band++) {
+    const indices = shuffle([0, 1, 2]);
+    const solBand = [sol[band*3], sol[band*3+1], sol[band*3+2]];
+    const puzBand = [puz[band*3], puz[band*3+1], puz[band*3+2]];
+    for (let i = 0; i < 3; i++) {
+      sol[band*3 + i] = solBand[indices[i]];
+      puz[band*3 + i] = puzBand[indices[i]];
     }
   }
-  return { solution: board, puzzle };
+
+  // 3. Shuffle columns within stacks
+  for (let stack = 0; stack < 3; stack++) {
+    const indices = shuffle([0, 1, 2]);
+    const solCols = indices.map(idx => sol.map(row => row[stack*3 + idx]));
+    const puzCols = indices.map(idx => puz.map(row => row[stack*3 + idx]));
+    for (let r = 0; r < 9; r++) {
+      for (let i = 0; i < 3; i++) {
+        sol[r][stack*3 + i] = solCols[i][r];
+        puz[r][stack*3 + i] = puzCols[i][r];
+      }
+    }
+  }
+
+  // 4. Shuffle bands
+  const bandIndices = shuffle([0, 1, 2]);
+  const finalSol = [], finalPuz = [];
+  for (let i = 0; i < 3; i++) {
+    for (let r = 0; r < 3; r++) {
+      finalSol.push(sol[bandIndices[i]*3 + r]);
+      finalPuz.push(puz[bandIndices[i]*3 + r]);
+    }
+  }
+  sol = finalSol;
+  puz = finalPuz;
+
+  // 5. Shuffle stacks
+  const stackIndices = shuffle([0, 1, 2]);
+  for (let r = 0; r < 9; r++) {
+    const solRow = [], puzRow = [];
+    for (let i = 0; i < 3; i++) {
+      for (let c = 0; c < 3; c++) {
+        solRow.push(sol[r][stackIndices[i]*3 + c]);
+        puzRow.push(puz[r][stackIndices[i]*3 + c]);
+      }
+    }
+    sol[r] = solRow;
+    puz[r] = puzRow;
+  }
+
+  return { solution: sol, puzzle: puz };
 }
 
 export default function MiniSudoku({ onBack }) {
@@ -114,30 +177,30 @@ export default function MiniSudoku({ onBack }) {
 
   const checkWinCondition = (currentGrid) => {
     // Check if filled
-    for (let r = 0; r < 6; r++) {
-      for (let c = 0; c < 6; c++) {
+    for (let r = 0; r < 9; r++) {
+      for (let c = 0; c < 9; c++) {
         if (currentGrid[r][c] === 0) return false;
       }
     }
 
     // Check validity
     let newErrors = [];
-    for (let r = 0; r < 6; r++) {
-      for (let c = 0; c < 6; c++) {
+    for (let r = 0; r < 9; r++) {
+      for (let c = 0; c < 9; c++) {
         const val = currentGrid[r][c];
         let isValid = true;
         // check row
-        for (let i = 0; i < 6; i++) {
+        for (let i = 0; i < 9; i++) {
           if (i !== c && currentGrid[r][i] === val) isValid = false;
         }
         // check col
-        for (let i = 0; i < 6; i++) {
+        for (let i = 0; i < 9; i++) {
           if (i !== r && currentGrid[i][c] === val) isValid = false;
         }
         // check box
-        const br = Math.floor(r / 2) * 2;
+        const br = Math.floor(r / 3) * 3;
         const bc = Math.floor(c / 3) * 3;
-        for (let i = 0; i < 2; i++) {
+        for (let i = 0; i < 3; i++) {
           for (let j = 0; j < 3; j++) {
             if ((br + i !== r || bc + j !== c) && currentGrid[br + i][bc + j] === val) {
               isValid = false;
@@ -161,9 +224,9 @@ export default function MiniSudoku({ onBack }) {
   const handleCellChange = (r, c, val) => {
     if (!isPlaying || initialGrid[r][c] !== 0) return;
     
-    // Allow 1-6 or clear
+    // Allow 1-9 or clear
     let num = parseInt(val);
-    if (isNaN(num) || num < 1 || num > 6) num = 0;
+    if (isNaN(num) || num < 1 || num > 9) num = 0;
     
     const newGrid = grid.map(row => [...row]);
     newGrid[r][c] = num;
