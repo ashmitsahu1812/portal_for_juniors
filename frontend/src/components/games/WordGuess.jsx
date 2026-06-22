@@ -88,6 +88,9 @@ export default function WordGuess({ onBack }) {
     try {
       await api.post('/games/score', { gameType: 'word_guess', timeTakenSeconds: timeTaken });
       fetchLeaderboard();
+      setTimeout(() => {
+        setHasPlayed(true);
+      }, 2500);
     } catch (err) {
       console.error('Failed to submit score');
     }

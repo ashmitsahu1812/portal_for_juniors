@@ -94,6 +94,9 @@ export default function MiniSudoku({ onBack }) {
     try {
       await api.post('/games/score', { gameType: 'sudoku', timeTakenSeconds: timeTaken });
       fetchLeaderboard();
+      setTimeout(() => {
+        setHasPlayed(true);
+      }, 2500);
     } catch (err) {
       alert(err.message || 'Error submitting score');
       console.error('Failed to submit score');
