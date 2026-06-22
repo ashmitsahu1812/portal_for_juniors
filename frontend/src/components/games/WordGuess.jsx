@@ -245,7 +245,7 @@ export default function WordGuess({ onBack }) {
           <ArrowLeft size={16} /> Back to Hub
         </button>
         {!hasPlayed && <div className="game-timer">{formatTime(time)}</div>}
-        {!hasPlayed && (
+        {!hasPlayed && isPlaying && (
           <button className="btn btn-primary" onClick={startNewGame}>
             Restart
           </button>
