@@ -213,13 +213,13 @@
 /* Mini Sudoku Specific */
 .sudoku-grid {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 4px;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 0;
   background: var(--border);
   padding: 4px;
   border-radius: 8px;
   width: 100%;
-  max-width: 320px;
+  max-width: 400px;
 }
 
 .sudoku-cell-wrapper {
@@ -235,11 +235,13 @@
   left: 0;
   width: 100%;
   height: 100%;
+  min-width: 0;
+  min-height: 0;
   background: transparent;
   font-size: 2rem;
   font-family: 'JetBrains Mono', monospace;
   font-weight: 700;
-  border: none;
+  border: 1px solid var(--border);
   text-align: center;
   outline: none;
   color: var(--text-primary);
@@ -264,13 +266,133 @@
   background: rgba(16, 185, 129, 0.1);
 }
 
-/* 2x2 Subgrid borders */
-.sudoku-cell-wrapper:nth-child(2n) {
-  border-right: 2px solid var(--border);
+/* 2x3 Subgrid borders */
+.sudoku-cell-wrapper:nth-child(3n) .sudoku-cell {
+  border-right: 3px solid var(--border);
 }
-.sudoku-cell-wrapper:nth-child(4n) {
-  border-right: none;
+.sudoku-cell-wrapper:nth-child(6n) .sudoku-cell {
+  border-right: 1px solid var(--border); /* outer edge */
 }
-.sudoku-cell-wrapper:nth-child(n+5):nth-child(-n+8) {
-  border-bottom: 2px solid var(--border);
+.sudoku-cell-wrapper:nth-child(n+7):nth-child(-n+12) .sudoku-cell,
+.sudoku-cell-wrapper:nth-child(n+19):nth-child(-n+24) .sudoku-cell {
+  border-bottom: 3px solid var(--border);
 }
+
+/* Word Guess Specific */
+.word-guess-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+  width: 100%;
+  max-width: 500px;
+}
+
+.word-grid {
+  display: grid;
+  grid-template-rows: repeat(6, 1fr);
+  gap: 5px;
+}
+
+.word-row {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 5px;
+}
+
+.word-cell {
+  width: 50px;
+  height: 50px;
+  border: 2px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2rem;
+  font-weight: bold;
+  text-transform: uppercase;
+}
+
+.word-cell.empty {
+  border: 2px solid var(--border);
+}
+
+.word-cell.filled {
+  border: 2px solid var(--text-secondary);
+  color: var(--text-primary);
+}
+
+.word-cell.correct {
+  background-color: #10b981;
+  border-color: #10b981;
+  color: white;
+}
+
+.word-cell.present {
+  background-color: #eab308;
+  border-color: #eab308;
+  color: white;
+}
+
+.word-cell.absent {
+  background-color: #64748b;
+  border-color: #64748b;
+  color: white;
+}
+
+.keyboard {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  width: 100%;
+}
+
+.keyboard-row {
+  display: flex;
+  justify-content: center;
+  gap: 6px;
+}
+
+.key {
+  min-width: 32px;
+  height: 48px;
+  border-radius: 4px;
+  border: 1px solid var(--border);
+  background: var(--bg-subtle);
+  color: var(--text-primary);
+  font-weight: bold;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  user-select: none;
+  flex: 1;
+  font-size: 1rem;
+}
+
+.key-wide {
+  flex: 1.5;
+  font-size: 0.8rem;
+}
+
+.key.correct {
+  background-color: #10b981;
+  color: white;
+  border-color: #10b981;
+}
+
+.key.present {
+  background-color: #eab308;
+  color: white;
+  border-color: #eab308;
+}
+
+.key.absent {
+  background-color: #64748b;
+  color: white;
+  border-color: #64748b;
+}
+
+.key:hover {
+  filter: brightness(0.9);
+}
+

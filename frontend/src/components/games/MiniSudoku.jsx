@@ -11,29 +11,30 @@ const getDailyRNG = () => {
   };
 };
 
-// Generates a valid 4x4 Sudoku board
+// Generates a valid 6x6 Sudoku board
 function generateBoard() {
   const random = getDailyRNG();
   
-  // A simple hardcoded valid 4x4 board for generation logic
+  // A simple hardcoded valid 6x6 board for generation logic
   const base = [
-    [1, 2, 3, 4],
-    [3, 4, 1, 2],
-    [2, 3, 4, 1],
-    [4, 1, 2, 3]
+    [1, 2, 3, 4, 5, 6],
+    [4, 5, 6, 1, 2, 3],
+    [2, 3, 1, 5, 6, 4],
+    [5, 6, 4, 2, 3, 1],
+    [3, 1, 2, 6, 4, 5],
+    [6, 4, 5, 3, 1, 2]
   ];
   
-  // Randomly shuffle rows within bands, cols within bands, or numbers to make it unique
-  // For simplicity, we just randomly map 1-4 to a different permutation
-  const perm = [1, 2, 3, 4].sort(() => random() - 0.5);
+  // Randomly map 1-6 to a different permutation
+  const perm = [1, 2, 3, 4, 5, 6].sort(() => random() - 0.5);
   const board = base.map(row => row.map(cell => perm[cell - 1]));
   
-  // Remove some numbers to create a puzzle (remove ~8 cells)
+  // Remove some numbers to create a puzzle (remove ~18 cells)
   const puzzle = board.map(row => [...row]);
   let removed = 0;
-  while (removed < 8) {
-    const r = Math.floor(random() * 4);
-    const c = Math.floor(random() * 4);
+  while (removed < 18) {
+    const r = Math.floor(random() * 6);
+    const c = Math.floor(random() * 6);
     if (puzzle[r][c] !== 0) {
       puzzle[r][c] = 0;
       removed++;
@@ -110,31 +111,31 @@ export default function MiniSudoku({ onBack }) {
 
   const checkWinCondition = (currentGrid) => {
     // Check if filled
-    for (let r = 0; r < 4; r++) {
-      for (let c = 0; c < 4; c++) {
+    for (let r = 0; r < 6; r++) {
+      for (let c = 0; c < 6; c++) {
         if (currentGrid[r][c] === 0) return false;
       }
     }
 
     // Check validity
     let newErrors = [];
-    for (let r = 0; r < 4; r++) {
-      for (let c = 0; c < 4; c++) {
+    for (let r = 0; r < 6; r++) {
+      for (let c = 0; c < 6; c++) {
         const val = currentGrid[r][c];
         let isValid = true;
         // check row
-        for (let i = 0; i < 4; i++) {
+        for (let i = 0; i < 6; i++) {
           if (i !== c && currentGrid[r][i] === val) isValid = false;
         }
         // check col
-        for (let i = 0; i < 4; i++) {
+        for (let i = 0; i < 6; i++) {
           if (i !== r && currentGrid[i][c] === val) isValid = false;
         }
         // check box
         const br = Math.floor(r / 2) * 2;
-        const bc = Math.floor(c / 2) * 2;
+        const bc = Math.floor(c / 3) * 3;
         for (let i = 0; i < 2; i++) {
-          for (let j = 0; j < 2; j++) {
+          for (let j = 0; j < 3; j++) {
             if ((br + i !== r || bc + j !== c) && currentGrid[br + i][bc + j] === val) {
               isValid = false;
             }
@@ -157,9 +158,9 @@ export default function MiniSudoku({ onBack }) {
   const handleCellChange = (r, c, val) => {
     if (!isPlaying || initialGrid[r][c] !== 0) return;
     
-    // Allow 1-4 or clear
+    // Allow 1-6 or clear
     let num = parseInt(val);
-    if (isNaN(num) || num < 1 || num > 4) num = 0;
+    if (isNaN(num) || num < 1 || num > 6) num = 0;
     
     const newGrid = grid.map(row => [...row]);
     newGrid[r][c] = num;

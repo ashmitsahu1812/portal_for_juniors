@@ -15,7 +15,7 @@ router.post('/score', protect, async (req, res, next) => {
     const { gameType, timeTakenSeconds } = req.body;
     const userId = req.user.id;
 
-    if (!['memory', 'sudoku'].includes(gameType)) {
+    if (!['memory', 'sudoku', 'word_guess'].includes(gameType)) {
       return res.status(400).json({ success: false, message: 'Invalid game type' });
     }
 
@@ -61,7 +61,7 @@ router.get('/leaderboard/:gameType', async (req, res, next) => {
   try {
     const { gameType } = req.params;
     
-    if (!['memory', 'sudoku'].includes(gameType)) {
+    if (!['memory', 'sudoku', 'word_guess'].includes(gameType)) {
       return res.status(400).json({ success: false, message: 'Invalid game type' });
     }
 
@@ -108,7 +108,8 @@ router.get('/status', protect, async (req, res, next) => {
 
     const status = {
       memory: scores.some(s => s.gameType === 'memory'),
-      sudoku: scores.some(s => s.gameType === 'sudoku')
+      sudoku: scores.some(s => s.gameType === 'sudoku'),
+      word_guess: scores.some(s => s.gameType === 'word_guess')
     };
 
     res.json({ success: true, status });

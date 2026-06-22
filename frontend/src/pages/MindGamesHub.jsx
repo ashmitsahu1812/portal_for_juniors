@@ -1,7 +1,8 @@
 import { useState } from 'react';
-import { Gamepad2, Brain, Grid3X3 } from 'lucide-react';
+import { Gamepad2, Brain, Grid3X3, Type } from 'lucide-react';
 import MemoryMatch from '../components/games/MemoryMatch';
 import MiniSudoku from '../components/games/MiniSudoku';
+import WordGuess from '../components/games/WordGuess';
 import '../styles/mindgames.css';
 
 export default function MindGamesHub() {
@@ -13,6 +14,10 @@ export default function MindGamesHub() {
 
   if (activeGame === 'sudoku') {
     return <MiniSudoku onBack={() => setActiveGame(null)} />;
+  }
+
+  if (activeGame === 'wordguess') {
+    return <WordGuess onBack={() => setActiveGame(null)} />;
   }
 
   return (
@@ -52,10 +57,25 @@ export default function MindGamesHub() {
           </div>
           <div className="game-card-content">
             <h3>Mini Sudoku</h3>
-            <p>A quick 4x4 logic puzzle. Fill the grid so every row, column, and 2x2 box has numbers 1-4.</p>
+            <p>A quick 6x6 logic puzzle. Fill the grid so every row, column, and 2x3 box has numbers 1-6.</p>
             <div className="game-stats">
               <span>Time limit: None</span>
-              <span>Grid: 4x4</span>
+              <span>Grid: 6x6</span>
+            </div>
+          </div>
+        </div>
+
+        {/* Word Guess Card */}
+        <div className="game-card" onClick={() => setActiveGame('wordguess')}>
+          <div className="game-card-icon" style={{ background: 'rgba(16, 185, 129, 0.15)', color: '#10b981' }}>
+            <Type size={32} />
+          </div>
+          <div className="game-card-content">
+            <h3>Word Guess</h3>
+            <p>Guess the hidden 5-letter word in 6 tries. Use the color hints to narrow it down.</p>
+            <div className="game-stats">
+              <span>Time limit: None</span>
+              <span>Grid: 5x6</span>
             </div>
           </div>
         </div>
