@@ -8,7 +8,7 @@ const gameScoreSchema = new mongoose.Schema({
   },
   gameType: {
     type: String,
-    enum: ['memory', 'sudoku'],
+    enum: ['memory', 'sudoku', 'word_guess'],
     required: true,
   },
   timeTakenSeconds: {
