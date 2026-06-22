@@ -6,6 +6,11 @@ import { protect } from '../middleware/auth.js';
 
 const router = express.Router();
 
+const getISTStartOfDay = () => {
+  const istDateStr = new Date().toLocaleDateString("en-US", { timeZone: "Asia/Kolkata" });
+  return new Date(`${istDateStr} 00:00:00 GMT+0530`);
+};
+
 /**
  * POST /api/games/score
  * Submit a completed game score (time taken)
@@ -23,9 +28,8 @@ router.post('/score', protect, async (req, res, next) => {
       return res.status(400).json({ success: false, message: 'Invalid time' });
     }
 
-    // Enforce "One Puzzle Per Day"
-    const startOfDay = new Date();
-    startOfDay.setHours(0, 0, 0, 0);
+    // Enforce "One Puzzle Per Day" using IST timezone
+    const startOfDay = getISTStartOfDay();
     const existing = await GameScore.findOne({
       user: userId,
       gameType,
@@ -65,9 +69,8 @@ router.get('/leaderboard/:gameType', async (req, res, next) => {
       return res.status(400).json({ success: false, message: 'Invalid game type' });
     }
 
-    // Get today's start date
-    const startOfDay = new Date();
-    startOfDay.setHours(0, 0, 0, 0);
+    // Get today's start date in IST
+    const startOfDay = getISTStartOfDay();
 
     const topScores = await GameScore.find({
       gameType,
@@ -98,8 +101,7 @@ router.get('/leaderboard/:gameType', async (req, res, next) => {
 router.get('/status', protect, async (req, res, next) => {
   try {
     const userId = req.user.id;
-    const startOfDay = new Date();
-    startOfDay.setHours(0, 0, 0, 0);
+    const startOfDay = getISTStartOfDay();
 
     const scores = await GameScore.find({
       user: userId,
