@@ -33,8 +33,8 @@ export default function Sidebar({ isOpen, onClose }) {
           <div style={{
             width: 24, height: 24, borderRadius: 0,
             background: 'var(--accent-purple)',
-            border: '2px solid #000',
-            boxShadow: '2px 2px 0px 0px #000',
+            border: '2px solid var(--border-bright)',
+            boxShadow: '2px 2px 0px 0px var(--border-bright)',
             display: 'flex', alignItems: 'center', justifyContent: 'center',
             marginTop: '0.2rem'
           }}>
@@ -43,7 +43,7 @@ export default function Sidebar({ isOpen, onClose }) {
           <div style={{ display: 'flex', flexDirection: 'column' }}>
             <h1 style={{ lineHeight: '1', fontSize: '1.4rem' }}>Kick Start</h1>
             <span style={{ fontSize: '0.85rem', fontWeight: 600, letterSpacing: '0.5px' }}>
-              by <span style={{ color: 'var(--bg-base)', fontWeight: 800 }}>RE</span><span style={{ color: 'var(--text-primary)', fontWeight: 800 }}>start</span>
+              by <span style={{ color: 'var(--logo-blue)', fontWeight: 800 }}>RE</span><span style={{ color: 'var(--text-primary)', fontWeight: 800 }}>start</span>
             </span>
           </div>
         </div>
