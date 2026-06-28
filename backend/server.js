@@ -19,6 +19,7 @@ import { fileURLToPath } from 'url';
 import http from 'http';
 import { Server as SocketIOServer } from 'socket.io';
 import { initBattleManager } from './sockets/battleManager.js';
+import { initStudyRoomManager } from './sockets/studyRoomManager.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -33,6 +34,7 @@ import progressRoutes from './routes/progress.js';
 import pathwayRoutes from './routes/pathways.js';
 import communityRoutes from './routes/community.js';
 import gameRoutes from './routes/games.js';
+import assignmentRoutes from './routes/assignments.js';
 
 // ── Bootstrap ─────────────────────────────────────────────────────────────────
 dotenv.config();
@@ -81,6 +83,7 @@ const io = new SocketIOServer(server, {
 });
 
 initBattleManager(io);
+initStudyRoomManager(io);
 
 // ── General Middleware ────────────────────────────────────────────────────────
 
@@ -127,6 +130,7 @@ app.use('/api/progress', progressRoutes);
 app.use('/api/pathways', pathwayRoutes);
 app.use('/api/community', communityRoutes);
 app.use('/api/games', gameRoutes);
+app.use('/api/assignments', assignmentRoutes);
 
 // ── Health Check ──────────────────────────────────────────────────────────────
 app.get('/api/health', (_req, res) => {

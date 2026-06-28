@@ -1,6 +1,6 @@
 import { NavLink, Link, useLocation } from 'react-router-dom';
 import {
-  LayoutDashboard, BookOpen, Code2, BarChart3, Zap, Terminal, FileText, LogOut, Trophy, Milestone, Moon, Sun, Users, Settings, Swords, Flame, Gamepad2
+  LayoutDashboard, BookOpen, Code2, BarChart3, Zap, Terminal, FileText, LogOut, Trophy, Milestone, Moon, Sun, Users, Settings, Swords, Flame, Gamepad2, Briefcase, MonitorPlay
 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { useTheme } from '../context/ThemeContext';
@@ -16,6 +16,8 @@ const navItems = [
   { to: '/leaderboard', icon: Trophy,          label: 'Leaderboard'     },
   { to: '/community',   icon: Users,           label: 'Community Hub'   },
   { to: '/games',       icon: Gamepad2,        label: 'Mind Games'      },
+  { to: '/assignments', icon: Briefcase,       label: 'Assignment Tracker' },
+  { to: '/study-room',  icon: MonitorPlay,     label: 'Study Room'      },
   { to: '/settings',    icon: Settings,        label: 'Settings'        },
 ];
 

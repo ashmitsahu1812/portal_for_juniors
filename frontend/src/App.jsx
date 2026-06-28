@@ -17,6 +17,8 @@ import CommunityCreate from './pages/CommunityCreate';
 import BattleLobby from './pages/BattleLobby';
 import BattleArena from './pages/BattleArena';
 import MindGamesHub from './pages/MindGamesHub';
+import AssignmentTracker from './pages/AssignmentTracker';
+import StudyRoom from './pages/StudyRoom';
 import Settings from './pages/Settings';
 import Profile from './pages/Profile';
 import Login from './pages/Login';
@@ -132,6 +134,10 @@ export default function App() {
 
                   {/* Mind Games */}
                   <Route path="/games" element={<MindGamesHub />} />
+
+                  {/* Productivity */}
+                  <Route path="/assignments" element={<AssignmentTracker />} />
+                  <Route path="/study-room" element={<StudyRoom />} />
 
                   {/* 404 */}
                   <Route path="*" element={

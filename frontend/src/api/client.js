@@ -58,6 +58,19 @@ export const fetchPathways = () =>
 export const fetchPathway = (id) =>
   api.get(`/pathways/${id}`).then((r) => r.data.data);
 
+// ── Assignments ───────────────────────────────────────────────────────────────
+export const fetchAssignments = () =>
+  api.get('/assignments').then((r) => r.data.data);
+
+export const createAssignment = (payload) =>
+  api.post('/assignments', payload).then((r) => r.data.data);
+
+export const updateAssignment = (id, payload) =>
+  api.put(`/assignments/${id}`, payload).then((r) => r.data.data);
+
+export const deleteAssignment = (id) =>
+  api.delete(`/assignments/${id}`).then((r) => r.data.data);
+
 // ── Google Auth ───────────────────────────────────────────────────────────────
 export const googleAuth = (credential) =>
   api.post('/auth/google', { credential }).then((r) => r.data);

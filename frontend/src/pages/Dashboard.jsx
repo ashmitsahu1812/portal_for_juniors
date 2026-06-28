@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { fetchModules, fetchPathways } from '../api/client';
 import { useAuth } from '../context/AuthContext';
 import { BookOpen, Code2, CheckCircle, Clock, Zap, ArrowRight, TrendingUp, Star, Target, Milestone } from 'lucide-react';
+import PomodoroWidget from '../components/PomodoroWidget';
 
 /* ── Quick-stat card ──────────────────────────────────────────────────────── */
 function StatCard({ value, label, color, icon: Icon }) {
@@ -69,13 +70,16 @@ export default function Dashboard() {
 
 
 
-        {/* ── Hero banner ─────────────────────────────────────────────────── */}
-        <div style={{
-          background: 'linear-gradient(135deg, rgba(255,255,255,0.05), rgba(255,255,255,0.02))',
-          border: '1px solid var(--border)',
-          borderRadius: 16, padding: '2rem', marginBottom: '2.5rem',
-          position: 'relative', overflow: 'hidden',
-        }}>
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr 300px', gap: '2.5rem', alignItems: 'start' }}>
+          {/* ── Left Column: Hero & Paths ──────────────────────────────────── */}
+          <div>
+            {/* ── Hero banner ─────────────────────────────────────────────────── */}
+            <div style={{
+              background: 'linear-gradient(135deg, rgba(255,255,255,0.05), rgba(255,255,255,0.02))',
+              border: '1px solid var(--border)',
+              borderRadius: 16, padding: '2rem', marginBottom: '2.5rem',
+              position: 'relative', overflow: 'hidden',
+            }}>
           {/* Decorative orb */}
           <div style={{
             position: 'absolute', right: '-4rem', top: '-4rem',
@@ -154,6 +158,14 @@ export default function Dashboard() {
             ))}
           </div>
         )}
+          </div>
+
+          {/* ── Right Column: Widgets ──────────────────────────────────────── */}
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
+            <PomodoroWidget />
+            {/* Add more widgets here in the future like upcoming deadlines */}
+          </div>
+        </div>
 
       </div>
     </>
