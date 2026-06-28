@@ -25,7 +25,7 @@ export default function StudyRoom() {
     socket.on('connect', () => {
       // Announce presence
       socket.emit('joinStudyRoom', {
-        id: user.id,
+        id: user.id || user._id,
         name: user.name,
         email: user.email
       });
