@@ -1,11 +1,13 @@
 import { useState, useEffect } from 'react';
-import { Users, Wifi, Clock, ArrowLeft } from 'lucide-react';
+import { Users, Wifi, Clock, ArrowLeft, Video, VideoOff } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { io } from 'socket.io-client';
 import { useAuth } from '../context/AuthContext';
+import { JitsiMeeting } from '@jitsi/react-sdk';
 
 export default function StudyRoom() {
   const [activeUsers, setActiveUsers] = useState([]);
+  const [inCall, setInCall] = useState(false);
   const { user } = useAuth();
   
   useEffect(() => {
@@ -65,6 +67,44 @@ export default function StudyRoom() {
           <span style={{ fontWeight: 600 }}>{activeUsers.length} Online</span>
         </div>
       </div>
+
+      <div style={{ marginBottom: '2rem', padding: '1rem', background: 'var(--bg-card)', borderRadius: 12, border: '1px solid var(--border)', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+        <div>
+          <h3 style={{ margin: '0 0 0.25rem 0', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+            <Video size={18} color="var(--accent-purple)" /> Join the Group Call
+          </h3>
+          <p style={{ margin: 0, fontSize: '0.9rem', color: 'var(--text-secondary)' }}>
+            Hop in to talk, study together, or share your screen.
+          </p>
+        </div>
+        <button 
+          className="btn btn-primary" 
+          onClick={() => setInCall(!inCall)}
+          style={{ background: inCall ? 'var(--accent-red)' : 'var(--accent-purple)' }}
+        >
+          {inCall ? <><VideoOff size={16} /> Leave Call</> : <><Video size={16} /> Join Call</>}
+        </button>
+      </div>
+
+      {inCall && (
+        <div style={{ width: '100%', height: '600px', borderRadius: 12, overflow: 'hidden', marginBottom: '2rem', border: '1px solid var(--border)' }}>
+          <JitsiMeeting
+            domain="meet.jit.si"
+            roomName="JuniorKickstartPortalStudyRoom"
+            configOverwrite={{
+              startWithAudioMuted: true,
+              startWithVideoMuted: true,
+              disableModeratorIndicator: true,
+              prejoinPageEnabled: false
+            }}
+            userInfo={{
+              displayName: user?.name || 'Anonymous Student',
+              email: user?.email
+            }}
+            getIFrameRef={(iframeRef) => { iframeRef.style.height = '100%'; }}
+          />
+        </div>
+      )}
 
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(240px, 1fr))', gap: '1.5rem' }}>
         {activeUsers.map(u => (
