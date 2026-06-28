@@ -12,9 +12,11 @@ export default function StudyRoom() {
     if (!user) return;
 
     // Connect to study-room namespace
-    const socketUrl = import.meta.env.VITE_API_URL 
-      ? import.meta.env.VITE_API_URL.replace('/api', '/study-room')
-      : 'http://localhost:5001/study-room';
+    let backendUrl = import.meta.env.VITE_API_URL || 'http://localhost:5001';
+    if (backendUrl.endsWith('/api')) {
+      backendUrl = backendUrl.slice(0, -4);
+    }
+    const socketUrl = `${backendUrl}/study-room`;
 
     const socket = io(socketUrl, {
       withCredentials: true
