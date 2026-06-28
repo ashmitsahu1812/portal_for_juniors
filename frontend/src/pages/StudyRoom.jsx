@@ -7,6 +7,7 @@ import { useAuth } from '../context/AuthContext';
 export default function StudyRoom() {
   const [activeUsers, setActiveUsers] = useState([]);
   const [inCall, setInCall] = useState(false);
+  const [socketInstance, setSocketInstance] = useState(null);
   const { user } = useAuth();
   
   useEffect(() => {
@@ -28,7 +29,8 @@ export default function StudyRoom() {
       socket.emit('joinStudyRoom', {
         id: user.id || user._id,
         name: user.name,
-        email: user.email
+        email: user.email,
+        inCall
       });
     });
 
@@ -36,10 +38,19 @@ export default function StudyRoom() {
       setActiveUsers(usersList);
     });
 
+    setSocketInstance(socket);
+
     return () => {
       socket.disconnect();
     };
   }, [user]);
+
+  // Sync inCall status to backend
+  useEffect(() => {
+    if (socketInstance) {
+      socketInstance.emit('setCallStatus', inCall);
+    }
+  }, [inCall, socketInstance]);
 
   const getTimeOnline = (joinedAt) => {
     const diffMins = Math.floor((new Date() - new Date(joinedAt)) / 60000);
@@ -115,16 +126,32 @@ export default function StudyRoom() {
                 YOU
               </div>
             )}
-            <div style={{
-              width: 64, height: 64, borderRadius: '50%',
-              background: 'linear-gradient(135deg, var(--accent-blue), var(--accent-purple))',
-              display: 'flex', alignItems: 'center', justifyContent: 'center',
-              color: '#fff', fontSize: '1.5rem', fontWeight: 800,
-              marginBottom: '1rem',
-              border: '2px solid var(--border)'
-            }}>
-              {u.name.charAt(0).toUpperCase()}
+            
+            <div style={{ position: 'relative' }}>
+              <div style={{
+                width: 64, height: 64, borderRadius: '50%',
+                background: 'linear-gradient(135deg, var(--accent-blue), var(--accent-purple))',
+                display: 'flex', alignItems: 'center', justifyContent: 'center',
+                color: '#fff', fontSize: '1.5rem', fontWeight: 800,
+                marginBottom: '1rem',
+                border: '2px solid var(--border)'
+              }}>
+                {u.name.charAt(0).toUpperCase()}
+              </div>
+              {u.inCall && (
+                <div style={{
+                  position: 'absolute', bottom: '1rem', right: 0,
+                  background: 'var(--accent-green)', color: '#000',
+                  padding: '4px', borderRadius: '50%',
+                  display: 'flex', alignItems: 'center', justifyContent: 'center',
+                  boxShadow: '0 0 10px rgba(0,0,0,0.5)',
+                  border: '2px solid var(--bg-card)'
+                }} title="In Call">
+                  <Video size={12} />
+                </div>
+              )}
             </div>
+            
             <h3 style={{ margin: '0 0 0.25rem 0', fontSize: '1.1rem' }}>{u.name}</h3>
             
             <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', color: 'var(--text-secondary)', fontSize: '0.85rem', marginTop: '0.5rem' }}>

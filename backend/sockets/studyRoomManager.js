@@ -2,7 +2,7 @@ export function initStudyRoomManager(io) {
   const studyRoomNamespace = io.of('/study-room');
 
   // Track online users in the study room
-  // Map of socket.id -> { userId, name, email, joinedAt }
+  // Map of socket.id -> { userId, name, email, joinedAt, inCall }
   const activeUsers = new Map();
 
   studyRoomNamespace.on('connection', (socket) => {
@@ -15,13 +15,24 @@ export function initStudyRoomManager(io) {
         userId: userData.id,
         name: userData.name,
         email: userData.email,
-        joinedAt: new Date().toISOString()
+        joinedAt: new Date().toISOString(),
+        inCall: !!userData.inCall
       };
 
       activeUsers.set(socket.id, userInfo);
 
       // Broadcast the updated list to all connected clients in this namespace
       broadcastActiveUsers();
+    });
+
+    // Handle user toggling call status
+    socket.on('setCallStatus', (isInCall) => {
+      if (activeUsers.has(socket.id)) {
+        const user = activeUsers.get(socket.id);
+        user.inCall = !!isInCall;
+        activeUsers.set(socket.id, user);
+        broadcastActiveUsers();
+      }
     });
 
     // Handle disconnection
@@ -42,9 +53,11 @@ export function initStudyRoomManager(io) {
         } else {
           // If already exists, keep the earliest joinedAt
           const existing = uniqueUsersMap.get(user.userId);
-          if (new Date(user.joinedAt) < new Date(existing.joinedAt)) {
-            uniqueUsersMap.set(user.userId, user);
-          }
+          const earliestJoined = new Date(user.joinedAt) < new Date(existing.joinedAt) ? user.joinedAt : existing.joinedAt;
+          // If any instance is in a call, mark the unique user as in a call
+          const isAnyInCall = user.inCall || existing.inCall;
+          
+          uniqueUsersMap.set(user.userId, { ...existing, joinedAt: earliestJoined, inCall: isAnyInCall });
         }
       }
       
