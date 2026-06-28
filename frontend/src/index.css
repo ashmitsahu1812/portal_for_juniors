@@ -4,25 +4,25 @@
 
 /* ── Design Tokens ─────────────────────────────────────────────────────────── */
 :root {
-  --bg-base:       #FFFDF9; /* Off-white warm background */
-  --bg-surface:    #F4EEDF; /* Slightly darker cream for sidebar */
-  --bg-elevated:   #FFFFFF;
-  --bg-card:       #FFFFFF;
+  --bg-base:       #ffffff;
+  --bg-surface:    #f8f9fa; 
+  --bg-elevated:   #ffffff;
+  --bg-card:       #ffffff;
   
-  --accent-blue:   #00E5FF; /* Cyan */
-  --accent-cyan:   #00C2D8;
-  --accent-green:  #00FF66; /* Neon Green */
-  --accent-purple: #B026FF; /* Electric Purple */
-  --accent-yellow: #FFEA00; /* Bright Yellow */
-  --accent-red:    #FF3366; /* Hot Pink/Red */
+  --accent-blue:   #0085ff;
+  --accent-cyan:   #0085ff;
+  --accent-green:  #0085ff;
+  --accent-purple: #0085ff;
+  --accent-yellow: #0085ff;
+  --accent-red:    #0085ff;
   
   /* Brand */
-  --logo-blue:     #007AFF; /* Classic Blue */
+  --logo-blue:     #0085ff;
 
   /* Text & Border */
   --text-primary:   #000000;
   --text-secondary: #4A4A4A;
-  --text-muted:     #555555;
+  --text-muted:     #777777;
   --border:         #000000;
   --border-bright:  #000000;
 
@@ -34,22 +34,22 @@
 
 .dark {
   /* Theme Overrides for Dark Mode */
-  --bg-base:        #0D0D0D; 
-  --bg-surface:     #1A1A1A;
-  --bg-elevated:    #2A2A2A;
-  --bg-card:        #2A2A2A;
+  --bg-base:        #000000; 
+  --bg-surface:     #0a0a0a;
+  --bg-elevated:    #141414;
+  --bg-card:        #141414;
 
   /* Adjust brand color for dark mode contrast */
-  --logo-blue:      #60A5FA; /* Lighter Blue */
+  --logo-blue:      #0085ff;
 
-  --text-primary:   #FFFFFF;
-  --text-secondary: #A0A0A0;
+  --text-primary:   #ffffff;
+  --text-secondary: #cccccc;
   --text-muted:     #888888;
   --border:         #333333;
-  --border-bright:  #FFFFFF;
+  --border-bright:  #ffffff;
 
-  --shadow-hard:    4px 4px 0px 0px #FFFFFF;
-  --shadow-hard-sm: 2px 2px 0px 0px #FFFFFF;
+  --shadow-hard:    4px 4px 0px 0px #0085ff;
+  --shadow-hard-sm: 2px 2px 0px 0px #0085ff;
 }
 
 /* ── Base Reset ─────────────────────────────────────────────────────────────── */
