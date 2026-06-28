@@ -3,7 +3,6 @@ import { Users, Wifi, Clock, ArrowLeft, Video, VideoOff } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { io } from 'socket.io-client';
 import { useAuth } from '../context/AuthContext';
-import { JitsiMeeting } from '@jitsi/react-sdk';
 
 export default function StudyRoom() {
   const [activeUsers, setActiveUsers] = useState([]);
@@ -88,20 +87,11 @@ export default function StudyRoom() {
 
       {inCall && (
         <div style={{ width: '100%', height: '600px', borderRadius: 12, overflow: 'hidden', marginBottom: '2rem', border: '1px solid var(--border)' }}>
-          <JitsiMeeting
-            domain="meet.jit.si"
-            roomName="JuniorKickstartPortalStudyRoom"
-            configOverwrite={{
-              startWithAudioMuted: true,
-              startWithVideoMuted: true,
-              disableModeratorIndicator: true,
-              prejoinPageEnabled: false
-            }}
-            userInfo={{
-              displayName: user?.name || 'Anonymous Student',
-              email: user?.email
-            }}
-            getIFrameRef={(iframeRef) => { iframeRef.style.height = '100%'; }}
+          <iframe 
+            allow="camera; microphone; display-capture; fullscreen; clipboard-read; clipboard-write; autoplay" 
+            src={`https://p2p.mirotalk.com/join/JuniorKickstartPortalStudyRoom?name=${encodeURIComponent(user?.name || 'Student')}`}
+            style={{ width: '100%', height: '100%', border: 'none' }}
+            title="Video Call"
           />
         </div>
       )}
