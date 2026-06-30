@@ -279,7 +279,8 @@ code, pre, .mono { font-family: 'JetBrains Mono', monospace; }
   text-decoration: none;
   white-space: nowrap;
   box-shadow: var(--shadow-hard);
-  color: #000;
+  color: var(--text-primary);
+  background: var(--bg-elevated);
 }
 
 .btn:active:not(:disabled) {
@@ -294,15 +295,17 @@ code, pre, .mono { font-family: 'JetBrains Mono', monospace; }
   transform: none !important;
 }
 
-.btn-primary { background: var(--accent-blue); }
+.btn-primary { background: var(--accent-blue); color: #000; }
 .btn-primary:hover:not(:disabled) { background: #00F0FF; transform: translate(-2px, -2px); box-shadow: 6px 6px 0px 0px #000; }
 
-.btn-success { background: var(--accent-green); }
+.btn-success { background: var(--accent-green); color: #000; }
 .btn-success:hover:not(:disabled) { background: #26FF7B; transform: translate(-2px, -2px); box-shadow: 6px 6px 0px 0px #000; }
 
 .btn-ghost {
   background: transparent;
   color: var(--text-primary);
+  border-color: transparent;
+  box-shadow: none;
 }
 .btn-ghost:hover:not(:disabled) { background: var(--bg-surface); transform: translate(-2px, -2px); box-shadow: 6px 6px 0px 0px var(--shadow-color, #000); }
 

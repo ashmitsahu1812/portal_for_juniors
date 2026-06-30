@@ -62,7 +62,7 @@ export default function Community() {
         {problems.length === 0 ? (
           <div className="empty-state">
             <AlertTriangle size={48} />
-            <h3 style={{ fontSize: '1.5rem', color: '#000' }}>No problems yet!</h3>
+            <h3 style={{ fontSize: '1.5rem', color: 'var(--text-primary)' }}>No problems yet!</h3>
             <p>Be the first student to create a coding challenge for the community.</p>
             <button className="btn btn-primary mt-2" onClick={() => navigate('/community/create')}>
               Create Problem
