@@ -53,8 +53,8 @@ router.get('/leaderboard', async (req, res, next) => {
 
       const battleRating = u.progress?.rating || 0;
 
-      // Combined score: 50% quiz percentage + 50% problems solved ratio + battle rating
-      const totalScore = Math.round((quizPct * 0.5) + (Math.min(solvedCount, totalProblems) / totalProblems) * 100 * 0.5) + battleRating;
+      // Combined score: 50% quiz percentage + (solvedCount * 10) + battleRating
+      const totalScore = Math.round((quizPct * 0.5) + (solvedCount * 10)) + battleRating;
 
       return {
         _id: u._id,

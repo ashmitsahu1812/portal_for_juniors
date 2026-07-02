@@ -205,7 +205,7 @@ export default function Leaderboard() {
         {/* Score formula note */}
         <div style={{ marginTop: '1rem', fontSize: '0.75rem', color: 'var(--text-muted)', textAlign: 'center' }}>
           <TrendingUp size={12} style={{ display: 'inline', marginRight: '0.3rem' }} />
-          Score = 50% quiz percentage + 50% problems solved ratio + Battle Rating
+          Score = 50% quiz percentage + (10 points per problem solved) + Battle Rating
         </div>
       </div>
     </>
