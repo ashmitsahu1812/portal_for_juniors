@@ -2,7 +2,7 @@
 
 > An interactive, gamified Learning Management System (LMS) and Online Coding Judge built for junior developers and students to learn programming, compete in real-time coding duels, solve algorithmic challenges, and collaborate.
 
-🌐 **Live Web Application**: [https://frontend-xi-nine-84.vercel.app](https://frontend-xi-nine-84.vercel.app)  
+🌐 **Live Web Application**: [https://kickstart.letsrestart.in](https://kickstart.letsrestart.in/)  
 ⚡ **Live Backend API**: [https://portal-for-juniors.onrender.com](https://portal-for-juniors.onrender.com)
 
 ---
