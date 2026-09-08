@@ -5,6 +5,7 @@ import {
 import { useAuth } from '../context/AuthContext';
 import { useTheme } from '../context/ThemeContext';
 import { useCourse } from '../context/CourseContext';
+import CourseDropdown from './CourseDropdown';
 
 const navItems = [
   { to: '/',            icon: LayoutDashboard, label: 'Dashboard'        },
@@ -33,7 +34,7 @@ export default function Sidebar({ isOpen, onClose }) {
       <aside className={`sidebar ${isOpen ? 'open' : ''}`}>
       {/* Logo */}
       <div className="sidebar-logo">
-        <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem', marginBottom: '0.15rem' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem', marginBottom: '0.75rem' }}>
           <div style={{
             width: 24, height: 24, borderRadius: 0,
             background: 'var(--accent-purple)',
@@ -51,11 +52,9 @@ export default function Sidebar({ isOpen, onClose }) {
             </span>
           </div>
         </div>
-        <p style={{ marginTop: '0.25rem', display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
-          <span>Semester {activeSemester}</span>
-          <span>·</span>
-          <span>CS Dept.</span>
-        </p>
+
+        {/* Course & Semester Switcher Dropdown */}
+        <CourseDropdown fullWidth />
       </div>
 
       {/* Navigation */}

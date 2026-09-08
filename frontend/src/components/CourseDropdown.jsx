@@ -2,7 +2,7 @@ import React, { useState, useRef, useEffect } from 'react';
 import { ChevronDown, ChevronRight, Check, BookOpen, Layers, Sparkles } from 'lucide-react';
 import { useCourse } from '../context/CourseContext';
 
-export default function CourseDropdown() {
+export default function CourseDropdown({ fullWidth = false }) {
   const { courses, activeCourse, activeSemester, selectCourse, setSemester } = useCourse();
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef(null);
@@ -19,7 +19,15 @@ export default function CourseDropdown() {
   }, []);
 
   return (
-    <div className="course-dropdown-container" ref={dropdownRef} style={{ position: 'relative', display: 'inline-block' }}>
+    <div
+      className="course-dropdown-container"
+      ref={dropdownRef}
+      style={{
+        position: 'relative',
+        display: fullWidth ? 'block' : 'inline-block',
+        width: fullWidth ? '100%' : 'auto',
+      }}
+    >
       {/* Trigger Button matching the screenshot pill */}
       <button
         type="button"
@@ -29,15 +37,17 @@ export default function CourseDropdown() {
         style={{
           display: 'flex',
           alignItems: 'center',
+          justifyContent: fullWidth ? 'space-between' : 'flex-start',
           gap: '0.65rem',
-          padding: '0.45rem 0.95rem',
+          width: fullWidth ? '100%' : 'auto',
+          padding: fullWidth ? '0.55rem 0.75rem' : '0.45rem 0.95rem',
           background: 'var(--bg-elevated)',
-          border: '2px solid var(--border)',
+          border: '2px solid var(--border-bright, #fff)',
           borderRadius: '10px',
-          boxShadow: '2px 2px 0px 0px var(--border)',
+          boxShadow: '2px 2px 0px 0px var(--border-bright, #fff)',
           cursor: 'pointer',
           color: 'var(--text-primary)',
-          fontSize: '0.9rem',
+          fontSize: '0.86rem',
           fontWeight: 600,
           fontFamily: "'Space Grotesk', sans-serif",
           transition: 'all 0.15s ease',
