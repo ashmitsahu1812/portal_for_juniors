@@ -2,44 +2,42 @@
 
 @import "tailwindcss";
 
-/* ── Design Tokens ─────────────────────────────────────────────────────────── */
+/* ── Design Tokens (Default Dark Theme for Kick Start) ─────────────────────── */
 :root {
-  --bg-base:       #ffffff;
-  --bg-surface:    #f8f9fa; 
-  --bg-elevated:   #ffffff;
-  --bg-card:       #ffffff;
+  --bg-base:        #000000; 
+  --bg-surface:     #0a0a0a;
+  --bg-elevated:    #141414;
+  --bg-card:        #141414;
   
-  --accent-blue:   #0085ff;
-  --accent-cyan:   #0085ff;
-  --accent-green:  #0085ff;
-  --accent-purple: #0085ff;
-  --accent-yellow: #0085ff;
-  --accent-red:    #0085ff;
+  --accent-blue:    #0085ff;
+  --accent-cyan:    #0085ff;
+  --accent-green:   #0085ff;
+  --accent-purple:  #0085ff;
+  --accent-yellow:  #0085ff;
+  --accent-red:     #0085ff;
   
   /* Brand */
-  --logo-blue:     #0085ff;
+  --logo-blue:      #0085ff;
 
   /* Text & Border */
-  --text-primary:   #000000;
-  --text-secondary: #4A4A4A;
-  --text-muted:     #777777;
-  --border:         #000000;
-  --border-bright:  #000000;
+  --text-primary:   #ffffff;
+  --text-secondary: #cccccc;
+  --text-muted:     #888888;
+  --border:         #333333;
+  --border-bright:  #ffffff;
 
-  --shadow-hard:    4px 4px 0px 0px #000000;
-  --shadow-hard-sm: 2px 2px 0px 0px #000000;
+  --shadow-hard:    4px 4px 0px 0px #0085ff;
+  --shadow-hard-sm: 2px 2px 0px 0px #0085ff;
 
   --sidebar-w: 260px;
 }
 
 .dark {
-  /* Theme Overrides for Dark Mode */
   --bg-base:        #000000; 
   --bg-surface:     #0a0a0a;
   --bg-elevated:    #141414;
   --bg-card:        #141414;
 
-  /* Adjust brand color for dark mode contrast */
   --logo-blue:      #0085ff;
 
   --text-primary:   #ffffff;
@@ -64,7 +62,7 @@ html {
 body {
   font-family: 'Inter', sans-serif;
   background-color: #000000;
-  color: var(--text-primary);
+  color: #ffffff;
   line-height: 1.6;
   -webkit-font-smoothing: antialiased;
   min-height: 100vh;
@@ -74,6 +72,11 @@ body {
 h1, h2, h3, h4, h5, h6 {
   font-family: 'Space Grotesk', sans-serif;
   font-weight: 700;
+  color: #ffffff;
+}
+
+p {
+  color: #a8a8a8;
 }
 
 /* ── Scrollbar ──────────────────────────────────────────────────────────────── */

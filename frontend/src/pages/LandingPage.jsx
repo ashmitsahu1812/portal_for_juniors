@@ -129,7 +129,7 @@ export default function LandingPage() {
           left: '4%',
           fontFamily: "'JetBrains Mono', monospace",
           fontSize: '0.78rem',
-          color: 'rgba(0, 133, 255, 0.28)',
+          color: 'rgba(0, 133, 255, 0.45)',
           pointerEvents: 'none',
           zIndex: 0,
           animation: 'floatElement 6s ease-in-out infinite',
@@ -146,7 +146,7 @@ export default function LandingPage() {
           right: '5%',
           fontFamily: "'JetBrains Mono', monospace",
           fontSize: '0.8rem',
-          color: 'rgba(0, 133, 255, 0.25)',
+          color: 'rgba(0, 133, 255, 0.45)',
           pointerEvents: 'none',
           zIndex: 0,
           animation: 'floatElement 7s ease-in-out infinite alternate',
@@ -163,7 +163,7 @@ export default function LandingPage() {
           left: '3%',
           fontFamily: "'JetBrains Mono', monospace",
           fontSize: '0.8rem',
-          color: 'rgba(0, 133, 255, 0.22)',
+          color: 'rgba(0, 133, 255, 0.45)',
           pointerEvents: 'none',
           zIndex: 0,
           animation: 'floatElement 8s ease-in-out infinite',
@@ -180,7 +180,7 @@ export default function LandingPage() {
           right: '4%',
           fontFamily: "'JetBrains Mono', monospace",
           fontSize: '0.8rem',
-          color: 'rgba(0, 133, 255, 0.25)',
+          color: 'rgba(0, 133, 255, 0.45)',
           pointerEvents: 'none',
           zIndex: 0,
           animation: 'floatElement 6.5s ease-in-out infinite alternate',
@@ -196,7 +196,7 @@ export default function LandingPage() {
           position: 'sticky',
           top: 0,
           zIndex: 50,
-          background: 'rgba(0, 0, 0, 0.92)',
+          background: 'rgba(0, 0, 0, 0.95)',
           backdropFilter: 'blur(10px)',
           borderBottom: '3px solid #222222',
           padding: '0.9rem 2rem',
@@ -222,22 +222,22 @@ export default function LandingPage() {
             <Terminal size={18} color="#ffffff" strokeWidth={3} />
           </div>
           <div style={{ display: 'flex', flexDirection: 'column' }}>
-            <span style={{ fontSize: '1.25rem', fontWeight: 800, fontFamily: "'Space Grotesk', sans-serif", lineHeight: 1 }}>
+            <span style={{ fontSize: '1.25rem', fontWeight: 800, fontFamily: "'Space Grotesk', sans-serif", lineHeight: 1, color: '#ffffff' }}>
               Kick Start
             </span>
-            <span style={{ fontSize: '0.72rem', fontWeight: 700, letterSpacing: '0.5px' }}>
-              by <span style={{ color: '#0085ff' }}>RE</span><span>start</span>
+            <span style={{ fontSize: '0.72rem', fontWeight: 700, letterSpacing: '0.5px', color: '#cccccc' }}>
+              by <span style={{ color: '#0085ff' }}>RE</span><span style={{ color: '#ffffff' }}>start</span>
             </span>
           </div>
         </div>
 
         {/* Center Links */}
         <div className="hide-mobile" style={{ display: 'flex', alignItems: 'center', gap: '1.5rem', fontSize: '0.88rem', fontWeight: 700, fontFamily: "'Space Grotesk', sans-serif" }}>
-          <a href="#who-is-this-for" style={{ color: '#aaaaaa', textDecoration: 'none', transition: 'color 0.15s' }}>Who It's For</a>
-          <a href="#coding-arena" style={{ color: '#aaaaaa', textDecoration: 'none', transition: 'color 0.15s' }}>Online Judge</a>
-          <a href="#curriculum" style={{ color: '#aaaaaa', textDecoration: 'none', transition: 'color 0.15s' }}>Syllabus</a>
-          <a href="#battles" style={{ color: '#aaaaaa', textDecoration: 'none', transition: 'color 0.15s' }}>1v1 Battles</a>
-          <a href="#mission" style={{ color: '#aaaaaa', textDecoration: 'none', transition: 'color 0.15s' }}>About</a>
+          <a href="#who-is-this-for" style={{ color: '#cccccc', textDecoration: 'none', transition: 'color 0.15s' }}>Who It's For</a>
+          <a href="#coding-arena" style={{ color: '#cccccc', textDecoration: 'none', transition: 'color 0.15s' }}>Online Judge</a>
+          <a href="#curriculum" style={{ color: '#cccccc', textDecoration: 'none', transition: 'color 0.15s' }}>Syllabus</a>
+          <a href="#battles" style={{ color: '#cccccc', textDecoration: 'none', transition: 'color 0.15s' }}>1v1 Battles</a>
+          <a href="#mission" style={{ color: '#cccccc', textDecoration: 'none', transition: 'color 0.15s' }}>About</a>
         </div>
 
         {/* Action Buttons */}
@@ -344,7 +344,7 @@ export default function LandingPage() {
             marginBottom: '1.75rem',
           }}
         >
-          <Zap size={14} /> SEMESTER 1 & 2 · CS & AIML LEARNING PORTAL
+          <Zap size={14} color="#0085ff" /> SEMESTER 1 & 2 · CS & AIML LEARNING PORTAL
         </div>
 
         <h1
@@ -355,6 +355,7 @@ export default function LandingPage() {
             lineHeight: 1.08,
             letterSpacing: '-0.035em',
             marginBottom: '1.4rem',
+            color: '#ffffff',
           }}
         >
           Master Real Coding.<br />
@@ -366,7 +367,7 @@ export default function LandingPage() {
         <p
           style={{
             fontSize: 'clamp(1rem, 1.9vw, 1.2rem)',
-            color: '#a8a8a8',
+            color: '#cccccc',
             maxWidth: '740px',
             margin: '0 auto 2.5rem',
             lineHeight: 1.65,
@@ -403,7 +404,7 @@ export default function LandingPage() {
               e.currentTarget.style.boxShadow = '5px 5px 0px 0px #ffffff';
             }}
           >
-            Enter Student Portal <ArrowRight size={17} />
+            Enter Student Portal <ArrowRight size={17} color="#ffffff" />
           </button>
 
           <a
@@ -463,7 +464,7 @@ export default function LandingPage() {
               <div style={{ fontSize: '0.95rem', fontWeight: 800, color: '#0085ff', fontFamily: "'Space Grotesk', sans-serif" }}>
                 {stat.label}
               </div>
-              <div style={{ fontSize: '0.78rem', color: '#777777', marginTop: '0.15rem' }}>
+              <div style={{ fontSize: '0.78rem', color: '#aaaaaa', marginTop: '0.15rem' }}>
                 {stat.desc}
               </div>
             </div>
@@ -487,10 +488,10 @@ export default function LandingPage() {
           <div style={{ fontSize: '0.78rem', fontWeight: 800, color: '#0085ff', textTransform: 'uppercase', letterSpacing: '0.1em', marginBottom: '0.35rem', fontFamily: "'JetBrains Mono', monospace" }}>
             // TARGET AUDIENCE //
           </div>
-          <h2 style={{ fontSize: 'clamp(2rem, 3.5vw, 2.6rem)', fontWeight: 800, fontFamily: "'Space Grotesk', sans-serif", letterSpacing: '-0.025em', margin: 0 }}>
+          <h2 style={{ fontSize: 'clamp(2rem, 3.5vw, 2.6rem)', fontWeight: 800, fontFamily: "'Space Grotesk', sans-serif", letterSpacing: '-0.025em', margin: 0, color: '#ffffff' }}>
             Who Is Kick Start Built For?
           </h2>
-          <p style={{ color: '#888888', fontSize: '1rem', marginTop: '0.4rem' }}>
+          <p style={{ color: '#aaaaaa', fontSize: '1rem', marginTop: '0.4rem' }}>
             Designed specifically around your actual computer science curriculum and university examination structure.
           </p>
         </div>
@@ -516,7 +517,7 @@ export default function LandingPage() {
                 FOUNDATIONS
               </span>
             </div>
-            <p style={{ color: '#a0a0a0', fontSize: '0.9rem', lineHeight: 1.6, flex: 1 }}>
+            <p style={{ color: '#cccccc', fontSize: '0.9rem', lineHeight: 1.6, flex: 1 }}>
               Learn from ground zero. Build problem-solving logic in Python, understand memory pointers & arrays in C, practice Linux CLI terminal commands, and master web layout basics.
             </p>
             <div style={{ marginTop: '1.25rem', paddingTop: '0.85rem', borderTop: '1px solid #222222', fontSize: '0.82rem', color: '#0085ff', fontWeight: 700 }}>
@@ -544,7 +545,7 @@ export default function LandingPage() {
                 CURRENT TERM 🔥
               </span>
             </div>
-            <p style={{ color: '#a0a0a0', fontSize: '0.9rem', lineHeight: 1.6, flex: 1 }}>
+            <p style={{ color: '#cccccc', fontSize: '0.9rem', lineHeight: 1.6, flex: 1 }}>
               Tackle Data Structures (Stacks, Queues, Linked Lists, Trees), Object-Oriented Programming in C++/Java, DBMS relational models with SQL queries, and full-stack API concepts.
             </p>
             <div style={{ marginTop: '1.25rem', paddingTop: '0.85rem', borderTop: '1px solid #222222', fontSize: '0.82rem', color: '#0085ff', fontWeight: 700 }}>
@@ -572,7 +573,7 @@ export default function LandingPage() {
                 1v1 ARENA
               </span>
             </div>
-            <p style={{ color: '#a0a0a0', fontSize: '0.9rem', lineHeight: 1.6, flex: 1 }}>
+            <p style={{ color: '#cccccc', fontSize: '0.9rem', lineHeight: 1.6, flex: 1 }}>
               Duel with peers in timed 1v1 battle rooms with live status sync, test your algorithms against strict execution limits, and climb the university streak leaderboard.
             </p>
             <div style={{ marginTop: '1.25rem', paddingTop: '0.85rem', borderTop: '1px solid #222222', fontSize: '0.82rem', color: '#0085ff', fontWeight: 700 }}>
@@ -599,11 +600,11 @@ export default function LandingPage() {
             <div style={{ fontSize: '0.78rem', fontWeight: 800, color: '#0085ff', textTransform: 'uppercase', letterSpacing: '0.1em', marginBottom: '0.35rem', fontFamily: "'JetBrains Mono', monospace" }}>
               // ONLINE SANDBOX EXECUTION //
             </div>
-            <h2 style={{ fontSize: 'clamp(2rem, 3.2vw, 2.5rem)', fontWeight: 800, fontFamily: "'Space Grotesk', sans-serif", letterSpacing: '-0.025em', lineHeight: 1.18 }}>
+            <h2 style={{ fontSize: 'clamp(2rem, 3.2vw, 2.5rem)', fontWeight: 800, fontFamily: "'Space Grotesk', sans-serif", letterSpacing: '-0.025em', lineHeight: 1.18, color: '#ffffff' }}>
               Sandboxed Online Judge with Automated Grading
             </h2>
-            <p style={{ color: '#a0a0a0', fontSize: '0.95rem', lineHeight: 1.65, margin: '1.2rem 0 1.5rem' }}>
-              Write code in <strong>Python</strong>, <strong>C++</strong>, <strong>C</strong>, or <strong>Java</strong>. Solutions are automatically compiled in isolated sandboxes and verified against hidden test suites.
+            <p style={{ color: '#cccccc', fontSize: '0.95rem', lineHeight: 1.65, margin: '1.2rem 0 1.5rem' }}>
+              Write code in <strong style={{ color: '#ffffff' }}>Python</strong>, <strong style={{ color: '#ffffff' }}>C++</strong>, <strong style={{ color: '#ffffff' }}>C</strong>, or <strong style={{ color: '#ffffff' }}>Java</strong>. Solutions are automatically compiled in isolated sandboxes and verified against hidden test suites.
             </p>
 
             <div style={{ display: 'flex', flexDirection: 'column', gap: '0.65rem', marginBottom: '1.75rem' }}>
@@ -612,7 +613,7 @@ export default function LandingPage() {
                 'Hidden test cases to test edge cases and prevent hardcoding',
                 'Precise memory and runtime telemetry metrics',
               ].map((item, idx) => (
-                <div key={idx} style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '0.9rem', color: '#cccccc' }}>
+                <div key={idx} style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '0.9rem', color: '#e0e0e0' }}>
                   <CheckCircle size={16} color="#0085ff" style={{ flexShrink: 0 }} />
                   <span>{item}</span>
                 </div>
@@ -636,7 +637,7 @@ export default function LandingPage() {
                 gap: '0.45rem',
               }}
             >
-              Start Coding <ArrowRight size={15} />
+              Start Coding <ArrowRight size={15} color="#ffffff" />
             </button>
           </div>
 
@@ -682,10 +683,10 @@ export default function LandingPage() {
           <div style={{ fontSize: '0.78rem', fontWeight: 800, color: '#0085ff', textTransform: 'uppercase', letterSpacing: '0.1em', marginBottom: '0.35rem', fontFamily: "'JetBrains Mono', monospace" }}>
             // CURRICULUM TRACKS //
           </div>
-          <h2 style={{ fontSize: 'clamp(2rem, 3.5vw, 2.6rem)', fontWeight: 800, fontFamily: "'Space Grotesk', sans-serif", letterSpacing: '-0.025em', margin: 0 }}>
+          <h2 style={{ fontSize: 'clamp(2rem, 3.5vw, 2.6rem)', fontWeight: 800, fontFamily: "'Space Grotesk', sans-serif", letterSpacing: '-0.025em', margin: 0, color: '#ffffff' }}>
             Semester 1 & Semester 2 Tracks
           </h2>
-          <p style={{ color: '#888888', fontSize: '1rem', marginTop: '0.4rem' }}>
+          <p style={{ color: '#aaaaaa', fontSize: '1rem', marginTop: '0.4rem' }}>
             Switch between terms at any time via the sidebar dropdown.
           </p>
         </div>
@@ -701,10 +702,10 @@ export default function LandingPage() {
               </span>
             </div>
             <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'flex', flexDirection: 'column', gap: '0.75rem', fontSize: '0.9rem', color: '#cccccc' }}>
-              <li style={{ padding: '0.5rem 0.75rem', background: '#111111', border: '1px solid #222' }}>Problem Solving in Python (Loops, Lists, Functions)</li>
-              <li style={{ padding: '0.5rem 0.75rem', background: '#111111', border: '1px solid #222' }}>C Programming Fundamentals (Pointers, Memory)</li>
-              <li style={{ padding: '0.5rem 0.75rem', background: '#111111', border: '1px solid #222' }}>Systems & Web Essentials (Git, Linux CLI, HTML/CSS)</li>
-              <li style={{ padding: '0.5rem 0.75rem', background: '#111111', border: '1px solid #222' }}>Comprehensive Review Quizzes & Past Papers</li>
+              <li style={{ padding: '0.5rem 0.75rem', background: '#111111', border: '1px solid #222', color: '#e0e0e0' }}>Problem Solving in Python (Loops, Lists, Functions)</li>
+              <li style={{ padding: '0.5rem 0.75rem', background: '#111111', border: '1px solid #222', color: '#e0e0e0' }}>C Programming Fundamentals (Pointers, Memory)</li>
+              <li style={{ padding: '0.5rem 0.75rem', background: '#111111', border: '1px solid #222', color: '#e0e0e0' }}>Systems & Web Essentials (Git, Linux CLI, HTML/CSS)</li>
+              <li style={{ padding: '0.5rem 0.75rem', background: '#111111', border: '1px solid #222', color: '#e0e0e0' }}>Comprehensive Review Quizzes & Past Papers</li>
             </ul>
           </div>
 
@@ -718,10 +719,10 @@ export default function LandingPage() {
               </span>
             </div>
             <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'flex', flexDirection: 'column', gap: '0.75rem', fontSize: '0.9rem', color: '#cccccc' }}>
-              <li style={{ padding: '0.5rem 0.75rem', background: '#111111', border: '1px solid #222' }}>Data Structures & Algorithms (Stacks, Queues, Trees)</li>
-              <li style={{ padding: '0.5rem 0.75rem', background: '#111111', border: '1px solid #222' }}>Object-Oriented Programming (C++ & Java Classes)</li>
-              <li style={{ padding: '0.5rem 0.75rem', background: '#111111', border: '1px solid #222' }}>Database Management Systems (SQL & Schemas)</li>
-              <li style={{ padding: '0.5rem 0.75rem', background: '#111111', border: '1px solid #222' }}>Full Stack Web Architecture & Asynchronous APIs</li>
+              <li style={{ padding: '0.5rem 0.75rem', background: '#111111', border: '1px solid #222', color: '#e0e0e0' }}>Data Structures & Algorithms (Stacks, Queues, Trees)</li>
+              <li style={{ padding: '0.5rem 0.75rem', background: '#111111', border: '1px solid #222', color: '#e0e0e0' }}>Object-Oriented Programming (C++ & Java Classes)</li>
+              <li style={{ padding: '0.5rem 0.75rem', background: '#111111', border: '1px solid #222', color: '#e0e0e0' }}>Database Management Systems (SQL & Schemas)</li>
+              <li style={{ padding: '0.5rem 0.75rem', background: '#111111', border: '1px solid #222', color: '#e0e0e0' }}>Full Stack Web Architecture & Asynchronous APIs</li>
             </ul>
           </div>
         </div>
@@ -745,10 +746,10 @@ export default function LandingPage() {
               <div style={{ fontSize: '0.78rem', fontWeight: 800, color: '#0085ff', textTransform: 'uppercase', letterSpacing: '0.1em', marginBottom: '0.35rem', fontFamily: "'JetBrains Mono', monospace" }}>
                 // MULTIPLAYER COMPETITIVE //
               </div>
-              <h3 style={{ fontSize: 'clamp(1.8rem, 3vw, 2.3rem)', fontWeight: 800, fontFamily: "'Space Grotesk', sans-serif", margin: '0 0 0.85rem' }}>
+              <h3 style={{ fontSize: 'clamp(1.8rem, 3vw, 2.3rem)', fontWeight: 800, fontFamily: "'Space Grotesk', sans-serif", margin: '0 0 0.85rem', color: '#ffffff' }}>
                 1v1 Real-Time Multiplayer Battle Arena
               </h3>
-              <p style={{ color: '#a0a0a0', fontSize: '0.92rem', lineHeight: 1.6, margin: '0 0 1.5rem' }}>
+              <p style={{ color: '#cccccc', fontSize: '0.92rem', lineHeight: 1.6, margin: '0 0 1.5rem' }}>
                 Challenge your classmates to private duel rooms. Both players receive the exact same problem statement and test suites. The first player to get all test cases green wins the match and earns streak multipliers.
               </p>
               <button
@@ -772,16 +773,16 @@ export default function LandingPage() {
             <div style={{ background: '#000000', border: '2px solid #222222', padding: '1.25rem', fontFamily: "'JetBrains Mono', monospace", fontSize: '0.8rem' }}>
               <div style={{ display: 'flex', justifyContent: 'space-between', borderBottom: '1px solid #222', paddingBottom: '0.5rem', marginBottom: '0.75rem', color: '#0085ff' }}>
                 <span>ROOM #0429 // ACTIVE</span>
-                <span>TIME: 08:42</span>
+                <span style={{ color: '#ffffff' }}>TIME: 08:42</span>
               </div>
               <div style={{ display: 'flex', flexDirection: 'column', gap: '0.6rem' }}>
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', background: '#111', padding: '0.4rem 0.6rem' }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', background: '#111', padding: '0.4rem 0.6rem', color: '#ffffff' }}>
                   <span>Player 1: you</span>
                   <span style={{ color: '#0085ff' }}>[3/4 TESTS PASSED]</span>
                 </div>
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', background: '#111', padding: '0.4rem 0.6rem' }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', background: '#111', padding: '0.4rem 0.6rem', color: '#ffffff' }}>
                   <span>Player 2: rival_dev</span>
-                  <span style={{ color: '#888888' }}>[2/4 TESTS PASSED]</span>
+                  <span style={{ color: '#aaaaaa' }}>[2/4 TESTS PASSED]</span>
                 </div>
               </div>
             </div>
@@ -805,7 +806,7 @@ export default function LandingPage() {
           <h3 style={{ fontSize: '1.6rem', fontWeight: 800, fontFamily: "'Space Grotesk', sans-serif", margin: '0 0 0.85rem', color: '#ffffff' }}>
             Built by Seniors for Juniors
           </h3>
-          <p style={{ color: '#a0a0a0', fontSize: '0.95rem', lineHeight: 1.65, margin: '0 0 1.75rem' }}>
+          <p style={{ color: '#cccccc', fontSize: '0.95rem', lineHeight: 1.65, margin: '0 0 1.75rem' }}>
             Kick Start was built by the <strong>REstart</strong> student initiative to provide a clean, centralized learning portal. All problems, notes, and battle rooms are 100% free and open for our student community.
           </p>
           <button
@@ -835,14 +836,14 @@ export default function LandingPage() {
           borderTop: '2px solid #1a1a1a',
           padding: '2.5rem 2rem',
           textAlign: 'center',
-          color: '#777777',
+          color: '#888888',
           fontSize: '0.82rem',
           fontFamily: "'Space Grotesk', sans-serif",
           background: '#000000',
         }}
       >
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.5rem', marginBottom: '0.5rem' }}>
-          <span>Kick Start by REstart</span>
+          <span style={{ color: '#ffffff' }}>Kick Start by REstart</span>
           <span>·</span>
           <span>CS & AIML Student Portal</span>
           <span>·</span>
