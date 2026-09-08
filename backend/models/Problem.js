@@ -162,6 +162,15 @@ const ProblemSchema = new mongoose.Schema(
       ref: 'User',
     }],
 
+    // Semester field for grouping problems (1, 2, etc.)
+    semester: {
+      type: Number,
+      default: 1,
+      min: [1, 'Semester must be at least 1.'],
+      max: [8, 'Semester cannot exceed 8.'],
+      index: true,
+    },
+
     // Publish toggle
     isPublished: {
       type: Boolean,

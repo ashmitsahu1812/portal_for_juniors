@@ -37,6 +37,9 @@ export const submitQuiz = (quizId, payload) =>
   api.post(`/quizzes/${quizId}/submit`, payload).then((r) => r.data.data);
 
 // ── Problems ─────────────────────────────────────────────────────────────────
+export const fetchProblems = (semester) =>
+  api.get('/problems', { params: semester ? { semester } : {} }).then((r) => r.data.data);
+
 export const fetchProblemsByModule = (moduleId) =>
   api.get(`/problems/module/${moduleId}`).then((r) => r.data.data);
 

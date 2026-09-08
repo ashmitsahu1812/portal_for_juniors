@@ -4,6 +4,7 @@ import {
 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { useTheme } from '../context/ThemeContext';
+import { useCourse } from '../context/CourseContext';
 
 const navItems = [
   { to: '/',            icon: LayoutDashboard, label: 'Dashboard'        },
@@ -24,6 +25,7 @@ const navItems = [
 export default function Sidebar({ isOpen, onClose }) {
   const { user, logout } = useAuth();
   const { isDarkMode, toggleTheme } = useTheme();
+  const { activeSemester, activeCourse } = useCourse();
 
   return (
     <>
@@ -49,7 +51,11 @@ export default function Sidebar({ isOpen, onClose }) {
             </span>
           </div>
         </div>
-        <p style={{ marginTop: '0.25rem' }}>Semester 1 · CS Dept.</p>
+        <p style={{ marginTop: '0.25rem', display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
+          <span>Semester {activeSemester}</span>
+          <span>·</span>
+          <span>CS Dept.</span>
+        </p>
       </div>
 
       {/* Navigation */}

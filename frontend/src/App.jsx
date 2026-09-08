@@ -26,6 +26,8 @@ import Register from './pages/Register';
 import { AuthProvider, useAuth } from './context/AuthContext';
 import { ThemeProvider } from './context/ThemeContext';
 import { SocketProvider } from './context/SocketContext';
+import { CourseProvider } from './context/CourseContext';
+import CourseDropdown from './components/CourseDropdown';
 
 function ProtectedRoute({ children }) {
   const { user, loading } = useAuth();
@@ -49,29 +51,44 @@ function MainLayout({ children }) {
       <Sidebar isOpen={isSidebarOpen} onClose={() => setIsSidebarOpen(false)} />
       
       <main className="main-content">
-        {/* Mobile Top Bar */}
-        <div className="mobile-topbar">
-          <div className="mobile-topbar-brand">
-            <div style={{
-              width: 22, height: 22,
-              background: 'var(--accent-purple)',
-              border: '2px solid #000',
-              boxShadow: '2px 2px 0px 0px #000',
-              display: 'flex', alignItems: 'center', justifyContent: 'center',
-            }}>
-              <Terminal size={12} color="#fff" strokeWidth={2.5} />
-            </div>
-            <div style={{ display: 'flex', flexDirection: 'column' }}>
-              <h1 style={{ lineHeight: '1', fontSize: '1.25rem' }}>Kick Start</h1>
-              <span style={{ fontSize: '0.75rem', fontWeight: 600, letterSpacing: '0.5px' }}>
-                by <span style={{ color: 'var(--logo-blue)', fontWeight: 800 }}>RE</span><span style={{ color: 'var(--text-primary)', fontWeight: 800 }}>start</span>
-              </span>
+        {/* Global Top Bar with Course Dropdown */}
+        <header className="app-topbar">
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', flex: 1 }}>
+            <button className="mobile-menu-btn" onClick={() => setIsSidebarOpen(true)}>
+              <Menu size={20} />
+            </button>
+            <CourseDropdown />
+          </div>
+
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.65rem' }}>
+            <div
+              className="topbar-status-badge"
+              style={{
+                fontSize: '0.75rem',
+                fontWeight: 700,
+                padding: '4px 10px',
+                borderRadius: '8px',
+                background: 'rgba(0, 133, 255, 0.1)',
+                border: '1.5px solid var(--border)',
+                color: 'var(--text-primary)',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '0.4rem',
+              }}
+            >
+              <span
+                style={{
+                  width: 7,
+                  height: 7,
+                  borderRadius: '50%',
+                  background: '#10b981',
+                  boxShadow: '0 0 6px #10b981',
+                }}
+              />
+              <span className="hide-mobile">Live Portal</span>
             </div>
           </div>
-          <button className="mobile-menu-btn" onClick={() => setIsSidebarOpen(true)}>
-            <Menu size={20} />
-          </button>
-        </div>
+        </header>
 
         {children}
       </main>
@@ -83,9 +100,10 @@ export default function App() {
   return (
     <ThemeProvider>
       <AuthProvider>
-        <SocketProvider>
-          <BrowserRouter>
-          <Routes>
+        <CourseProvider>
+          <SocketProvider>
+            <BrowserRouter>
+            <Routes>
           {/* Public Auth Routes */}
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
@@ -152,9 +170,10 @@ export default function App() {
             </ProtectedRoute>
           } />
         </Routes>
-        </BrowserRouter>
-        </SocketProvider>
-      </AuthProvider>
-    </ThemeProvider>
-  );
+      </BrowserRouter>
+    </SocketProvider>
+  </CourseProvider>
+</AuthProvider>
+</ThemeProvider>
+);
 }

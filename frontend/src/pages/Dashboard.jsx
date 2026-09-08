@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { fetchModules, fetchPathways } from '../api/client';
 import { useAuth } from '../context/AuthContext';
+import { useCourse } from '../context/CourseContext';
 import { BookOpen, Code2, CheckCircle, Clock, Zap, ArrowRight, TrendingUp, Star, Target, Milestone } from 'lucide-react';
 import PomodoroWidget from '../components/PomodoroWidget';
 
@@ -28,13 +29,15 @@ export default function Dashboard() {
   const [pathways, setPathways] = useState([]);
   const [loading, setLoading] = useState(true);
   const { user } = useAuth();
+  const { activeSemester, activeCourse } = useCourse();
 
   useEffect(() => {
+    setLoading(true);
     Promise.all([
-      fetchModules(1).then(setModules),
+      fetchModules(activeSemester).then(setModules),
       fetchPathways().then(setPathways)
     ]).finally(() => setLoading(false));
-  }, []);
+  }, [activeSemester]);
 
   const quizScores = user?.progress?.quizScores || [];
   const earnedMarks = quizScores.reduce((sum, q) => sum + (q.score || 0), 0);
@@ -51,7 +54,7 @@ export default function Dashboard() {
               <Star size={20} color="var(--accent-yellow)" />
               Welcome back! 👋
             </h2>
-            <p>Your CS Semester 1 learning hub — quizzes, lectures, and coding challenges.</p>
+            <p>Your CS Semester {activeSemester} learning hub — quizzes, lectures, and coding challenges.</p>
           </div>
           <Link to="/modules" className="btn btn-primary">
             Explore Modules <ArrowRight size={15} />

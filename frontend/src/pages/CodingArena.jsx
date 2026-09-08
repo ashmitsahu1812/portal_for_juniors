@@ -2,12 +2,13 @@ import { useEffect, useState } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
-import { fetchProblem, fetchProblemsByModule, fetchModules } from '../api/client';
+import { fetchProblem, fetchProblemsByModule, fetchModules, fetchProblems } from '../api/client';
 import { useAuth } from '../context/AuthContext';
+import { useCourse } from '../context/CourseContext';
 import CodeEditor from '../components/CodeEditor';
 import {
   ArrowLeft, Code2, BookOpen, ChevronRight, Clock, Cpu,
-  Eye, EyeOff, LayoutPanelLeft, CheckCircle
+  Eye, EyeOff, LayoutPanelLeft, CheckCircle, Sparkles, Filter
 } from 'lucide-react';
 
 const diffClass = { Easy: 'badge-easy', Medium: 'badge-medium', Hard: 'badge-hard' };
@@ -89,18 +90,29 @@ export default function CodingArena() {
   const { problemId } = useParams();
   const navigate = useNavigate();
   const { user } = useAuth();
+  const { activeSemester, setSemester } = useCourse();
 
   const [problem,  setProblem]  = useState(null);
   const [allProbs, setAllProbs] = useState([]);
   const [loading,  setLoading]  = useState(true);
+  const [selectedSemFilter, setSelectedSemFilter] = useState(activeSemester);
+
+  // Sync internal filter with activeSemester when activeSemester changes from dropdown
+  useEffect(() => {
+    setSelectedSemFilter(activeSemester);
+  }, [activeSemester]);
 
   /* Load problem + sibling problem list */
   useEffect(() => {
     if (!problemId) {
-      // No problem selected — show all problems across all modules
-      fetchModules(1)
-        .then((mods) => Promise.all(mods.map((m) => fetchProblemsByModule(m._id))))
-        .then((arrays) => setAllProbs(arrays.flat()))
+      setLoading(true);
+      const semParam = selectedSemFilter === 'all' ? undefined : Number(selectedSemFilter);
+      fetchProblems(semParam)
+        .then((probs) => setAllProbs(probs || []))
+        .catch((err) => {
+          console.error("Failed to fetch problems:", err);
+          setAllProbs([]);
+        })
         .finally(() => setLoading(false));
       return;
     }
@@ -114,24 +126,104 @@ export default function CodingArena() {
         }
         return fetchProblemsByModule(p.moduleId);
       })
-      .then(setAllProbs)
+      .then((related) => setAllProbs(related || []))
       .catch((err) => {
         console.error("Failed to load problem:", err);
         setProblem(null);
       })
       .finally(() => setLoading(false));
-  }, [problemId]);
+  }, [problemId, selectedSemFilter]);
 
   /* ── No problem selected screen ─────────────────────────────────────────── */
   if (!problemId) {
     return (
       <>
         <div className="page-header">
-          <h2>
-            <Code2 size={20} style={{ display: 'inline', marginRight: '0.5rem', color: 'var(--accent-blue)' }} />
-            Coding Arena
-          </h2>
-          <p>Practice algorithmic problems with an online judge — instant feedback, all 4 languages.</p>
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '1rem' }}>
+            <div>
+              <h2>
+                <Code2 size={20} style={{ display: 'inline', marginRight: '0.5rem', color: 'var(--accent-blue)' }} />
+                Coding Arena
+              </h2>
+              <p>
+                {selectedSemFilter === 2
+                  ? 'Semester 2 algorithmic challenges, data structures & practice problem bank.'
+                  : selectedSemFilter === 1
+                  ? 'Semester 1 foundational algorithmic challenges and online judge problems.'
+                  : 'Practice algorithmic problems with instant multi-language compilation & verdicts.'}
+              </p>
+            </div>
+
+            {/* Semester Tabs */}
+            <div
+              style={{
+                display: 'flex',
+                background: 'var(--bg-elevated)',
+                border: '2px solid var(--border)',
+                borderRadius: '10px',
+                padding: '3px',
+                gap: '4px',
+              }}
+            >
+              <button
+                type="button"
+                onClick={() => {
+                  setSelectedSemFilter(2);
+                  setSemester(2);
+                }}
+                style={{
+                  padding: '6px 14px',
+                  borderRadius: '7px',
+                  border: 'none',
+                  fontSize: '0.85rem',
+                  fontWeight: 700,
+                  cursor: 'pointer',
+                  background: selectedSemFilter === 2 ? '#10b981' : 'transparent',
+                  color: selectedSemFilter === 2 ? '#fff' : 'var(--text-secondary)',
+                  transition: 'all 0.15s ease',
+                }}
+              >
+                Semester 2 🔥
+              </button>
+              <button
+                type="button"
+                onClick={() => {
+                  setSelectedSemFilter(1);
+                  setSemester(1);
+                }}
+                style={{
+                  padding: '6px 14px',
+                  borderRadius: '7px',
+                  border: 'none',
+                  fontSize: '0.85rem',
+                  fontWeight: 700,
+                  cursor: 'pointer',
+                  background: selectedSemFilter === 1 ? 'var(--accent-blue)' : 'transparent',
+                  color: selectedSemFilter === 1 ? '#fff' : 'var(--text-secondary)',
+                  transition: 'all 0.15s ease',
+                }}
+              >
+                Semester 1
+              </button>
+              <button
+                type="button"
+                onClick={() => setSelectedSemFilter('all')}
+                style={{
+                  padding: '6px 14px',
+                  borderRadius: '7px',
+                  border: 'none',
+                  fontSize: '0.85rem',
+                  fontWeight: 700,
+                  cursor: 'pointer',
+                  background: selectedSemFilter === 'all' ? 'var(--text-primary)' : 'transparent',
+                  color: selectedSemFilter === 'all' ? 'var(--bg-base)' : 'var(--text-secondary)',
+                  transition: 'all 0.15s ease',
+                }}
+              >
+                All
+              </button>
+            </div>
+          </div>
         </div>
         <div className="page-body">
           {loading ? (
@@ -139,9 +231,44 @@ export default function CodingArena() {
               {[1,2,3,4].map(i => <div key={i} className="skeleton" style={{ height: 60 }} />)}
             </div>
           ) : allProbs.length === 0 ? (
-            <div className="empty-state">
-              <Code2 size={48} />
-              <p>No problems available. Seed the database first.</p>
+            <div className="empty-state" style={{ padding: '3rem 1.5rem', textAlign: 'center' }}>
+              <div
+                style={{
+                  width: 64,
+                  height: 64,
+                  borderRadius: '16px',
+                  background: 'rgba(0, 133, 255, 0.1)',
+                  border: '2px solid var(--border)',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  margin: '0 auto 1.25rem',
+                }}
+              >
+                <Code2 size={32} color="var(--accent-blue)" />
+              </div>
+              <h3 style={{ fontSize: '1.25rem', fontWeight: 700, marginBottom: '0.5rem' }}>
+                {selectedSemFilter === 2
+                  ? 'Semester 2 Coding Arena Ready!'
+                  : 'No problems found'}
+              </h3>
+              <p style={{ maxWidth: 450, margin: '0 auto 1.5rem', color: 'var(--text-secondary)', fontSize: '0.9rem' }}>
+                {selectedSemFilter === 2
+                  ? 'Ready for your Semester 2 questions! Share the questions you would like to import, and they will be added here with full test suite coverage.'
+                  : 'No problems are available for this filter.'}
+              </p>
+              {selectedSemFilter === 2 && (
+                <button
+                  type="button"
+                  onClick={() => {
+                    setSelectedSemFilter(1);
+                    setSemester(1);
+                  }}
+                  className="btn btn-ghost btn-sm"
+                >
+                  View Semester 1 Problems
+                </button>
+              )}
             </div>
           ) : (
             <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
@@ -163,8 +290,13 @@ export default function CodingArena() {
                     </div>
                     <div style={{ flex: 1 }}>
                       <div style={{ fontWeight: 600 }}>{p.title}</div>
-                      <div style={{ display: 'flex', gap: '0.5rem', marginTop: '0.25rem' }}>
+                      <div style={{ display: 'flex', gap: '0.5rem', marginTop: '0.25rem', flexWrap: 'wrap', alignItems: 'center' }}>
                         <span className={`badge ${diffClass[p.difficulty] ?? ''}`}>{p.difficulty}</span>
+                        {p.semester && (
+                          <span style={{ fontSize: '0.72rem', color: 'var(--accent-purple)', fontWeight: 600 }}>
+                            Sem {p.semester}
+                          </span>
+                        )}
                         {p.tags?.slice(0,3).map(t => (
                           <span key={t} style={{ fontSize: '0.72rem', color: 'var(--text-muted)' }}>#{t}</span>
                         ))}

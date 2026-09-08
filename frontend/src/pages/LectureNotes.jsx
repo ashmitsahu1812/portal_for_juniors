@@ -1,18 +1,26 @@
 import { useEffect, useState, useMemo } from 'react';
 import { fetchModules } from '../api/client';
+import { useCourse } from '../context/CourseContext';
 import { BookOpen, FileText, Download, Search, PlayCircle } from 'lucide-react';
 
 export default function LectureNotes() {
+  const { activeSemester } = useCourse();
   const [modules, setModules] = useState([]);
   const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState('');
+  const [semesterFilter, setSemesterFilter] = useState(activeSemester || 'all');
+
+  useEffect(() => {
+    setSemesterFilter(activeSemester);
+  }, [activeSemester]);
 
   useEffect(() => {
     setLoading(true);
-    fetchModules()
+    const sem = semesterFilter === 'all' ? undefined : Number(semesterFilter);
+    fetchModules(sem)
       .then(setModules)
       .finally(() => setLoading(false));
-  }, []);
+  }, [semesterFilter]);
 
   // Filter out modules that have no PDFs, then filter by search query
   const modulesWithNotes = useMemo(() => {
@@ -60,6 +68,16 @@ export default function LectureNotes() {
               style={{ background: 'none', border: 'none', outline: 'none', color: 'var(--text-primary)', fontSize: '0.875rem', width: '100%' }}
             />
           </div>
+
+          <select
+            className="select-styled"
+            value={semesterFilter}
+            onChange={(e) => setSemesterFilter(e.target.value)}
+          >
+            <option value="all">All Semesters</option>
+            <option value="1">Semester 1</option>
+            <option value="2">Semester 2</option>
+          </select>
         </div>
       </div>
 

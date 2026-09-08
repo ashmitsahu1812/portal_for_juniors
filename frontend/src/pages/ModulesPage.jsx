@@ -1,13 +1,19 @@
 import { useEffect, useState } from 'react';
 import { fetchModules } from '../api/client';
+import { useCourse } from '../context/CourseContext';
 import ModuleCard from '../components/ModuleCard';
 import { BookOpen, Search, Filter } from 'lucide-react';
 
 export default function ModulesPage() {
+  const { activeSemester, setSemester: setGlobalSemester } = useCourse();
   const [modules, setModules] = useState([]);
   const [loading, setLoading] = useState(true);
   const [search, setSearch]   = useState('');
-  const [semester, setSemester] = useState('all');
+  const [semester, setSemester] = useState(activeSemester || 'all');
+
+  useEffect(() => {
+    setSemester(activeSemester);
+  }, [activeSemester]);
 
   useEffect(() => {
     const sem = semester === 'all' ? undefined : Number(semester);
