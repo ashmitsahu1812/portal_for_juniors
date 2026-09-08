@@ -799,9 +799,16 @@ code, pre, .mono { font-family: 'JetBrains Mono', monospace; }
 
 /* ── Cybernetic Animations for Landing Page & Loader ─────────────────────────── */
 @keyframes cyberScanLine {
-  0% { top: 0%; opacity: 0.8; }
-  50% { opacity: 1; }
-  100% { top: 100%; opacity: 0.2; }
+  0% { transform: translateY(-100%); opacity: 0.6; }
+  50% { opacity: 0.9; }
+  100% { transform: translateY(100vh); opacity: 0.2; }
+}
+
+@keyframes cyberLaserHorizontal {
+  0% { transform: translateX(-100%); opacity: 0; }
+  30% { opacity: 0.8; }
+  70% { opacity: 0.8; }
+  100% { transform: translateX(100vw); opacity: 0; }
 }
 
 @keyframes blink {
@@ -814,7 +821,94 @@ code, pre, .mono { font-family: 'JetBrains Mono', monospace; }
   to { opacity: 1; transform: scale(1); }
 }
 
-@keyframes pulse {
-  0%, 100% { opacity: 1; }
-  50% { opacity: 0.4; }
+@keyframes pulseSlow {
+  0%, 100% { transform: scale(1); opacity: 0.18; }
+  50% { transform: scale(1.15); opacity: 0.32; }
 }
+
+@keyframes eqBarBounce {
+  0%, 100% { height: 18%; }
+  50% { height: 95%; }
+}
+
+@keyframes marqueeScrollLeft {
+  0% { transform: translateX(0%); }
+  100% { transform: translateX(-50%); }
+}
+
+@keyframes marqueeScrollRight {
+  0% { transform: translateX(-50%); }
+  100% { transform: translateX(0%); }
+}
+
+@keyframes floatElement {
+  0%, 100% { transform: translateY(0px) rotate(0deg); }
+  50% { transform: translateY(-12px) rotate(2deg); }
+}
+
+@keyframes matrixFall {
+  0% { transform: translateY(-100%); opacity: 0; }
+  10% { opacity: 1; }
+  90% { opacity: 0.8; }
+  100% { transform: translateY(100vh); opacity: 0; }
+}
+
+/* ── Cyber Background & Marquee Utilities ────────────────────────────────────── */
+.cyber-grid-bg {
+  background-color: #000000;
+  background-image: 
+    linear-gradient(rgba(0, 133, 255, 0.08) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0, 133, 255, 0.08) 1px, transparent 1px),
+    radial-gradient(rgba(0, 133, 255, 0.18) 1px, transparent 1px);
+  background-size: 48px 48px, 48px 48px, 24px 24px;
+  background-position: 0 0, 0 0, 12px 12px;
+}
+
+.scanline-overlay {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: repeating-linear-gradient(
+    0deg,
+    rgba(0, 0, 0, 0.25) 0px,
+    rgba(0, 0, 0, 0.25) 1px,
+    transparent 1px,
+    transparent 3px
+  );
+  opacity: 0.6;
+  z-index: 2;
+}
+
+.marquee-container {
+  display: flex;
+  overflow: hidden;
+  user-select: none;
+  width: 100%;
+  white-space: nowrap;
+}
+
+.marquee-inner-left {
+  display: flex;
+  min-width: 200%;
+  animation: marqueeScrollLeft 24s linear infinite;
+}
+
+.marquee-inner-right {
+  display: flex;
+  min-width: 200%;
+  animation: marqueeScrollRight 28s linear infinite;
+}
+
+.marquee-container:hover .marquee-inner-left,
+.marquee-container:hover .marquee-inner-right {
+  animation-play-state: paused;
+}
+
+.neo-glow-blue {
+  box-shadow: 0 0 25px rgba(0, 133, 255, 0.35);
+}
+
+.neo-text-glow {
+  text-shadow: 0 0 16px rgba(0, 133, 255, 0.7), 0 0 32px rgba(0, 133, 255, 0.3);
+}
+
