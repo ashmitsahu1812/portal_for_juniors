@@ -132,6 +132,7 @@ export default function CyberLoader({ onComplete }) {
         alignItems: 'center',
         padding: '1.5rem',
         opacity: isFading ? 0 : 1,
+        pointerEvents: isFading ? 'none' : 'auto',
         transform: isFading ? 'scale(1.05)' : 'scale(1)',
         transition: 'opacity 0.35s cubic-bezier(0.16, 1, 0.3, 1), transform 0.35s cubic-bezier(0.16, 1, 0.3, 1)',
         overflow: 'hidden',

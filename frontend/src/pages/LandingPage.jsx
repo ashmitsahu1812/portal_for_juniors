@@ -45,14 +45,11 @@ export default function LandingPage() {
     setAuthModalOpen(true);
   };
 
-  if (showLoader) {
-    return <CyberLoader onComplete={handleLoaderComplete} />;
-  }
-
   return (
     <div
       className="cyber-grid-bg"
       style={{
+        background: '#000000',
         color: '#ffffff',
         minHeight: '100vh',
         fontFamily: "'Inter', sans-serif",
@@ -60,6 +57,9 @@ export default function LandingPage() {
         overflowX: 'hidden',
       }}
     >
+      {/* ── Cyber Boot Sequence Overlay (0-100% Loader) ── */}
+      {showLoader && <CyberLoader onComplete={handleLoaderComplete} />}
+
       {/* ── Interactive Cursor Glowing Spotlight ── */}
       <div
         style={{
