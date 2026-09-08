@@ -1,37 +1,21 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 
-export const COURSES = [
+export const SEMESTERS = [
   {
-    id: 'nstp25-sem2',
-    name: "NSTP'25-CS+AIML",
+    id: 'sem-2',
     semester: 2,
-    subTitle: 'Semester 2 · Data Structures, OOP & Web',
-    status: 'Enrolled',
-    icon: 'Terminal',
+    title: 'Semester 2',
+    cohort: 'CS & AIML',
+    focus: 'Data Structures, OOP in C++, DBMS & Web Dev',
+    tag: 'Current Term 🚀',
   },
   {
-    id: 'nstp25-sem1',
-    name: "NSTP'25-CS+AIML",
+    id: 'sem-1',
     semester: 1,
-    subTitle: 'Semester 1 · Python, C & Fundamentals',
-    status: 'Enrolled',
-    icon: 'Terminal',
-  },
-  {
-    id: 'webdev-netflix',
-    name: 'Web Development - Netflix Clone',
-    semester: 2,
-    subTitle: 'React, Node & Cloud Streaming',
-    status: 'Enrolled',
-    icon: 'Globe',
-  },
-  {
-    id: 'cpp-beginners',
-    name: 'C++ for Beginners',
-    semester: 1,
-    subTitle: 'Algorithms & Problem Solving',
-    status: 'Enrolled',
-    icon: 'Code2',
+    title: 'Semester 1',
+    cohort: 'CS & AIML',
+    focus: 'Problem Solving in Python, C & Web Essentials',
+    tag: 'Foundations',
   },
 ];
 
@@ -46,47 +30,27 @@ export const useCourse = () => {
 };
 
 export const CourseProvider = ({ children }) => {
-  // Read initial from localStorage or default to Sem 1 or 2
-  const [selectedCourseId, setSelectedCourseId] = useState(() => {
-    return localStorage.getItem('selected_course_id') || 'nstp25-sem2';
-  });
-
   const [activeSemester, setActiveSemester] = useState(() => {
-    const savedSem = localStorage.getItem('active_semester');
-    return savedSem ? Number(savedSem) : 2;
+    const saved = localStorage.getItem('active_semester');
+    return saved ? Number(saved) : 2;
   });
 
-  // Keep state synced with localStorage
   useEffect(() => {
-    localStorage.setItem('selected_course_id', selectedCourseId);
     localStorage.setItem('active_semester', String(activeSemester));
-  }, [selectedCourseId, activeSemester]);
+  }, [activeSemester]);
 
-  const activeCourse = COURSES.find((c) => c.id === selectedCourseId) || COURSES[0];
-
-  const selectCourse = (course) => {
-    setSelectedCourseId(course.id);
-    if (course.semester) {
-      setActiveSemester(course.semester);
-    }
-  };
+  const currentSem = SEMESTERS.find((s) => s.semester === activeSemester) || SEMESTERS[0];
 
   const setSemester = (sem) => {
-    const semNum = Number(sem);
-    setActiveSemester(semNum);
-    const matchingCourse = COURSES.find((c) => c.semester === semNum && c.id.startsWith('nstp25'));
-    if (matchingCourse) {
-      setSelectedCourseId(matchingCourse.id);
-    }
+    setActiveSemester(Number(sem));
   };
 
   return (
     <CourseContext.Provider
       value={{
-        courses: COURSES,
-        activeCourse,
+        semesters: SEMESTERS,
+        currentSem,
         activeSemester,
-        selectCourse,
         setSemester,
       }}
     >

@@ -683,31 +683,43 @@ code, pre, .mono { font-family: 'JetBrains Mono', monospace; }
 .mb-1 { margin-bottom: 0.5rem; }
 .mb-2 { margin-bottom: 1rem; }
 
-/* ── Top Bar & Header ───────────────────────────────────────────────────────── */
-.app-topbar {
-  display: flex;
+/* ── Mobile Layout & Responsive Adjustments ──────────────────────────────────── */
+
+.mobile-topbar {
+  display: none;
   align-items: center;
   justify-content: space-between;
-  padding: 0.75rem 2.5rem;
-  background: var(--bg-surface);
-  border-bottom: 2px solid var(--border);
+  padding: 1rem 1.5rem;
+  background: var(--accent-yellow);
+  border-bottom: 3px solid var(--border);
   position: sticky;
   top: 0;
   z-index: 40;
-  backdrop-filter: blur(8px);
+}
+
+.mobile-topbar-brand {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.mobile-topbar-brand h1 {
+  font-size: 1.1rem;
+  color: #000;
+  letter-spacing: -0.02em;
+  margin: 0;
 }
 
 .mobile-menu-btn {
-  display: none;
   background: var(--bg-elevated);
   border: 2px solid var(--border);
   padding: 0.4rem;
+  display: flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
   box-shadow: 2px 2px 0px 0px var(--border);
   color: var(--text-primary);
-  border-radius: 8px;
 }
 .mobile-menu-btn:active {
   transform: translate(2px, 2px);
@@ -735,16 +747,8 @@ code, pre, .mono { font-family: 'JetBrains Mono', monospace; }
 }
 
 @media (max-width: 768px) {
-  .app-topbar {
-    padding: 0.65rem 1rem;
-  }
-
-  .mobile-menu-btn {
+  .mobile-topbar {
     display: flex;
-  }
-
-  .hide-mobile {
-    display: none;
   }
 
   .main-content {

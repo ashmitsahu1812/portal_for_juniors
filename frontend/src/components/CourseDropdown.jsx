@@ -1,9 +1,9 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { ChevronDown, ChevronRight, Check, BookOpen, Layers, Sparkles } from 'lucide-react';
+import { ChevronDown, Check, Layers, Sparkles } from 'lucide-react';
 import { useCourse } from '../context/CourseContext';
 
-export default function CourseDropdown({ fullWidth = false }) {
-  const { courses, activeCourse, activeSemester, selectCourse, setSemester } = useCourse();
+export default function CourseDropdown() {
+  const { semesters, activeSemester, setSemester } = useCourse();
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef(null);
 
@@ -18,246 +18,173 @@ export default function CourseDropdown({ fullWidth = false }) {
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
 
+  const current = semesters.find((s) => s.semester === activeSemester) || semesters[0];
+
   return (
     <div
-      className="course-dropdown-container"
+      className="semester-switcher-wrapper"
       ref={dropdownRef}
-      style={{
-        position: 'relative',
-        display: fullWidth ? 'block' : 'inline-block',
-        width: fullWidth ? '100%' : 'auto',
-      }}
+      style={{ position: 'relative', width: '100%', marginTop: '0.65rem' }}
     >
-      {/* Trigger Button matching the screenshot pill */}
+      {/* Switcher Button inside Sidebar */}
       <button
         type="button"
         onClick={() => setIsOpen(!isOpen)}
-        className="course-dropdown-btn"
-        aria-expanded={isOpen}
         style={{
+          width: '100%',
           display: 'flex',
           alignItems: 'center',
-          justifyContent: fullWidth ? 'space-between' : 'flex-start',
-          gap: '0.65rem',
-          width: fullWidth ? '100%' : 'auto',
-          padding: fullWidth ? '0.55rem 0.75rem' : '0.45rem 0.95rem',
-          background: 'var(--bg-elevated)',
-          border: '2px solid var(--border-bright, #fff)',
-          borderRadius: '10px',
-          boxShadow: '2px 2px 0px 0px var(--border-bright, #fff)',
+          justifyContent: 'space-between',
+          gap: '0.5rem',
+          padding: '0.45rem 0.65rem',
+          background: 'rgba(255, 255, 255, 0.05)',
+          border: '1.5px solid rgba(255, 255, 255, 0.2)',
+          borderRadius: '8px',
           cursor: 'pointer',
-          color: 'var(--text-primary)',
-          fontSize: '0.86rem',
-          fontWeight: 600,
+          color: '#ffffff',
           fontFamily: "'Space Grotesk', sans-serif",
           transition: 'all 0.15s ease',
+          textAlign: 'left',
+        }}
+        onMouseOver={(e) => {
+          e.currentTarget.style.background = 'rgba(255, 255, 255, 0.1)';
+          e.currentTarget.style.borderColor = 'var(--accent-blue)';
+        }}
+        onMouseOut={(e) => {
+          e.currentTarget.style.background = 'rgba(255, 255, 255, 0.05)';
+          e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.2)';
         }}
       >
-        {/* Course icon matching blue shield/book style in screenshot */}
-        <div
-          style={{
-            width: 22,
-            height: 22,
-            borderRadius: 6,
-            background: 'rgba(0, 133, 255, 0.15)',
-            border: '1.5px solid var(--accent-blue)',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            color: 'var(--accent-blue)',
-            flexShrink: 0,
-          }}
-        >
-          <Layers size={13} strokeWidth={2.5} />
-        </div>
-
-        <span style={{ letterSpacing: '-0.01em', whiteSpace: 'nowrap' }}>
-          {activeCourse.name}
-          <span
+        <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', minWidth: 0 }}>
+          <div
             style={{
-              marginLeft: '0.45rem',
+              width: 20,
+              height: 20,
+              borderRadius: 4,
+              background: activeSemester === 2 ? '#10b981' : 'var(--accent-blue)',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              flexShrink: 0,
+              color: '#fff',
+              fontWeight: 800,
               fontSize: '0.72rem',
-              padding: '1px 6px',
-              borderRadius: '6px',
-              background: activeSemester === 2 ? 'rgba(16, 185, 129, 0.15)' : 'rgba(0, 133, 255, 0.15)',
-              color: activeSemester === 2 ? '#10b981' : 'var(--accent-blue)',
-              fontWeight: 700,
-              border: '1px solid currentColor',
             }}
           >
-            Sem {activeSemester}
-          </span>
-        </span>
+            {activeSemester}
+          </div>
+          <div style={{ display: 'flex', flexDirection: 'column', minWidth: 0 }}>
+            <span style={{ fontSize: '0.82rem', fontWeight: 700, lineHeight: 1.2, color: '#fff' }}>
+              Semester {activeSemester}
+            </span>
+            <span style={{ fontSize: '0.68rem', color: '#888', lineHeight: 1.2 }}>
+              CS & AIML Dept.
+            </span>
+          </div>
+        </div>
 
         <ChevronDown
-          size={16}
+          size={14}
+          color="#aaa"
           style={{
             transform: isOpen ? 'rotate(180deg)' : 'rotate(0deg)',
             transition: 'transform 0.2s ease',
-            color: 'var(--text-muted)',
-            marginLeft: '0.2rem',
+            flexShrink: 0,
           }}
         />
       </button>
 
-      {/* Popover Dropdown matching screenshot */}
+      {/* Popover Dropdown Menu */}
       {isOpen && (
         <div
-          className="course-dropdown-menu"
           style={{
             position: 'absolute',
-            top: 'calc(100% + 8px)',
+            top: 'calc(100% + 6px)',
             left: 0,
-            width: '340px',
-            maxWidth: '90vw',
-            background: 'var(--bg-card)',
-            border: '2px solid var(--border)',
-            borderRadius: '14px',
-            boxShadow: 'var(--shadow-hard, 4px 4px 0px 0px #000)',
-            padding: '1.1rem 1rem',
+            right: 0,
+            minWidth: '240px',
+            background: '#111111',
+            border: '2px solid #333333',
+            borderRadius: '10px',
+            boxShadow: '0 8px 24px rgba(0,0,0,0.8), 2px 2px 0px 0px var(--accent-blue)',
+            padding: '0.5rem',
             zIndex: 100,
             animation: 'dropdownFadeIn 0.15s ease-out',
           }}
         >
-          {/* Header Row */}
-          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '0.2rem' }}>
-            <h3 style={{ fontSize: '1.05rem', fontWeight: 700, color: 'var(--text-primary)', margin: 0 }}>
-              Your Courses
-            </h3>
-            <button
-              type="button"
-              onClick={() => setIsOpen(false)}
-              style={{
-                fontSize: '0.75rem',
-                fontWeight: 600,
-                color: 'var(--text-secondary)',
-                background: 'var(--bg-surface)',
-                border: '1px solid var(--border)',
-                borderRadius: '6px',
-                padding: '3px 8px',
-                cursor: 'pointer',
-              }}
-            >
-              Show All
-            </button>
-          </div>
-
-          <p style={{ fontSize: '0.78rem', color: 'var(--text-muted)', marginBottom: '0.9rem' }}>
-            Find your recently opened courses here
-          </p>
-
-          {/* Quick Semester Switcher Tabs */}
           <div
             style={{
-              display: 'flex',
-              gap: '0.4rem',
-              padding: '0.3rem',
-              background: 'var(--bg-surface)',
-              borderRadius: '8px',
-              border: '1px solid var(--border)',
-              marginBottom: '0.9rem',
+              fontSize: '0.68rem',
+              fontWeight: 700,
+              textTransform: 'uppercase',
+              letterSpacing: '0.08em',
+              color: '#777',
+              padding: '0.3rem 0.5rem 0.4rem',
             }}
           >
-            <button
-              type="button"
-              onClick={() => setSemester(1)}
-              style={{
-                flex: 1,
-                padding: '0.35rem 0.5rem',
-                fontSize: '0.78rem',
-                fontWeight: 700,
-                borderRadius: '6px',
-                border: activeSemester === 1 ? '1.5px solid var(--border)' : '1.5px solid transparent',
-                background: activeSemester === 1 ? 'var(--accent-blue)' : 'transparent',
-                color: activeSemester === 1 ? '#fff' : 'var(--text-secondary)',
-                cursor: 'pointer',
-                transition: 'all 0.15s ease',
-              }}
-            >
-              Semester 1
-            </button>
-            <button
-              type="button"
-              onClick={() => setSemester(2)}
-              style={{
-                flex: 1,
-                padding: '0.35rem 0.5rem',
-                fontSize: '0.78rem',
-                fontWeight: 700,
-                borderRadius: '6px',
-                border: activeSemester === 2 ? '1.5px solid var(--border)' : '1.5px solid transparent',
-                background: activeSemester === 2 ? '#10b981' : 'transparent',
-                color: activeSemester === 2 ? '#fff' : 'var(--text-secondary)',
-                cursor: 'pointer',
-                transition: 'all 0.15s ease',
-              }}
-            >
-              Semester 2 🚀
-            </button>
+            Choose Semester
           </div>
 
-          {/* Course List */}
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '0.45rem' }}>
-            {courses.map((course) => {
-              const isSelected = activeCourse.id === course.id;
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '0.35rem' }}>
+            {semesters.map((sem) => {
+              const isSelected = sem.semester === activeSemester;
               return (
                 <div
-                  key={course.id}
+                  key={sem.id}
                   onClick={() => {
-                    selectCourse(course);
+                    setSemester(sem.semester);
                     setIsOpen(false);
                   }}
                   style={{
                     display: 'flex',
-                    alignItems: 'center',
+                    alignItems: 'flex-start',
                     justifyContent: 'space-between',
-                    padding: '0.7rem 0.85rem',
-                    borderRadius: '10px',
+                    gap: '0.5rem',
+                    padding: '0.55rem 0.65rem',
+                    borderRadius: '6px',
                     cursor: 'pointer',
-                    background: isSelected ? 'rgba(0, 133, 255, 0.12)' : 'var(--bg-elevated)',
-                    border: isSelected ? '1.5px solid var(--accent-blue)' : '1px solid var(--border)',
-                    transition: 'all 0.15s ease',
+                    background: isSelected ? 'rgba(0, 133, 255, 0.15)' : 'transparent',
+                    border: isSelected ? '1px solid var(--accent-blue)' : '1px solid transparent',
+                    transition: 'all 0.12s ease',
                   }}
                   onMouseOver={(e) => {
-                    if (!isSelected) e.currentTarget.style.background = 'var(--bg-surface)';
+                    if (!isSelected) e.currentTarget.style.background = 'rgba(255,255,255,0.06)';
                   }}
                   onMouseOut={(e) => {
-                    if (!isSelected) e.currentTarget.style.background = 'var(--bg-elevated)';
+                    if (!isSelected) e.currentTarget.style.background = 'transparent';
                   }}
                 >
                   <div style={{ display: 'flex', flexDirection: 'column', gap: '0.15rem' }}>
                     <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
                       <span
                         style={{
-                          fontSize: '0.88rem',
+                          fontSize: '0.85rem',
                           fontWeight: isSelected ? 700 : 600,
-                          color: 'var(--text-primary)',
+                          color: isSelected ? '#fff' : '#ccc',
                         }}
                       >
-                        {course.name}
+                        {sem.title}
                       </span>
-                      {course.semester && (
-                        <span
-                          style={{
-                            fontSize: '0.68rem',
-                            fontWeight: 700,
-                            padding: '1px 5px',
-                            borderRadius: '4px',
-                            background: course.semester === 2 ? 'rgba(16, 185, 129, 0.15)' : 'rgba(0, 133, 255, 0.15)',
-                            color: course.semester === 2 ? '#10b981' : 'var(--accent-blue)',
-                          }}
-                        >
-                          Sem {course.semester}
-                        </span>
-                      )}
+                      <span
+                        style={{
+                          fontSize: '0.64rem',
+                          fontWeight: 700,
+                          padding: '1px 5px',
+                          borderRadius: '4px',
+                          background: sem.semester === 2 ? 'rgba(16, 185, 129, 0.2)' : 'rgba(255, 255, 255, 0.1)',
+                          color: sem.semester === 2 ? '#34d399' : '#aaa',
+                        }}
+                      >
+                        {sem.tag}
+                      </span>
                     </div>
-                    <span style={{ fontSize: '0.74rem', color: 'var(--text-muted)' }}>
-                      {course.status || 'Enrolled'}
+                    <span style={{ fontSize: '0.7rem', color: '#777', lineHeight: 1.3 }}>
+                      {sem.focus}
                     </span>
                   </div>
 
                   {isSelected && (
-                    <ChevronRight size={18} color="var(--accent-blue)" strokeWidth={2.5} />
+                    <Check size={14} color="var(--accent-blue)" strokeWidth={3} style={{ flexShrink: 0, marginTop: '2px' }} />
                   )}
                 </div>
               );
