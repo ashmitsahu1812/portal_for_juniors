@@ -1,14 +1,13 @@
 import React, { useState, useEffect } from 'react';
-import { Terminal, Shield, Cpu, Zap, ArrowRight, FastForward } from 'lucide-react';
+import { Terminal, FastForward } from 'lucide-react';
 
-const BOOT_STEPS = [
-  { text: 'BOOT_SEQUENCE::INIT_KICKSTART_OS_v2.4...', delay: 150 },
-  { text: 'VERIFYING_CS_AIML_CORE_KERNEL... [OK]', delay: 350 },
-  { text: 'MOUNTING_SEMESTER_1_AND_2_CURRICULUM_BANKS... [OK]', delay: 600 },
-  { text: 'INITIALIZING_ONLINE_JUDGE_SANDBOX (C, C++, PY, JAVA)... [READY]', delay: 850 },
-  { text: 'ESTABLISHING_1v1_MULTIPLAYER_SOCKET_RELAY... [ONLINE]', delay: 1100 },
-  { text: 'LOADING_CURATED_LECTURE_NOTES_AND_AI_QUIZZES... [MOUNTED]', delay: 1350 },
-  { text: 'SYSTEMS_NOMINAL: WELCOME CS FRESHMEN & SOPHOMORES.', delay: 1600 },
+const BOOT_LOGS = [
+  '>> INITIALIZING KICK START v2.0...',
+  '>> CONNECTING TO MONGO ATLAS DATABASE [OK]',
+  '>> LOADING SYLLABUS: SEMESTER 1 & SEMESTER 2 [OK]',
+  '>> MOUNTING ONLINE JUDGE (C, C++, PYTHON, JAVA) [READY]',
+  '>> STARTING MULTIPLAYER 1v1 BATTLE ENGINE [ONLINE]',
+  '>> READY. WELCOME JUNIORS.',
 ];
 
 export default function CyberLoader({ onComplete }) {
@@ -17,32 +16,31 @@ export default function CyberLoader({ onComplete }) {
   const [isFading, setIsFading] = useState(false);
 
   useEffect(() => {
-    // Progress increment timer
+    // Fast increment progress
     const progressInterval = setInterval(() => {
       setProgress((prev) => {
         if (prev >= 100) {
           clearInterval(progressInterval);
           return 100;
         }
-        const jump = Math.floor(Math.random() * 8) + 4;
-        return Math.min(prev + jump, 100);
+        return Math.min(prev + 12, 100);
       });
-    }, 60);
+    }, 80);
 
     // Boot logs queue
-    BOOT_STEPS.forEach((step, idx) => {
+    BOOT_LOGS.forEach((log, idx) => {
       setTimeout(() => {
-        setLogs((prev) => [...prev, step.text]);
-      }, step.delay);
+        setLogs((prev) => [...prev, log]);
+      }, (idx + 1) * 160);
     });
 
-    // Complete loader after 2.1 seconds
+    // Complete loader after 1.5 seconds total
     const finishTimeout = setTimeout(() => {
       setIsFading(true);
       setTimeout(() => {
         onComplete();
-      }, 400);
-    }, 2100);
+      }, 300);
+    }, 1500);
 
     return () => {
       clearInterval(progressInterval);
@@ -54,7 +52,7 @@ export default function CyberLoader({ onComplete }) {
     setIsFading(true);
     setTimeout(() => {
       onComplete();
-    }, 200);
+    }, 150);
   };
 
   return (
@@ -62,8 +60,8 @@ export default function CyberLoader({ onComplete }) {
       style={{
         position: 'fixed',
         inset: 0,
-        background: '#05070d',
-        color: '#00e5ff',
+        background: '#000000',
+        color: '#ffffff',
         fontFamily: "'JetBrains Mono', monospace",
         zIndex: 9999,
         display: 'flex',
@@ -72,187 +70,137 @@ export default function CyberLoader({ onComplete }) {
         alignItems: 'center',
         padding: '1.5rem',
         opacity: isFading ? 0 : 1,
-        transform: isFading ? 'scale(1.02)' : 'scale(1)',
-        transition: 'opacity 0.4s cubic-bezier(0.16, 1, 0.3, 1), transform 0.4s ease',
-        overflow: 'hidden',
+        transition: 'opacity 0.3s ease',
       }}
     >
-      {/* Background Cyber Grid */}
-      <div
-        style={{
-          position: 'absolute',
-          inset: 0,
-          backgroundImage: `
-            linear-gradient(rgba(0, 133, 255, 0.08) 1px, transparent 1px),
-            linear-gradient(90deg, rgba(0, 133, 255, 0.08) 1px, transparent 1px)
-          `,
-          backgroundSize: '40px 40px',
-          opacity: 0.6,
-          pointerEvents: 'none',
-        }}
-      />
-
-      {/* Pulsing Scan Line */}
-      <div
-        style={{
-          position: 'absolute',
-          top: 0,
-          left: 0,
-          right: 0,
-          height: '2px',
-          background: 'linear-gradient(90deg, transparent, #00e5ff, transparent)',
-          boxShadow: '0 0 15px #00e5ff',
-          animation: 'cyberScanLine 2s linear infinite',
-          pointerEvents: 'none',
-        }}
-      />
-
-      {/* Main Terminal Window */}
+      {/* Terminal Window in pure Black & Blue Neo-Brutalist style */}
       <div
         style={{
           width: '100%',
-          maxWidth: '620px',
-          background: 'rgba(10, 15, 26, 0.95)',
-          border: '2px solid rgba(0, 229, 255, 0.4)',
-          borderRadius: '12px',
-          boxShadow: '0 0 40px rgba(0, 229, 255, 0.15), 0 20px 50px rgba(0,0,0,0.8)',
-          padding: '1.75rem',
+          maxWidth: '560px',
+          background: '#0a0a0a',
+          border: '2px solid #0085ff',
+          boxShadow: '6px 6px 0px 0px #0085ff',
+          borderRadius: '0px',
+          padding: '1.5rem',
           position: 'relative',
-          backdropFilter: 'blur(10px)',
         }}
       >
-        {/* Terminal Header */}
+        {/* Top bar */}
         <div
           style={{
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'space-between',
-            borderBottom: '1px solid rgba(0, 229, 255, 0.2)',
-            paddingBottom: '0.85rem',
-            marginBottom: '1.25rem',
+            borderBottom: '2px solid #222222',
+            paddingBottom: '0.75rem',
+            marginBottom: '1rem',
           }}
         >
-          <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
             <div
               style={{
-                width: 26,
-                height: 26,
-                background: 'rgba(0, 229, 255, 0.15)',
-                border: '1px solid #00e5ff',
-                borderRadius: '6px',
+                width: 22,
+                height: 22,
+                background: '#0085ff',
+                border: '1.5px solid #000',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
               }}
             >
-              <Terminal size={14} color="#00e5ff" />
+              <Terminal size={13} color="#fff" strokeWidth={3} />
             </div>
-            <div>
-              <div style={{ fontSize: '0.85rem', fontWeight: 700, color: '#fff', letterSpacing: '0.05em' }}>
-                KICK START // RESTART
-              </div>
-              <div style={{ fontSize: '0.68rem', color: 'rgba(0, 229, 255, 0.7)' }}>
-                CS & AIML CORE ARCHITECTURE
-              </div>
-            </div>
+            <span style={{ fontSize: '0.85rem', fontWeight: 700, color: '#ffffff', letterSpacing: '0.04em' }}>
+              KICK START // RESTART
+            </span>
           </div>
 
           <button
             onClick={handleSkip}
             style={{
-              background: 'rgba(255, 255, 255, 0.06)',
-              border: '1px solid rgba(255, 255, 255, 0.2)',
-              borderRadius: '6px',
-              color: '#fff',
-              fontSize: '0.72rem',
-              padding: '4px 10px',
+              background: '#141414',
+              border: '1.5px solid #333',
+              color: '#888888',
+              fontSize: '0.7rem',
+              fontWeight: 700,
+              padding: '3px 8px',
               display: 'flex',
               alignItems: 'center',
               gap: '0.3rem',
               cursor: 'pointer',
               fontFamily: "'JetBrains Mono', monospace",
-              transition: 'all 0.15s ease',
             }}
-            onMouseOver={(e) => (e.currentTarget.style.background = 'rgba(0, 229, 255, 0.2)')}
-            onMouseOut={(e) => (e.currentTarget.style.background = 'rgba(255, 255, 255, 0.06)')}
+            onMouseOver={(e) => {
+              e.currentTarget.style.color = '#ffffff';
+              e.currentTarget.style.borderColor = '#0085ff';
+            }}
+            onMouseOut={(e) => {
+              e.currentTarget.style.color = '#888888';
+              e.currentTarget.style.borderColor = '#333';
+            }}
           >
-            SKIP <FastForward size={11} />
+            SKIP <FastForward size={10} />
           </button>
         </div>
 
-        {/* Live Logs Stream */}
+        {/* Logs */}
         <div
           style={{
-            minHeight: '140px',
-            maxHeight: '180px',
-            overflowY: 'hidden',
+            minHeight: '120px',
             display: 'flex',
             flexDirection: 'column',
-            gap: '0.45rem',
+            gap: '0.4rem',
             fontSize: '0.78rem',
             lineHeight: 1.4,
-            marginBottom: '1.5rem',
+            marginBottom: '1.25rem',
           }}
         >
           {logs.map((log, i) => (
             <div
               key={i}
               style={{
-                color: i === logs.length - 1 ? '#00e5ff' : 'rgba(255, 255, 255, 0.7)',
-                display: 'flex',
-                alignItems: 'flex-start',
-                gap: '0.5rem',
+                color: i === logs.length - 1 ? '#0085ff' : '#a0a0a0',
+                fontWeight: i === logs.length - 1 ? 700 : 400,
               }}
             >
-              <span style={{ color: '#0085ff', fontWeight: 800 }}>&gt;</span>
-              <span>{log}</span>
+              {log}
             </div>
           ))}
-          <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', color: '#00e5ff' }}>
-            <span style={{ animation: 'blink 0.8s infinite', fontWeight: 900 }}>_</span>
-          </div>
+          <div style={{ color: '#0085ff', fontWeight: 900, animation: 'blink 0.8s infinite' }}>_</div>
         </div>
 
-        {/* Progress Bar & Status */}
+        {/* Progress Bar */}
         <div>
           <div
             style={{
               display: 'flex',
-              alignItems: 'center',
               justifyContent: 'space-between',
-              fontSize: '0.75rem',
+              fontSize: '0.72rem',
               fontWeight: 700,
-              color: '#fff',
-              marginBottom: '0.5rem',
+              color: '#888888',
+              marginBottom: '0.4rem',
+              textTransform: 'uppercase',
             }}
           >
-            <span style={{ display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
-              <Cpu size={14} color="#00e5ff" />
-              SYNCHRONIZING PORTAL ASSETS
-            </span>
-            <span style={{ color: '#00e5ff', letterSpacing: '0.05em' }}>{progress}%</span>
+            <span>BOOTING SYSTEM</span>
+            <span style={{ color: '#0085ff' }}>{progress}%</span>
           </div>
-
-          {/* Glowing Track */}
           <div
             style={{
               width: '100%',
-              height: '8px',
-              background: 'rgba(255, 255, 255, 0.08)',
-              borderRadius: '4px',
+              height: '6px',
+              background: '#1a1a1a',
+              border: '1px solid #333333',
               overflow: 'hidden',
-              position: 'relative',
-              border: '1px solid rgba(0, 229, 255, 0.2)',
             }}
           >
             <div
               style={{
                 width: `${progress}%`,
                 height: '100%',
-                background: 'linear-gradient(90deg, #0085ff, #00e5ff, #10b981)',
-                boxShadow: '0 0 12px #00e5ff',
+                background: '#0085ff',
                 transition: 'width 0.1s ease-out',
-                borderRadius: '4px',
               }}
             />
           </div>

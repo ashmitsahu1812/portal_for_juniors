@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
-import { Play, CheckCircle2, Terminal, Code2, Clock, Cpu, Sparkles, RefreshCw, Layers } from 'lucide-react';
+import { Play, CheckCircle2, Clock, Cpu, RefreshCw } from 'lucide-react';
 
 const SNIPPETS = {
   python: {
-    lang: 'Python 3',
+    lang: 'Python',
     code: `def find_target_pair(arr, target):
     # Hash map for O(n) optimal lookup
     seen = {}
@@ -14,7 +14,7 @@ const SNIPPETS = {
         seen[num] = i
     return []
 
-# Test execution with Judge sandbox
+# Executing test in sandboxed judge
 arr = [2, 7, 11, 15]
 target = 9
 print(find_target_pair(arr, target))`,
@@ -23,7 +23,7 @@ print(find_target_pair(arr, target))`,
     memory: '14.1 MB',
   },
   cpp: {
-    lang: 'C++ 20',
+    lang: 'C++',
     code: `#include <iostream>
 #include <vector>
 #include <unordered_map>
@@ -50,7 +50,7 @@ int main() {
     memory: '8.4 MB',
   },
   java: {
-    lang: 'Java 17',
+    lang: 'Java',
     code: `import java.util.*;
 
 public class Solution {
@@ -81,7 +81,6 @@ export default function InteractiveJudgeDemo() {
   const [selectedLang, setSelectedLang] = useState('python');
   const [isRunning, setIsRunning] = useState(false);
   const [hasRun, setHasRun] = useState(false);
-  const [activeTab, setActiveTab] = useState('test1');
 
   const current = SNIPPETS[selectedLang];
 
@@ -91,16 +90,15 @@ export default function InteractiveJudgeDemo() {
     setTimeout(() => {
       setIsRunning(false);
       setHasRun(true);
-    }, 750);
+    }, 600);
   };
 
   return (
     <div
       style={{
-        background: '#0a0d14',
-        border: '2px solid rgba(0, 133, 255, 0.4)',
-        borderRadius: '16px',
-        boxShadow: '0 20px 50px rgba(0,0,0,0.6), 0 0 30px rgba(0, 133, 255, 0.1)',
+        background: '#0d0d0d',
+        border: '3px solid #0085ff',
+        boxShadow: '6px 6px 0px 0px #0085ff',
         overflow: 'hidden',
         fontFamily: "'Space Grotesk', sans-serif",
       }}
@@ -111,20 +109,14 @@ export default function InteractiveJudgeDemo() {
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'space-between',
-          padding: '0.75rem 1.25rem',
-          background: '#101522',
-          borderBottom: '1px solid rgba(255, 255, 255, 0.1)',
+          padding: '0.65rem 1rem',
+          background: '#000000',
+          borderBottom: '2px solid #222222',
           flexWrap: 'wrap',
-          gap: '0.75rem',
+          gap: '0.5rem',
         }}
       >
-        <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-          <div style={{ display: 'flex', gap: '6px', marginRight: '0.5rem' }}>
-            <span style={{ width: 10, height: 10, borderRadius: '50%', background: '#ef4444' }} />
-            <span style={{ width: 10, height: 10, borderRadius: '50%', background: '#f59e0b' }} />
-            <span style={{ width: 10, height: 10, borderRadius: '50%', background: '#10b981' }} />
-          </div>
-
+        <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
           {Object.entries(SNIPPETS).map(([key, data]) => (
             <button
               key={key}
@@ -134,14 +126,14 @@ export default function InteractiveJudgeDemo() {
               }}
               style={{
                 padding: '4px 10px',
-                borderRadius: '6px',
-                fontSize: '0.78rem',
+                fontSize: '0.8rem',
                 fontWeight: 700,
                 cursor: 'pointer',
-                border: selectedLang === key ? '1px solid var(--accent-blue)' : '1px solid transparent',
-                background: selectedLang === key ? 'rgba(0, 133, 255, 0.2)' : 'transparent',
-                color: selectedLang === key ? '#00e5ff' : '#888',
-                transition: 'all 0.15s ease',
+                border: selectedLang === key ? '2px solid #0085ff' : '2px solid #222',
+                background: selectedLang === key ? '#0085ff' : '#141414',
+                color: '#ffffff',
+                fontFamily: "'Space Grotesk', sans-serif",
+                transition: 'all 0.1s ease',
               }}
             >
               {data.lang}
@@ -156,19 +148,16 @@ export default function InteractiveJudgeDemo() {
             display: 'flex',
             alignItems: 'center',
             gap: '0.4rem',
-            padding: '6px 14px',
-            background: 'linear-gradient(135deg, #0085ff, #00e5ff)',
-            border: 'none',
-            borderRadius: '8px',
-            color: '#000',
+            padding: '5px 12px',
+            background: '#0085ff',
+            border: '2px solid #000000',
+            boxShadow: '2px 2px 0px 0px #000000',
+            color: '#ffffff',
             fontWeight: 800,
             fontSize: '0.82rem',
             cursor: isRunning ? 'not-allowed' : 'pointer',
-            boxShadow: '0 0 15px rgba(0, 229, 255, 0.4)',
-            transition: 'transform 0.1s ease',
+            fontFamily: "'Space Grotesk', sans-serif",
           }}
-          onMouseDown={(e) => (e.currentTarget.style.transform = 'scale(0.96)')}
-          onMouseUp={(e) => (e.currentTarget.style.transform = 'scale(1)')}
         >
           {isRunning ? (
             <>
@@ -177,93 +166,90 @@ export default function InteractiveJudgeDemo() {
             </>
           ) : (
             <>
-              <Play size={13} fill="#000" />
+              <Play size={13} fill="#fff" />
               RUN ONLINE JUDGE
             </>
           )}
         </button>
       </div>
 
-      {/* Editor & Output Split */}
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr', gap: '0' }}>
-        {/* Code Area */}
-        <div
-          style={{
-            padding: '1.25rem',
-            background: '#07090e',
-            fontFamily: "'JetBrains Mono', monospace",
-            fontSize: '0.82rem',
-            lineHeight: 1.6,
-            color: '#cbd5e1',
-            overflowX: 'auto',
-            maxHeight: '260px',
-            borderBottom: '1px solid rgba(255, 255, 255, 0.08)',
-          }}
-        >
-          <pre style={{ margin: 0 }}>
-            <code>{current.code}</code>
-          </pre>
+      {/* Code Editor Preview */}
+      <div
+        style={{
+          padding: '1rem',
+          background: '#050505',
+          fontFamily: "'JetBrains Mono', monospace",
+          fontSize: '0.82rem',
+          lineHeight: 1.6,
+          color: '#e2e8f0',
+          overflowX: 'auto',
+          maxHeight: '250px',
+          borderBottom: '2px solid #222222',
+        }}
+      >
+        <pre style={{ margin: 0 }}>
+          <code>{current.code}</code>
+        </pre>
+      </div>
+
+      {/* Output Console Box */}
+      <div style={{ padding: '0.85rem 1rem', background: '#0d0d0d' }}>
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '0.4rem' }}>
+          <span style={{ fontSize: '0.72rem', fontWeight: 700, color: '#888888', textTransform: 'uppercase', letterSpacing: '0.06em' }}>
+            Verdict Console
+          </span>
+
+          {hasRun && (
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem', fontSize: '0.75rem', fontWeight: 700 }}>
+              <span style={{ display: 'flex', alignItems: 'center', gap: '0.2rem', color: '#a0a0a0' }}>
+                <Clock size={11} /> {current.runtime}
+              </span>
+              <span style={{ display: 'flex', alignItems: 'center', gap: '0.2rem', color: '#a0a0a0' }}>
+                <Cpu size={11} /> {current.memory}
+              </span>
+              <span
+                style={{
+                  background: '#0085ff',
+                  color: '#ffffff',
+                  padding: '1px 6px',
+                  fontWeight: 800,
+                  fontSize: '0.7rem',
+                  border: '1px solid #000',
+                }}
+              >
+                ACCEPTED
+              </span>
+            </div>
+          )}
         </div>
 
-        {/* Live Judge Output Box */}
-        <div style={{ padding: '1rem 1.25rem', background: '#0e131f' }}>
-          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '0.6rem' }}>
-            <span style={{ fontSize: '0.72rem', fontWeight: 700, color: '#888', textTransform: 'uppercase', letterSpacing: '0.08em' }}>
-              Online Sandbox Execution
-            </span>
-
-            {hasRun && (
-              <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', fontSize: '0.75rem', color: '#10b981', fontWeight: 700 }}>
-                <span style={{ display: 'flex', alignItems: 'center', gap: '0.25rem' }}>
-                  <Clock size={12} /> {current.runtime}
-                </span>
-                <span style={{ display: 'flex', alignItems: 'center', gap: '0.25rem' }}>
-                  <Cpu size={12} /> {current.memory}
-                </span>
-                <span
-                  style={{
-                    background: 'rgba(16, 185, 129, 0.2)',
-                    color: '#10b981',
-                    padding: '2px 6px',
-                    borderRadius: '4px',
-                    border: '1px solid #10b981',
-                  }}
-                >
-                  ACCEPTED (100%)
-                </span>
+        <div
+          style={{
+            background: '#000000',
+            border: '2px solid #222222',
+            padding: '0.6rem 0.85rem',
+            fontFamily: "'JetBrains Mono', monospace",
+            fontSize: '0.78rem',
+            color: hasRun ? '#0085ff' : '#666666',
+            minHeight: '40px',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+          }}
+        >
+          {isRunning ? (
+            <span style={{ color: '#0085ff' }}>Executing against hidden test cases...</span>
+          ) : hasRun ? (
+            <>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                <CheckCircle2 size={15} color="#0085ff" />
+                <span>Output: <strong style={{ color: '#fff' }}>{current.output}</strong> (All 5/5 cases passed)</span>
               </div>
-            )}
-          </div>
-
-          <div
-            style={{
-              background: '#06080d',
-              border: '1px solid rgba(255, 255, 255, 0.1)',
-              borderRadius: '8px',
-              padding: '0.75rem 1rem',
-              fontFamily: "'JetBrains Mono', monospace",
-              fontSize: '0.78rem',
-              color: hasRun ? '#10b981' : '#64748b',
-              minHeight: '44px',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'space-between',
-            }}
-          >
-            {isRunning ? (
-              <span style={{ color: '#00e5ff' }}>Executing in isolated Docker container...</span>
-            ) : hasRun ? (
-              <>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                  <CheckCircle2 size={16} color="#10b981" />
-                  <span>Output: <strong>{current.output}</strong> — All 5 Hidden Cases Passed!</span>
-                </div>
-                <span style={{ color: '#00e5ff', fontSize: '0.7rem' }}>Verdict: Correct Answer</span>
-              </>
-            ) : (
-              <span>Click "RUN ONLINE JUDGE" to test real-time code evaluation.</span>
-            )}
-          </div>
+              <span style={{ color: '#0085ff', fontWeight: 700, fontSize: '0.7rem' }}>Verdict: Correct</span>
+            </>
+          ) : (
+            <span>Click "RUN ONLINE JUDGE" to simulate execution.</span>
+          )}
         </div>
       </div>
     </div>

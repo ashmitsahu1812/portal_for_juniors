@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import { GoogleLogin } from '@react-oauth/google';
-import { LogIn, Lock, Mail, User, X, ArrowRight, ShieldCheck } from 'lucide-react';
+import { Lock, Mail, User, X, ArrowRight } from 'lucide-react';
 
 export default function AuthModal({ isOpen, onClose, initialMode = 'login' }) {
   const [mode, setMode] = useState(initialMode); // 'login' | 'register'
@@ -59,30 +59,28 @@ export default function AuthModal({ isOpen, onClose, initialMode = 'login' }) {
       style={{
         position: 'fixed',
         inset: 0,
-        background: 'rgba(0, 0, 0, 0.75)',
-        backdropFilter: 'blur(8px)',
+        background: 'rgba(0, 0, 0, 0.85)',
         zIndex: 10000,
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
         padding: '1rem',
-        animation: 'fadeIn 0.2s ease-out',
       }}
       onClick={(e) => {
         if (e.target === e.currentTarget) onClose();
       }}
     >
       <div
-        className="card"
         style={{
           width: '100%',
-          maxWidth: '440px',
-          background: '#0d1117',
-          border: '2px solid var(--accent-blue)',
-          borderRadius: '16px',
-          boxShadow: '0 25px 50px -12px rgba(0, 133, 255, 0.25), 0 0 0 1px rgba(0, 133, 255, 0.2)',
+          maxWidth: '420px',
+          background: '#0a0a0a',
+          border: '3px solid #0085ff',
+          boxShadow: '6px 6px 0px 0px #0085ff',
           padding: '2rem',
           position: 'relative',
+          color: '#ffffff',
+          fontFamily: "'Space Grotesk', sans-serif",
         }}
       >
         {/* Close button */}
@@ -90,31 +88,28 @@ export default function AuthModal({ isOpen, onClose, initialMode = 'login' }) {
           onClick={onClose}
           style={{
             position: 'absolute',
-            top: '1.25rem',
-            right: '1.25rem',
-            background: 'rgba(255, 255, 255, 0.08)',
-            border: '1px solid rgba(255, 255, 255, 0.2)',
-            borderRadius: '8px',
-            padding: '4px',
-            color: '#aaa',
+            top: '1rem',
+            right: '1rem',
+            background: '#141414',
+            border: '2px solid #333',
+            color: '#fff',
             cursor: 'pointer',
+            padding: '4px',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
           }}
         >
-          <X size={18} />
+          <X size={16} />
         </button>
 
         {/* Tab switcher */}
         <div
           style={{
             display: 'flex',
-            background: 'rgba(255, 255, 255, 0.05)',
-            border: '1px solid rgba(255, 255, 255, 0.1)',
-            borderRadius: '10px',
-            padding: '3px',
-            marginBottom: '1.75rem',
+            border: '2px solid #222222',
+            background: '#000000',
+            marginBottom: '1.5rem',
           }}
         >
           <button
@@ -126,14 +121,13 @@ export default function AuthModal({ isOpen, onClose, initialMode = 'login' }) {
             style={{
               flex: 1,
               padding: '0.5rem',
-              borderRadius: '8px',
               border: 'none',
               fontSize: '0.85rem',
               fontWeight: 700,
               cursor: 'pointer',
-              background: mode === 'login' ? 'var(--accent-blue)' : 'transparent',
-              color: mode === 'login' ? '#fff' : '#888',
-              transition: 'all 0.15s ease',
+              background: mode === 'login' ? '#0085ff' : 'transparent',
+              color: mode === 'login' ? '#ffffff' : '#888888',
+              fontFamily: "'Space Grotesk', sans-serif",
             }}
           >
             Sign In
@@ -147,51 +141,49 @@ export default function AuthModal({ isOpen, onClose, initialMode = 'login' }) {
             style={{
               flex: 1,
               padding: '0.5rem',
-              borderRadius: '8px',
               border: 'none',
               fontSize: '0.85rem',
               fontWeight: 700,
               cursor: 'pointer',
-              background: mode === 'register' ? 'var(--accent-blue)' : 'transparent',
-              color: mode === 'register' ? '#fff' : '#888',
-              transition: 'all 0.15s ease',
+              background: mode === 'register' ? '#0085ff' : 'transparent',
+              color: mode === 'register' ? '#ffffff' : '#888888',
+              fontFamily: "'Space Grotesk', sans-serif",
             }}
           >
             Create Account
           </button>
         </div>
 
-        <div style={{ textAlign: 'center', marginBottom: '1.5rem' }}>
-          <h2 style={{ fontSize: '1.4rem', fontWeight: 800, color: '#fff', letterSpacing: '-0.02em' }}>
-            {mode === 'login' ? 'Welcome Back, Junior!' : 'Join the CS Accelerator'}
+        <div style={{ marginBottom: '1.25rem' }}>
+          <h2 style={{ fontSize: '1.35rem', fontWeight: 700, color: '#ffffff', letterSpacing: '-0.02em', margin: 0 }}>
+            {mode === 'login' ? 'Welcome Back' : 'Join Portal'}
           </h2>
-          <p style={{ color: '#888', fontSize: '0.84rem', marginTop: '0.35rem' }}>
+          <p style={{ color: '#888888', fontSize: '0.82rem', marginTop: '0.25rem' }}>
             {mode === 'login'
-              ? 'Access your coding progress, lecture notes, and quizzes.'
-              : 'Create your free account and start practicing algorithms.'}
+              ? 'Enter your credentials to access your coding dashboard.'
+              : 'Create your account to start solving problems and taking quizzes.'}
           </p>
         </div>
 
         {error && (
           <div
             style={{
-              background: 'rgba(239, 68, 68, 0.15)',
-              color: '#f87171',
-              padding: '0.65rem 0.9rem',
-              borderRadius: '8px',
-              fontSize: '0.82rem',
-              marginBottom: '1.25rem',
-              border: '1px solid rgba(239, 68, 68, 0.3)',
+              background: 'rgba(239, 68, 68, 0.1)',
+              color: '#ef4444',
+              padding: '0.6rem 0.8rem',
+              fontSize: '0.8rem',
+              marginBottom: '1rem',
+              border: '1px solid #ef4444',
             }}
           >
             {error}
           </div>
         )}
 
-        <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '0.9rem' }}>
+        <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '0.85rem' }}>
           {mode === 'register' && (
             <div>
-              <label style={{ display: 'block', fontSize: '0.78rem', fontWeight: 700, color: '#aaa', marginBottom: '0.3rem' }}>
+              <label style={{ display: 'block', fontSize: '0.75rem', fontWeight: 700, color: '#aaaaaa', marginBottom: '0.25rem', textTransform: 'uppercase' }}>
                 Full Name
               </label>
               <div
@@ -199,10 +191,9 @@ export default function AuthModal({ isOpen, onClose, initialMode = 'login' }) {
                   display: 'flex',
                   alignItems: 'center',
                   gap: '0.5rem',
-                  background: '#161b22',
-                  border: '1px solid #30363d',
-                  borderRadius: '8px',
-                  padding: '0.55rem 0.85rem',
+                  background: '#141414',
+                  border: '2px solid #333333',
+                  padding: '0.55rem 0.75rem',
                 }}
               >
                 <User size={15} color="#888" />
@@ -219,6 +210,7 @@ export default function AuthModal({ isOpen, onClose, initialMode = 'login' }) {
                     color: '#fff',
                     width: '100%',
                     fontSize: '0.875rem',
+                    fontFamily: 'inherit',
                   }}
                 />
               </div>
@@ -226,18 +218,17 @@ export default function AuthModal({ isOpen, onClose, initialMode = 'login' }) {
           )}
 
           <div>
-            <label style={{ display: 'block', fontSize: '0.78rem', fontWeight: 700, color: '#aaa', marginBottom: '0.3rem' }}>
-              University / Personal Email
+            <label style={{ display: 'block', fontSize: '0.75rem', fontWeight: 700, color: '#aaaaaa', marginBottom: '0.25rem', textTransform: 'uppercase' }}>
+              Email
             </label>
             <div
               style={{
                 display: 'flex',
                 alignItems: 'center',
                 gap: '0.5rem',
-                background: '#161b22',
-                border: '1px solid #30363d',
-                borderRadius: '8px',
-                padding: '0.55rem 0.85rem',
+                background: '#141414',
+                border: '2px solid #333333',
+                padding: '0.55rem 0.75rem',
               }}
             >
               <Mail size={15} color="#888" />
@@ -246,7 +237,7 @@ export default function AuthModal({ isOpen, onClose, initialMode = 'login' }) {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 required
-                placeholder="junior@university.edu"
+                placeholder="student@university.edu"
                 style={{
                   background: 'none',
                   border: 'none',
@@ -254,13 +245,14 @@ export default function AuthModal({ isOpen, onClose, initialMode = 'login' }) {
                   color: '#fff',
                   width: '100%',
                   fontSize: '0.875rem',
+                  fontFamily: 'inherit',
                 }}
               />
             </div>
           </div>
 
           <div>
-            <label style={{ display: 'block', fontSize: '0.78rem', fontWeight: 700, color: '#aaa', marginBottom: '0.3rem' }}>
+            <label style={{ display: 'block', fontSize: '0.75rem', fontWeight: 700, color: '#aaaaaa', marginBottom: '0.25rem', textTransform: 'uppercase' }}>
               Password
             </label>
             <div
@@ -268,10 +260,9 @@ export default function AuthModal({ isOpen, onClose, initialMode = 'login' }) {
                 display: 'flex',
                 alignItems: 'center',
                 gap: '0.5rem',
-                background: '#161b22',
-                border: '1px solid #30363d',
-                borderRadius: '8px',
-                padding: '0.55rem 0.85rem',
+                background: '#141414',
+                border: '2px solid #333333',
+                padding: '0.55rem 0.75rem',
               }}
             >
               <Lock size={15} color="#888" />
@@ -288,6 +279,7 @@ export default function AuthModal({ isOpen, onClose, initialMode = 'login' }) {
                   color: '#fff',
                   width: '100%',
                   fontSize: '0.875rem',
+                  fontFamily: 'inherit',
                 }}
               />
             </div>
@@ -298,32 +290,32 @@ export default function AuthModal({ isOpen, onClose, initialMode = 'login' }) {
             disabled={loading}
             style={{
               width: '100%',
-              padding: '0.7rem',
-              borderRadius: '8px',
-              border: 'none',
-              background: 'linear-gradient(135deg, #0085ff, #00e5ff)',
-              color: '#000',
+              padding: '0.65rem',
+              border: '2px solid #000000',
+              background: '#0085ff',
+              color: '#ffffff',
               fontWeight: 800,
               fontSize: '0.9rem',
               cursor: loading ? 'not-allowed' : 'pointer',
-              marginTop: '0.5rem',
+              marginTop: '0.35rem',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
               gap: '0.4rem',
-              boxShadow: '0 0 15px rgba(0, 133, 255, 0.4)',
+              boxShadow: '3px 3px 0px 0px #000000',
+              fontFamily: "'Space Grotesk', sans-serif",
             }}
           >
-            {loading ? 'Authenticating...' : mode === 'login' ? 'Sign In to Portal' : 'Create Free Account'}
+            {loading ? 'Authenticating...' : mode === 'login' ? 'Sign In' : 'Create Account'}
             {!loading && <ArrowRight size={15} />}
           </button>
         </form>
 
         {/* Divider */}
         <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', margin: '1.25rem 0' }}>
-          <div style={{ flex: 1, height: 1, background: '#30363d' }} />
-          <span style={{ fontSize: '0.72rem', color: '#666', textTransform: 'uppercase' }}>or quick 1-tap</span>
-          <div style={{ flex: 1, height: 1, background: '#30363d' }} />
+          <div style={{ flex: 1, height: 1, background: '#222' }} />
+          <span style={{ fontSize: '0.7rem', color: '#666', textTransform: 'uppercase' }}>or</span>
+          <div style={{ flex: 1, height: 1, background: '#222' }} />
         </div>
 
         {/* Google Sign-In */}
@@ -333,8 +325,8 @@ export default function AuthModal({ isOpen, onClose, initialMode = 'login' }) {
             onError={() => setError('Google Sign-In failed. Please try again.')}
             theme="filled_black"
             shape="rectangular"
-            width="370"
-            text="continue_with"
+            width="350"
+            text="signin_with"
           />
         </div>
       </div>
