@@ -2,13 +2,15 @@ import React, { useState, useEffect, useRef } from 'react';
 import { Terminal, FastForward, Cpu, Radio, ShieldCheck, Zap } from 'lucide-react';
 
 const BOOT_LOGS = [
-  { at: 5, msg: '[0.012s] KERNEL_INIT // Booting isolated v8 sandbox runtime...' },
-  { at: 18, msg: '[0.048s] SYLLABUS_PACK // Loading Semester 1 (18 modules, 97 problems)...' },
-  { at: 35, msg: '[0.092s] SEM2_MOUNT // Initializing DSA, OOP C++, DBMS, Web tracks...' },
-  { at: 55, msg: '[0.145s] SANDBOX_ENGINE // Linking C++, Python, C, Java compilers...' },
-  { at: 72, msg: '[0.201s] MULTIPLAYER_NET // Initializing 1v1 Battle Arena matchmaking...' },
-  { at: 88, msg: '[0.264s] AUTH_GATEWAY // Secure student token handshake established [OK]' },
-  { at: 98, msg: '[0.310s] SYSTEM_ONLINE // All subsystems nominal. Entering Portal...' },
+  { at: 3, msg: '[0.012s] KERNEL_INIT // Booting isolated v8 sandbox runtime...' },
+  { at: 14, msg: '[0.048s] MEMORY_POOL // Allocating isolated Docker worker processes...' },
+  { at: 28, msg: '[0.092s] SYLLABUS_PACK // Loading Semester 1 (18 modules, 97 problems)...' },
+  { at: 42, msg: '[0.145s] SEM2_MOUNT // Mounting DSA, OOP C++, DBMS, Web tracks...' },
+  { at: 58, msg: '[0.201s] SANDBOX_ENGINE // Linking C++, Python, C, Java compilers [OK]' },
+  { at: 72, msg: '[0.264s] MULTIPLAYER_NET // Initializing 1v1 Battle Arena matchmaking...' },
+  { at: 84, msg: '[0.318s] LEADERBOARD_DB // Syncing global streak metrics & duels...' },
+  { at: 94, msg: '[0.372s] AUTH_GATEWAY // Secure student token handshake established [OK]' },
+  { at: 100, msg: '[0.420s] SYSTEM_ONLINE // All subsystems nominal. Entering Portal...' },
 ];
 
 export default function CyberLoader({ onComplete }) {
@@ -73,12 +75,21 @@ export default function CyberLoader({ onComplete }) {
     };
   }, []);
 
-  // 0-100% Counter & Kernel Log Progress
+  // 0-100% Counter & Kernel Log Progress (Cinematic ~3.8s total duration)
   useEffect(() => {
     let curr = 0;
     const interval = setInterval(() => {
-      // Dynamic funky stepping: fast bursts with micro pauses
-      const step = Math.random() > 0.7 ? Math.floor(Math.random() * 8) + 4 : Math.floor(Math.random() * 4) + 1;
+      // Smooth dynamic cyber cadence: step mostly +1 or +2 with occasional brief burst
+      const rand = Math.random();
+      let step = 1;
+      if (rand > 0.85) {
+        step = Math.floor(Math.random() * 3) + 2; // small burst
+      } else if (rand < 0.15) {
+        step = 0; // micro pause for realistic cyber feel
+      } else {
+        step = Math.floor(Math.random() * 2) + 1; // standard step (+1 or +2)
+      }
+
       curr = Math.min(curr + step, 100);
       setProgress(curr);
 
@@ -92,10 +103,10 @@ export default function CyberLoader({ onComplete }) {
           setIsFading(true);
           setTimeout(() => {
             onComplete();
-          }, 350);
-        }, 300);
+          }, 400);
+        }, 500);
       }
-    }, 45);
+    }, 40);
 
     return () => clearInterval(interval);
   }, [onComplete]);
