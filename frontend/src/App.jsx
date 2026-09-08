@@ -23,6 +23,7 @@ import Settings from './pages/Settings';
 import Profile from './pages/Profile';
 import Login from './pages/Login';
 import Register from './pages/Register';
+import LandingPage from './pages/LandingPage';
 import { AuthProvider, useAuth } from './context/AuthContext';
 import { ThemeProvider } from './context/ThemeContext';
 import { SocketProvider } from './context/SocketContext';
@@ -31,7 +32,7 @@ import { CourseProvider } from './context/CourseContext';
 function ProtectedRoute({ children }) {
   const { user, loading } = useAuth();
   if (loading) return <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '100vh', color: 'var(--text-secondary)' }}>Loading session...</div>;
-  if (!user) return <Navigate to="/login" replace />;
+  if (!user) return <LandingPage />;
   return children;
 }
 
@@ -88,9 +89,10 @@ export default function App() {
           <SocketProvider>
             <BrowserRouter>
             <Routes>
-          {/* Public Auth Routes */}
-          <Route path="/login" element={<Login />} />
-          <Route path="/register" element={<Register />} />
+          {/* Public Landing & Auth Routes */}
+          <Route path="/landing" element={<LandingPage />} />
+          <Route path="/login" element={<LandingPage />} />
+          <Route path="/register" element={<LandingPage />} />
 
           {/* Protected Routes */}
           <Route path="/*" element={
