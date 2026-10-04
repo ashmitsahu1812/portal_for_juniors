@@ -59,13 +59,15 @@ export default function ModuleCard({ module }) {
         >
           View Details
         </Link>
-        <Link
-          to={`/modules/${module._id}/quiz`}
-          className={isCompleted ? "btn btn-success btn-sm" : "btn btn-primary btn-sm"}
-          style={{ flex: 1, justifyContent: 'center' }}
-        >
-          {isCompleted ? 'Retake Quiz' : 'Take Quiz'}
-        </Link>
+        {module.title !== 'MID SEM GUIDE' && (
+          <Link
+            to={`/modules/${module._id}/quiz`}
+            className={isCompleted ? "btn btn-success btn-sm" : "btn btn-primary btn-sm"}
+            style={{ flex: 1, justifyContent: 'center' }}
+          >
+            {isCompleted ? 'Retake Quiz' : 'Take Quiz'}
+          </Link>
+        )}
       </div>
     </div>
   );

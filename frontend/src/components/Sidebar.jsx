@@ -29,8 +29,14 @@ export default function Sidebar({ isOpen, onClose }) {
   const { user, logout } = useAuth();
   const { isDarkMode, toggleTheme } = useTheme();
   const { activeSemester, activeCourse } = useCourse();
+  const [midSemId, setMidSemId] = useState(null);
 
-  const midSemId = '6ac22236ee8f10c7beffa2ac';
+  useEffect(() => {
+    fetchModules().then(mods => {
+      const mid = mods.find(m => m.title && m.title.toUpperCase().includes('MID SEM'));
+      if (mid) setMidSemId(mid._id);
+    }).catch(console.error);
+  }, []);
 
   return (
     <>
