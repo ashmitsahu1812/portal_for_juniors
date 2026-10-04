@@ -122,6 +122,7 @@ export default function ModuleDetail() {
             </div>
           </div>
         )}
+        </div>
       </div>
     </>
   );
