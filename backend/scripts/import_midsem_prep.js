@@ -50,17 +50,17 @@ const seedMidSemPrep = async () => {
     console.log('✅ Connected to MongoDB...');
 
     // Find or create the module
-    let parentModule = await Module.findOne({ title: "Mid sem prep guide" });
+    let parentModule = await Module.findOne({ title: "End semester prep guide" });
     if (!parentModule) {
       parentModule = new Module({
-        title: "Mid sem prep guide",
-        description: "Preparation guide and practice questions for Mid Semester Exams.",
+        title: "End semester prep guide",
+        description: "Preparation guide and practice questions for End Semester Exams.",
         semester: 1,
         isPublished: true,
         order: 10
       });
       await parentModule.save();
-      console.log('✅ Created "Mid sem prep guide" module.');
+      console.log('✅ Created "End semester prep guide" module.');
     }
 
     for (const p of rawProblems) {
