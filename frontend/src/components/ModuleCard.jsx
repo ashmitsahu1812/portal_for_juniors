@@ -53,12 +53,18 @@ export default function ModuleCard({ module }) {
       {/* Actions */}
       <div style={{ display: 'flex', gap: '0.6rem' }}>
         <Link
+          to={`/modules/${module._id}`}
+          className="btn btn-secondary btn-sm"
+          style={{ flex: 1, justifyContent: 'center', background: 'rgba(255,255,255,0.05)' }}
+        >
+          View Details
+        </Link>
+        <Link
           to={`/modules/${module._id}/quiz`}
           className={isCompleted ? "btn btn-success btn-sm" : "btn btn-primary btn-sm"}
           style={{ flex: 1, justifyContent: 'center' }}
         >
           {isCompleted ? 'Retake Quiz' : 'Take Quiz'}
-          <ChevronRight size={13} />
         </Link>
       </div>
     </div>
