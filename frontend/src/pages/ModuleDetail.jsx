@@ -59,42 +59,46 @@ export default function ModuleDetail() {
           </div>
 
           {/* Quick actions */}
-          <div style={{ display: 'flex', gap: '0.6rem', flexShrink: 0 }}>
-            <Link to={`/modules/${id}/quiz`} className="btn btn-primary">
-              Take Quiz <ChevronRight size={15} />
-            </Link>
-          </div>
+          {module.title !== 'MID SEM GUIDE' && (
+            <div style={{ display: 'flex', gap: '0.6rem', flexShrink: 0 }}>
+              <Link to={`/modules/${id}/quiz`} className="btn btn-primary">
+                Take Quiz <ChevronRight size={15} />
+              </Link>
+            </div>
+          )}
         </div>
       </div>
 
       <div className="page-body">
         <div style={{ maxWidth: 600, margin: '0 auto' }}>
           {/* Quiz CTA */}
-          <div style={{
-            marginTop: '1.5rem',
-            background: 'linear-gradient(135deg, rgba(255,255,255,0.08), rgba(255,255,255,0.06))',
-            border: '1px solid rgba(255,255,255,0.2)',
-            borderRadius: 12, padding: '2rem', textAlign: 'center'
-          }}>
-            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '1rem', marginBottom: '1.5rem' }}>
-              <div style={{
-                width: 64, height: 64, borderRadius: 16,
-                background: 'rgba(255,255,255,0.1)', border: '1px solid rgba(255,255,255,0.2)',
-                display: 'flex', alignItems: 'center', justifyContent: 'center'
-              }}>
-                <Lightbulb size={32} color="var(--accent-purple)" />
-              </div>
-              <div>
-                <div style={{ fontWeight: 700, fontSize: '1.2rem', marginBottom: '0.5rem' }}>Ready to test yourself?</div>
-                <div style={{ fontSize: '0.9rem', color: 'var(--text-secondary)', maxWidth: 400, margin: '0 auto', lineHeight: 1.6 }}>
-                  Take the timed multiple-choice quiz to test your knowledge of this module.
+          {module.title !== 'MID SEM GUIDE' && (
+            <div style={{
+              marginTop: '1.5rem',
+              background: 'linear-gradient(135deg, rgba(255,255,255,0.08), rgba(255,255,255,0.06))',
+              border: '1px solid rgba(255,255,255,0.2)',
+              borderRadius: 12, padding: '2rem', textAlign: 'center'
+            }}>
+              <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '1rem', marginBottom: '1.5rem' }}>
+                <div style={{
+                  width: 64, height: 64, borderRadius: 16,
+                  background: 'rgba(255,255,255,0.1)', border: '1px solid rgba(255,255,255,0.2)',
+                  display: 'flex', alignItems: 'center', justifyContent: 'center'
+                }}>
+                  <Lightbulb size={32} color="var(--accent-purple)" />
+                </div>
+                <div>
+                  <div style={{ fontWeight: 700, fontSize: '1.2rem', marginBottom: '0.5rem' }}>Ready to test yourself?</div>
+                  <div style={{ fontSize: '0.9rem', color: 'var(--text-secondary)', maxWidth: 400, margin: '0 auto', lineHeight: 1.6 }}>
+                    Take the timed multiple-choice quiz to test your knowledge of this module.
+                  </div>
                 </div>
               </div>
+              <Link to={`/modules/${id}/quiz`} className="btn btn-primary btn-lg" style={{ width: '100%', justifyContent: 'center' }}>
+                Start Module Quiz <ChevronRight size={18} />
+              </Link>
             </div>
-            <Link to={`/modules/${id}/quiz`} className="btn btn-primary btn-lg" style={{ width: '100%', justifyContent: 'center' }}>
-              Start Module Quiz <ChevronRight size={18} />
-            </Link>
-          </div>
+          )}
         {problems.length > 0 && (
           <div style={{ marginTop: '2rem' }}>
             <h3 style={{ fontSize: '1.2rem', marginBottom: '1rem' }}>Coding Questions</h3>
