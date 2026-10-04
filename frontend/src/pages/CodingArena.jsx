@@ -271,42 +271,58 @@ export default function CodingArena() {
               )}
             </div>
           ) : (
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
-              {allProbs.map((p) => {
-                const isSolved = user?.progress?.solvedProblems?.some(sp => sp.problemId === p._id && sp.verdict === 'Accepted');
-                return (
-                <Link key={p._id} to={`/arena/${p._id}`} style={{ textDecoration: 'none' }}>
-                  <div className="card" style={{ 
-                    display: 'flex', alignItems: 'center', gap: '1rem', padding: '1rem',
-                    border: isSolved ? '3px solid var(--accent-green, #10b981)' : '3px solid var(--border)'
-                  }}>
-                    <div style={{
-                      width: 40, height: 40, borderRadius: 10,
-                      background: isSolved ? 'rgba(16, 185, 129, 0.1)' : 'rgba(255,255,255,0.08)', 
-                      border: isSolved ? '1px solid rgba(16, 185, 129, 0.3)' : '1px solid rgba(255,255,255,0.15)',
-                      display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0,
-                    }}>
-                      {isSolved ? <CheckCircle size={18} color="var(--accent-green, #10b981)" /> : <Code2 size={18} color="var(--accent-blue)" />}
-                    </div>
-                    <div style={{ flex: 1 }}>
-                      <div style={{ fontWeight: 600 }}>{p.title}</div>
-                      <div style={{ display: 'flex', gap: '0.5rem', marginTop: '0.25rem', flexWrap: 'wrap', alignItems: 'center' }}>
-                        <span className={`badge ${diffClass[p.difficulty] ?? ''}`}>{p.difficulty}</span>
-                        {p.semester && (
-                          <span style={{ fontSize: '0.72rem', color: 'var(--accent-purple)', fontWeight: 600 }}>
-                            Sem {p.semester}
-                          </span>
-                        )}
-                        {p.tags?.slice(0,3).map(t => (
-                          <span key={t} style={{ fontSize: '0.72rem', color: 'var(--text-muted)' }}>#{t}</span>
-                        ))}
-                      </div>
-                    </div>
-                    <ChevronRight size={16} color="var(--text-muted)" />
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '2rem' }}>
+              {Object.entries(
+                allProbs.reduce((acc, p) => {
+                  const group = p.moduleId?.title || 'General Challenges';
+                  if (!acc[group]) acc[group] = [];
+                  acc[group].push(p);
+                  return acc;
+                }, {})
+              ).map(([moduleTitle, problems]) => (
+                <div key={moduleTitle}>
+                  <h3 style={{ fontSize: '1.1rem', fontWeight: 700, marginBottom: '1rem', color: 'var(--text-primary)', borderBottom: '1px solid var(--border)', paddingBottom: '0.5rem' }}>
+                    {moduleTitle}
+                  </h3>
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+                    {problems.map((p) => {
+                      const isSolved = user?.progress?.solvedProblems?.some(sp => sp.problemId === p._id && sp.verdict === 'Accepted');
+                      return (
+                      <Link key={p._id} to={`/arena/${p._id}`} style={{ textDecoration: 'none' }}>
+                        <div className="card" style={{ 
+                          display: 'flex', alignItems: 'center', gap: '1rem', padding: '1rem',
+                          border: isSolved ? '3px solid var(--accent-green, #10b981)' : '3px solid var(--border)'
+                        }}>
+                          <div style={{
+                            width: 40, height: 40, borderRadius: 10,
+                            background: isSolved ? 'rgba(16, 185, 129, 0.1)' : 'rgba(255,255,255,0.08)', 
+                            border: isSolved ? '1px solid rgba(16, 185, 129, 0.3)' : '1px solid rgba(255,255,255,0.15)',
+                            display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0,
+                          }}>
+                            {isSolved ? <CheckCircle size={18} color="var(--accent-green, #10b981)" /> : <Code2 size={18} color="var(--accent-blue)" />}
+                          </div>
+                          <div style={{ flex: 1 }}>
+                            <div style={{ fontWeight: 600 }}>{p.title}</div>
+                            <div style={{ display: 'flex', gap: '0.5rem', marginTop: '0.25rem', flexWrap: 'wrap', alignItems: 'center' }}>
+                              <span className={`badge ${diffClass[p.difficulty] ?? ''}`}>{p.difficulty}</span>
+                              {p.semester && (
+                                <span style={{ fontSize: '0.72rem', color: 'var(--accent-purple)', fontWeight: 600 }}>
+                                  Sem {p.semester}
+                                </span>
+                              )}
+                              {p.tags?.slice(0,3).map(t => (
+                                <span key={t} style={{ fontSize: '0.72rem', color: 'var(--text-muted)' }}>#{t}</span>
+                              ))}
+                            </div>
+                          </div>
+                          <ChevronRight size={16} color="var(--text-muted)" />
+                        </div>
+                      </Link>
+                      );
+                    })}
                   </div>
-                </Link>
-                );
-              })}
+                </div>
+              ))}
             </div>
           )}
         </div>

@@ -37,6 +37,7 @@ router.get('/', async (req, res, next) => {
 
     const problems = await Problem.find(filter)
       .select('title difficulty allowedLanguages tags timeLimitSeconds memoryLimitMB moduleId semester')
+      .populate('moduleId', 'title')
       .sort({ difficulty: 1, createdAt: -1 });
 
     res.json({ success: true, count: problems.length, data: problems });
