@@ -1,10 +1,12 @@
 import { NavLink, Link, useLocation } from 'react-router-dom';
+import { useEffect, useState } from 'react';
 import {
   LayoutDashboard, BookOpen, Code2, BarChart3, Zap, Terminal, FileText, LogOut, Trophy, Milestone, Moon, Sun, Users, Settings, Swords, Flame, Gamepad2, Briefcase, MonitorPlay
 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { useTheme } from '../context/ThemeContext';
 import { useCourse } from '../context/CourseContext';
+import { fetchModules } from '../api/client';
 import CourseDropdown from './CourseDropdown';
 
 const navItems = [
@@ -27,6 +29,15 @@ export default function Sidebar({ isOpen, onClose }) {
   const { user, logout } = useAuth();
   const { isDarkMode, toggleTheme } = useTheme();
   const { activeSemester, activeCourse } = useCourse();
+
+  const [midSemId, setMidSemId] = useState(null);
+
+  useEffect(() => {
+    fetchModules().then(mods => {
+      const mid = mods.find(m => m.title === 'MID SEM GUIDE');
+      if (mid) setMidSemId(mid._id);
+    }).catch(console.error);
+  }, []);
 
   return (
     <>
@@ -73,7 +84,7 @@ export default function Sidebar({ isOpen, onClose }) {
         ))}
 
         <div className="nav-section-label" style={{ marginTop: '1.25rem' }}>Quick Access</div>
-        <NavLink to="/modules/6ac22236ee8f10c7beffa2ac" className="nav-link">
+        <NavLink to={midSemId ? `/modules/${midSemId}` : "/modules"} className="nav-link">
           <Zap size={16} strokeWidth={2} />
           MID SEM GUIDE
         </NavLink>

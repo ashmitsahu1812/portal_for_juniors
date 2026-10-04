@@ -95,7 +95,33 @@ export default function ModuleDetail() {
               Start Module Quiz <ChevronRight size={18} />
             </Link>
           </div>
-        </div>
+        {problems.length > 0 && (
+          <div style={{ marginTop: '2rem' }}>
+            <h3 style={{ fontSize: '1.2rem', marginBottom: '1rem' }}>Coding Questions</h3>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+              {problems.map(p => (
+                <Link key={p._id} to={`/arena/${p._id}`} style={{ textDecoration: 'none' }}>
+                  <div className="card" style={{ display: 'flex', alignItems: 'center', gap: '1rem', padding: '1rem', border: '1px solid var(--border)' }}>
+                    <div style={{
+                      width: 40, height: 40, borderRadius: 10,
+                      background: 'rgba(255,255,255,0.08)', border: '1px solid rgba(255,255,255,0.15)',
+                      display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0,
+                    }}>
+                      <Code2 size={18} color="var(--accent-blue)" />
+                    </div>
+                    <div style={{ flex: 1 }}>
+                      <div style={{ fontWeight: 600, color: 'var(--text-primary)' }}>{p.title}</div>
+                      <div style={{ display: 'flex', gap: '0.5rem', marginTop: '0.25rem' }}>
+                        <span className={`badge ${diffClass[p.difficulty] ?? ''}`}>{p.difficulty}</span>
+                      </div>
+                    </div>
+                    <ChevronRight size={16} color="var(--text-muted)" />
+                  </div>
+                </Link>
+              ))}
+            </div>
+          </div>
+        )}
       </div>
     </>
   );
