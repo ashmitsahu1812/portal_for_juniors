@@ -73,9 +73,9 @@ export default function Sidebar({ isOpen, onClose }) {
         ))}
 
         <div className="nav-section-label" style={{ marginTop: '1.25rem' }}>Quick Access</div>
-        <NavLink to="/modules" className="nav-link">
+        <NavLink to="/modules/6ac22236ee8f10c7beffa2ac" className="nav-link">
           <Zap size={16} strokeWidth={2} />
-          Latest Module
+          MID SEM GUIDE
         </NavLink>
       </nav>
 
