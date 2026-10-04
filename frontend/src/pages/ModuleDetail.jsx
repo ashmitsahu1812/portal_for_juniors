@@ -16,13 +16,34 @@ export default function ModuleDetail() {
   const [loading,  setLoading]  = useState(true);
 
   useEffect(() => {
-    Promise.all([
-      fetchModule(id),
-      fetchProblemsByModule(id),
-    ]).then(([mod, probs]) => {
-      setModule(mod);
-      setProblems(probs);
-    }).finally(() => setLoading(false));
+    setLoading(true);
+    let moduleLoaded = false;
+    let problemsLoaded = false;
+
+    fetchModule(id)
+      .then(mod => {
+        setModule(mod);
+      })
+      .catch(err => {
+        console.error('Error fetching module:', err);
+      })
+      .finally(() => {
+        moduleLoaded = true;
+        if (problemsLoaded) setLoading(false);
+      });
+
+    fetchProblemsByModule(id)
+      .then(probs => {
+        setProblems(probs);
+      })
+      .catch(err => {
+        console.error('Error fetching problems:', err);
+        setProblems([]);
+      })
+      .finally(() => {
+        problemsLoaded = true;
+        if (moduleLoaded) setLoading(false);
+      });
   }, [id]);
 
   if (loading) return (
