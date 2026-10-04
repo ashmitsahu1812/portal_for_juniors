@@ -11,7 +11,7 @@ const seedNewProblem = async () => {
     console.log('✅ Connected to MongoDB...');
 
     // Find the appropriate module
-    let parentModule = await Module.findOne({ title: /Python Control Flow and Functions/i });
+    let parentModule = await Module.findOne({ title: /MID SEM GUIDE/i });
     if (!parentModule) {
       parentModule = await Module.findOne(); // fallback
     }

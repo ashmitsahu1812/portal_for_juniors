@@ -11,7 +11,7 @@ const seedNewProblem = async () => {
     console.log('✅ Connected to MongoDB...');
 
     // Find the appropriate module (Foundations of Python Programming or Basic Arithmetic)
-    let parentModule = await Module.findOne({ title: /Foundations of Python Programming/i });
+    let parentModule = await Module.findOne({ title: /MID SEM GUIDE/i });
     if (!parentModule) {
       parentModule = await Module.findOne(); // fallback to any module if not found
     }
