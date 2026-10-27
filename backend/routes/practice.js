@@ -21,22 +21,29 @@ const topicAliases = {
 };
 
 const curatedProblems = [
-  { id: 'lc-two-sum', platform: 'leetcode', topic: 'Arrays', title: 'Two Sum', difficulty: 'Easy', url: 'https://leetcode.com/problems/two-sum/' },
+  { id: 'lc-two-sum', platform: 'leetcode', topic: 'Arrays', title: 'Two Sum', titleSlug: 'two-sum', difficulty: 'Easy', url: 'https://leetcode.com/problems/two-sum/' },
   { id: 'cf-4a', platform: 'codeforces', topic: 'Implementation', title: 'Watermelon', difficulty: 'Easy', url: 'https://codeforces.com/problemset/problem/4/A', codeforces: { contestId: 4, index: 'A' } },
-  { id: 'lc-best-time-to-buy-and-sell-stock', platform: 'leetcode', topic: 'Arrays', title: 'Best Time to Buy and Sell Stock', difficulty: 'Easy', url: 'https://leetcode.com/problems/best-time-to-buy-and-sell-stock/' },
+  { id: 'lc-best-time-to-buy-and-sell-stock', platform: 'leetcode', topic: 'Arrays', title: 'Best Time to Buy and Sell Stock', titleSlug: 'best-time-to-buy-and-sell-stock', difficulty: 'Easy', url: 'https://leetcode.com/problems/best-time-to-buy-and-sell-stock/' },
   { id: 'cf-71a', platform: 'codeforces', topic: 'Strings', title: 'Way Too Long Words', difficulty: 'Easy', url: 'https://codeforces.com/problemset/problem/71/A', codeforces: { contestId: 71, index: 'A' } },
-  { id: 'lc-valid-parentheses', platform: 'leetcode', topic: 'Stacks', title: 'Valid Parentheses', difficulty: 'Easy', url: 'https://leetcode.com/problems/valid-parentheses/' },
+  { id: 'lc-valid-parentheses', platform: 'leetcode', topic: 'Stacks', title: 'Valid Parentheses', titleSlug: 'valid-parentheses', difficulty: 'Easy', url: 'https://leetcode.com/problems/valid-parentheses/' },
   { id: 'cf-231a', platform: 'codeforces', topic: 'Implementation', title: 'Team', difficulty: 'Easy', url: 'https://codeforces.com/problemset/problem/231/A', codeforces: { contestId: 231, index: 'A' } },
-  { id: 'lc-binary-search', platform: 'leetcode', topic: 'Binary Search', title: 'Binary Search', difficulty: 'Easy', url: 'https://leetcode.com/problems/binary-search/' },
+  { id: 'lc-binary-search', platform: 'leetcode', topic: 'Binary Search', title: 'Binary Search', titleSlug: 'binary-search', difficulty: 'Easy', url: 'https://leetcode.com/problems/binary-search/' },
   { id: 'cf-486a', platform: 'codeforces', topic: 'Math', title: 'Calculating Function', difficulty: 'Easy', url: 'https://codeforces.com/problemset/problem/486/A', codeforces: { contestId: 486, index: 'A' } },
-  { id: 'lc-longest-substring-without-repeating-characters', platform: 'leetcode', topic: 'Sliding Window', title: 'Longest Substring Without Repeating Characters', difficulty: 'Medium', url: 'https://leetcode.com/problems/longest-substring-without-repeating-characters/' },
+  { id: 'lc-longest-substring-without-repeating-characters', platform: 'leetcode', topic: 'Sliding Window', title: 'Longest Substring Without Repeating Characters', titleSlug: 'longest-substring-without-repeating-characters', difficulty: 'Medium', url: 'https://leetcode.com/problems/longest-substring-without-repeating-characters/' },
   { id: 'cf-158a', platform: 'codeforces', topic: 'Implementation', title: 'Next Round', difficulty: 'Easy', url: 'https://codeforces.com/problemset/problem/158/A', codeforces: { contestId: 158, index: 'A' } },
-  { id: 'lc-3sum', platform: 'leetcode', topic: 'Arrays', title: '3Sum', difficulty: 'Medium', url: 'https://leetcode.com/problems/3sum/' },
-  { id: 'lc-coin-change', platform: 'leetcode', topic: 'Dynamic Programming', title: 'Coin Change', difficulty: 'Medium', url: 'https://leetcode.com/problems/coin-change/' },
-  { id: 'lc-number-of-islands', platform: 'leetcode', topic: 'Graphs', title: 'Number of Islands', difficulty: 'Medium', url: 'https://leetcode.com/problems/number-of-islands/' },
+  { id: 'lc-3sum', platform: 'leetcode', topic: 'Arrays', title: '3Sum', titleSlug: '3sum', difficulty: 'Medium', url: 'https://leetcode.com/problems/3sum/' },
+  { id: 'lc-coin-change', platform: 'leetcode', topic: 'Dynamic Programming', title: 'Coin Change', titleSlug: 'coin-change', difficulty: 'Medium', url: 'https://leetcode.com/problems/coin-change/' },
+  { id: 'lc-number-of-islands', platform: 'leetcode', topic: 'Graphs', title: 'Number of Islands', titleSlug: 'number-of-islands', difficulty: 'Medium', url: 'https://leetcode.com/problems/number-of-islands/' },
   { id: 'cf-580a', platform: 'codeforces', topic: 'Dynamic Programming', title: 'Kefa and First Steps', difficulty: 'Easy', url: 'https://codeforces.com/problemset/problem/580/A', codeforces: { contestId: 580, index: 'A' } },
-  { id: 'lc-merge-k-sorted-lists', platform: 'leetcode', topic: 'Linked Lists', title: 'Merge k Sorted Lists', difficulty: 'Hard', url: 'https://leetcode.com/problems/merge-k-sorted-lists/' },
+  { id: 'lc-merge-k-sorted-lists', platform: 'leetcode', topic: 'Linked Lists', title: 'Merge k Sorted Lists', titleSlug: 'merge-k-sorted-lists', difficulty: 'Hard', url: 'https://leetcode.com/problems/merge-k-sorted-lists/' },
 ];
+
+export function matchLeetCodeCuratedProblems(submissions, problems = curatedProblems) {
+  const acceptedSlugs = new Set(submissions.map(item => item.titleSlug).filter(Boolean));
+  return problems.filter(problem =>
+    problem.platform === 'leetcode' && problem.titleSlug && acceptedSlugs.has(problem.titleSlug)
+  );
+}
 
 async function cached(key, loader) {
   const existing = cache.get(key);
@@ -60,6 +67,30 @@ async function codeforces(path) {
 async function fetchCodeforcesUser(handle) {
   const users = await codeforces(`user.info?handles=${encodeURIComponent(handle)}`);
   return users[0] || null;
+}
+
+// Best-effort only: LeetCode's undocumented public GraphQL query returns recent accepted submissions, not full solve history.
+async function fetchLeetCodeAcceptedSubmissions(username) {
+  const response = await fetch('https://leetcode.com/graphql', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'User-Agent': 'KickStartStudentPortal/1.0',
+      Referer: 'https://leetcode.com/',
+    },
+    body: JSON.stringify({
+      query: 'query recentAcSubmissionList($username: String!, $limit: Int!) { recentAcSubmissionList(username: $username, limit: $limit) { title titleSlug } }',
+      variables: { username, limit: 20 },
+    }),
+    signal: AbortSignal.timeout(12000),
+  });
+  if (!response.ok) throw new Error(`LeetCode submissions API returned ${response.status}`);
+  const payload = await response.json();
+  const submissions = payload.data?.recentAcSubmissionList;
+  if (payload.errors?.length || !Array.isArray(submissions)) {
+    throw new Error(payload.errors?.[0]?.message || 'LeetCode accepted submissions are unavailable.');
+  }
+  return submissions;
 }
 
 async function fetchLeetCodeStats(username) {
@@ -177,9 +208,14 @@ router.get('/daily', async (_req, res, next) => {
 
 router.get('/problems', protect, async (req, res, next) => {
   try {
-    const user = await User.findById(req.user.id).select('externalPracticeDone');
+    const user = await User.findById(req.user.id).select('externalPracticeDone externalPracticeSources');
     const completed = new Set(user?.externalPracticeDone || []);
-    const data = curatedProblems.map(problem => ({ ...problem, completed: completed.has(problem.id) }));
+    const sources = user?.externalPracticeSources || new Map();
+    const data = curatedProblems.map(problem => ({
+      ...problem,
+      completed: completed.has(problem.id),
+      completionSource: sources.get?.(problem.id) || (completed.has(problem.id) ? 'manual' : null),
+    }));
     res.json({ success: true, data });
   } catch (err) {
     next(err);
@@ -301,9 +337,16 @@ router.post('/problems/:id/toggle', protect, async (req, res, next) => {
     const user = await User.findById(req.user.id);
     if (!user) return res.status(404).json({ success: false, message: 'User not found.' });
     const completed = new Set(user.externalPracticeDone || []);
-    if (completed.has(req.params.id)) completed.delete(req.params.id);
-    else completed.add(req.params.id);
+    const sources = user.externalPracticeSources || new Map();
+    if (completed.has(req.params.id)) {
+      completed.delete(req.params.id);
+      sources.delete?.(req.params.id);
+    } else {
+      completed.add(req.params.id);
+      sources.set?.(req.params.id, 'manual');
+    }
     user.externalPracticeDone = [...completed];
+    user.externalPracticeSources = sources;
     await user.save();
     res.json({ success: true, completed: completed.has(req.params.id) });
   } catch (err) {
@@ -321,14 +364,17 @@ router.post('/sync-codeforces', protect, async (req, res, next) => {
     const accepted = new Set(submissions.filter(item => item.verdict === 'OK' && item.problem?.contestId && item.problem?.index)
       .map(item => `${item.problem.contestId}:${item.problem.index}`));
     const completed = new Set(user.externalPracticeDone || []);
+    const sources = user.externalPracticeSources || new Map();
     let syncedCurated = 0;
     curatedProblems.forEach(problem => {
       if (problem.codeforces && accepted.has(`${problem.codeforces.contestId}:${problem.codeforces.index}`)) {
         completed.add(problem.id);
+        sources.set?.(problem.id, 'codeforces');
         syncedCurated += 1;
       }
     });
     user.externalPracticeDone = [...completed];
+    user.externalPracticeSources = sources;
     const arenaProblems = await Problem.find({ 'externalCodeforces.contestId': { $exists: true }, 'externalCodeforces.index': { $exists: true } }).select('_id externalCodeforces');
     let newArenaSolves = 0;
     arenaProblems.forEach(problem => {
@@ -348,6 +394,35 @@ router.post('/sync-codeforces', protect, async (req, res, next) => {
     });
     await user.save();
     res.json({ success: true, data: { syncedCurated, newArenaSolves, submissionsChecked: submissions.length } });
+  } catch (err) {
+    next(err);
+  }
+});
+
+router.post('/sync-leetcode', protect, async (req, res, next) => {
+  try {
+    const user = await User.findById(req.user.id);
+    const username = user?.externalProfiles?.leetcode;
+    if (!user) return res.status(404).json({ success: false, message: 'User not found.' });
+    if (!username) return res.status(400).json({ success: false, message: 'Link a LeetCode username first.' });
+
+    const submissions = await cached(`lc-submissions:${username.toLowerCase()}`, () => fetchLeetCodeAcceptedSubmissions(username));
+    const completed = new Set(user.externalPracticeDone || []);
+    const sources = user.externalPracticeSources || new Map();
+    const matchedProblems = matchLeetCodeCuratedProblems(submissions);
+    matchedProblems.forEach(problem => {
+      completed.add(problem.id);
+      sources.set?.(problem.id, 'leetcode');
+    });
+    const syncedCurated = matchedProblems.length;
+    user.externalPracticeDone = [...completed];
+    user.externalPracticeSources = sources;
+    await user.save();
+
+    res.json({
+      success: true,
+      data: { syncedCurated, submissionsChecked: submissions.length, submissionLimit: 20 },
+    });
   } catch (err) {
     next(err);
   }

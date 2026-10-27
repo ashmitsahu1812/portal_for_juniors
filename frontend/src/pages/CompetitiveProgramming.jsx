@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import { CalendarDays, Check, ExternalLink, RefreshCw, Code2, Flame, Target, Clock3, ListChecks } from 'lucide-react';
-import { fetchCodeforcesContests, fetchCodeforcesLeaderboard, fetchCuratedProblems, fetchDailyChallenge, fetchExternalStats, fetchPracticeRecommendations, syncCodeforcesSubmissions, toggleCuratedProblem } from '../api/client';
+import { fetchCodeforcesContests, fetchCodeforcesLeaderboard, fetchCuratedProblems, fetchDailyChallenge, fetchExternalStats, fetchPracticeRecommendations, syncCodeforcesSubmissions, syncLeetCodeSubmissions, toggleCuratedProblem } from '../api/client';
 import { useAuth } from '../context/AuthContext';
 
 function countdown(timestamp, nowMs = Date.now()) {
@@ -69,16 +69,22 @@ export default function CompetitiveProgramming() {
   const markDone = async (id) => {
     try {
       const result = await toggleCuratedProblem(id);
-      setProblems(current => current.map(problem => problem.id === id ? { ...problem, completed: result.completed } : problem));
+      setProblems(current => current.map(problem => problem.id === id ? { ...problem, completed: result.completed, completionSource: result.completed ? 'manual' : null } : problem));
     } catch (error) { setErrors(current => ({ ...current, problems: error.message })); }
   };
 
-  const sync = async () => {
+  const sync = async (platform) => {
     setBusy(true);
     setSyncMessage('');
     try {
-      const result = await syncCodeforcesSubmissions();
-      setSyncMessage(`Synced ${result.syncedCurated} curated problems; ${result.newArenaSolves} new Coding Arena solves found.`);
+      const result = platform === 'leetcode'
+        ? await syncLeetCodeSubmissions()
+        : await syncCodeforcesSubmissions();
+      const sourceName = platform === 'leetcode' ? 'LeetCode' : 'Codeforces';
+      const limitation = platform === 'leetcode'
+        ? ` Only the ${result.submissionsChecked} most recent accepted submissions (up to ${result.submissionLimit}) are checked.`
+        : ` Checked ${result.submissionsChecked} submissions.`;
+      setSyncMessage(`Synced ${result.syncedCurated} curated ${sourceName} problems.${limitation}${result.newArenaSolves ? ` ${result.newArenaSolves} new Coding Arena solves found.` : ''}`);
       await refresh();
     } catch (error) { setSyncMessage(error.message); }
     finally { setBusy(false); }
@@ -120,7 +126,10 @@ export default function CompetitiveProgramming() {
         <article className="card">
           <h3 style={{ marginBottom: 10 }}><ListChecks size={17} style={{ verticalAlign: 'middle', marginRight: 6 }} />Practice progress</h3>
           <div className="stat-value">{solvedCount}/{problems.length}</div><div className="stat-label">Curated problems completed</div>
-          <button className="btn btn-primary btn-sm" style={{ marginTop: 14 }} disabled={busy || !stats?.profiles?.codeforces} onClick={sync}><RefreshCw size={14} />{busy ? 'Syncing…' : 'Sync Codeforces submissions'}</button>
+          <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap', marginTop: 14 }}>
+            <button className="btn btn-primary btn-sm" disabled={busy || !stats?.profiles?.codeforces} onClick={() => sync('codeforces')}><RefreshCw size={14} />{busy ? 'Syncing…' : 'Sync Codeforces'}</button>
+            <button className="btn btn-primary btn-sm" disabled={busy || !stats?.profiles?.leetcode} onClick={() => sync('leetcode')}><RefreshCw size={14} />{busy ? 'Syncing…' : 'Sync LeetCode'}</button>
+          </div>
         </article>
       </section>
       {syncMessage && <p role="status" style={{ margin: '0 0 1rem', color: 'var(--accent-blue)' }}>{syncMessage}</p>}
@@ -147,9 +156,15 @@ export default function CompetitiveProgramming() {
         {!leaderboard.length ? <p>{errors.leaderboard || 'No linked Codeforces students yet.'}</p> : <div style={{ overflowX: 'auto' }}><div style={{ display: 'grid', gridTemplateColumns: '55px minmax(160px, 1fr) 120px 110px', gap: 10, minWidth: 420, padding: '8px 0', color: 'var(--text-muted)', fontSize: 12, fontWeight: 700 }}><span>Rank</span><span>Student / handle</span><span>CF rank</span><span style={{ textAlign: 'right' }}>Rating</span></div>{leaderboard.map((student, index) => <div key={student._id} style={{ display: 'grid', gridTemplateColumns: '55px minmax(160px, 1fr) 120px 110px', gap: 10, minWidth: 420, alignItems: 'center', padding: '10px 0', borderTop: '1px solid var(--border)', background: student._id === ownId ? 'rgba(0,133,255,.08)' : 'transparent' }}><strong>#{index + 1}</strong><span>{student.name} <small style={{ color: 'var(--text-muted)' }}>@{student.handle}</small></span><span>{student.rank}</span><strong style={{ textAlign: 'right' }}>{student.rating}</strong></div>)}</div>}
       </section>
 
+      <section className="card" style={{ marginBottom: '1.5rem' }}>
+        <h3 style={{ marginBottom: 8 }}>Striver’s SDE Sheet</h3>
+        <p style={{ marginBottom: 12 }}>Follow the official 156-problem, topic-organized interview-preparation roadmap and track your completion on TakeUForward.</p>
+        <a className="btn btn-primary btn-sm" href="https://takeuforward.org/prep-hub/strivers-sde-sheet?page=sheet" target="_blank" rel="noreferrer">Open the official SDE Sheet <ExternalLink size={14} /></a>
+      </section>
+
       <section className="card">
-        <h3 style={{ marginBottom: 12 }}>Curated problem sets</h3>
-        {!problems.length ? <p>{errors.problems || 'Loading problems…'}</p> : Object.entries(problems.reduce((groups, problem) => ({ ...groups, [problem.topic]: [...(groups[problem.topic] || []), problem] }), {})).map(([topic, topicProblems]) => <div key={topic} style={{ marginBottom: 18 }}><h4 style={{ marginBottom: 6 }}>{topic}</h4>{topicProblems.map(problem => <div key={problem.id} style={{ display: 'flex', gap: 10, alignItems: 'center', padding: '8px 0', borderBottom: '1px solid var(--border)' }}><button type="button" className="btn btn-sm" aria-label={`${problem.completed ? 'Unmark' : 'Mark'} ${problem.title} as done`} onClick={() => markDone(problem.id)} style={{ padding: '5px 8px', color: problem.completed ? 'var(--accent-green)' : 'var(--text-muted)' }}>{problem.completed ? <Check size={15} /> : <span style={{ width: 15, height: 15, border: '1px solid currentColor' }} />}</button><div style={{ flex: 1 }}><a href={problem.url} target="_blank" rel="noreferrer" style={{ color: 'var(--text-primary)', fontWeight: 600 }}>{problem.title}</a><div style={{ fontSize: 12, color: 'var(--text-muted)' }}>{problem.platform} · {problem.difficulty}</div></div><a href={problem.url} target="_blank" rel="noreferrer" aria-label={`Open ${problem.title}`}><ExternalLink size={15} /></a></div>)}</div>)}
+        <h3 style={{ marginBottom: 12 }}>Quick curated practice</h3>
+        {!problems.length ? <p>{errors.problems || 'Loading problems…'}</p> : Object.entries(problems.reduce((groups, problem) => ({ ...groups, [problem.topic]: [...(groups[problem.topic] || []), problem] }), {})).map(([topic, topicProblems]) => <div key={topic} style={{ marginBottom: 18 }}><h4 style={{ marginBottom: 6 }}>{topic}</h4>{topicProblems.map(problem => <div key={problem.id} style={{ display: 'flex', gap: 10, alignItems: 'center', padding: '8px 0', borderBottom: '1px solid var(--border)' }}><button type="button" className="btn btn-sm" aria-label={`${problem.completed ? 'Unmark' : 'Mark'} ${problem.title} as done`} onClick={() => markDone(problem.id)} style={{ padding: '5px 8px', color: problem.completed ? 'var(--accent-green)' : 'var(--text-muted)' }}>{problem.completed ? <Check size={15} /> : <span style={{ width: 15, height: 15, border: '1px solid currentColor' }} />}</button><div style={{ flex: 1 }}><a href={problem.url} target="_blank" rel="noreferrer" style={{ color: 'var(--text-primary)', fontWeight: 600 }}>{problem.title}</a><div style={{ fontSize: 12, color: 'var(--text-muted)' }}>{problem.platform} · {problem.difficulty}{problem.completed && ` · ${problem.completionSource === 'leetcode' ? 'Synced from LeetCode' : problem.completionSource === 'codeforces' ? 'Synced from Codeforces' : 'Marked manually'}`}</div></div><a href={problem.url} target="_blank" rel="noreferrer" aria-label={`Open ${problem.title}`}><ExternalLink size={15} /></a></div>)}</div>)}
       </section>
     </main>
   </>;

@@ -82,6 +82,9 @@ export const toggleCuratedProblem = (id) =>
 export const syncCodeforcesSubmissions = () =>
   api.post('/practice/sync-codeforces').then((r) => r.data.data);
 
+export const syncLeetCodeSubmissions = () =>
+  api.post('/practice/sync-leetcode').then((r) => r.data.data);
+
 // ── Pathways ──────────────────────────────────────────────────────────────────
 export const fetchPathways = () =>
   api.get('/pathways').then((r) => r.data.data);

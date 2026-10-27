@@ -28,6 +28,11 @@ const UserSchema = new mongoose.Schema({
     codeforces: { type: String, default: '' },
   },
   externalPracticeDone: [{ type: String }],
+  externalPracticeSources: {
+    type: Map,
+    of: String,
+    default: {},
+  },
   progress: {
     completedModules: [{
       type: mongoose.Schema.Types.ObjectId,
