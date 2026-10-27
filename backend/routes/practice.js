@@ -7,6 +7,19 @@ const router = express.Router();
 const cache = new Map();
 const CACHE_MS = 5 * 60 * 1000;
 
+const topicAliases = {
+  Arrays: ['array', 'list', 'sequence', 'prefix sum'],
+  Implementation: ['implementation', 'basic i/o', 'control flow', 'conditional', 'loop', 'programming fundamentals'],
+  Strings: ['string', 'substring'],
+  Stacks: ['stack'],
+  'Binary Search': ['binary search'],
+  Math: ['math', 'arithmetic', 'number theory', 'discrete mathematics'],
+  'Sliding Window': ['sliding window', 'substring'],
+  'Dynamic Programming': ['dynamic programming', 'dp'],
+  Graphs: ['graph', 'tree'],
+  'Linked Lists': ['linked list', 'data structures'],
+};
+
 const curatedProblems = [
   { id: 'lc-two-sum', platform: 'leetcode', topic: 'Arrays', title: 'Two Sum', difficulty: 'Easy', url: 'https://leetcode.com/problems/two-sum/' },
   { id: 'cf-4a', platform: 'codeforces', topic: 'Implementation', title: 'Watermelon', difficulty: 'Easy', url: 'https://codeforces.com/problemset/problem/4/A', codeforces: { contestId: 4, index: 'A' } },
@@ -168,6 +181,113 @@ router.get('/problems', protect, async (req, res, next) => {
     const completed = new Set(user?.externalPracticeDone || []);
     const data = curatedProblems.map(problem => ({ ...problem, completed: completed.has(problem.id) }));
     res.json({ success: true, data });
+  } catch (err) {
+    next(err);
+  }
+});
+
+router.get('/recommendations', protect, async (req, res, next) => {
+  try {
+    const user = await User.findById(req.user.id)
+      .select('externalProfiles externalPracticeDone progress.solvedProblems progress.quizScores')
+      .populate('progress.quizScores.moduleId', 'title description')
+      .lean();
+    if (!user) return res.status(404).json({ success: false, message: 'User not found.' });
+
+    const availableProblems = await Problem.find({ isPublished: true }).select('title difficulty tags').lean();
+    const acceptedIds = new Set((user.progress?.solvedProblems || [])
+      .filter(item => item.verdict === 'Accepted')
+      .map(item => item.problemId?.toString())
+      .filter(Boolean));
+    const attemptedIds = new Set((user.progress?.solvedProblems || [])
+      .map(item => item.problemId?.toString())
+      .filter(Boolean));
+    const solvedProblems = availableProblems.filter(problem => acceptedIds.has(problem._id.toString()));
+    const completed = new Set(user.externalPracticeDone || []);
+    const topicInsights = Object.fromEntries(Object.entries(topicAliases).map(([topic, aliases]) => {
+      const matchesTopic = value => aliases.some(alias => String(value || '').toLowerCase().includes(alias));
+      const arenaProblems = availableProblems.filter(problem => (problem.tags || []).some(matchesTopic));
+      const solvedTopicProblems = solvedProblems.filter(problem => (problem.tags || []).some(matchesTopic));
+      const quizzes = (user.progress?.quizScores || []).filter(score => {
+        const module = score.moduleId;
+        return module && matchesTopic(`${module.title || ''} ${module.description || ''}`);
+      });
+      const quizAverage = quizzes.length
+        ? Math.round(quizzes.reduce((sum, score) => sum + (score.totalMarks > 0 ? score.score / score.totalMarks * 100 : 0), 0) / quizzes.length)
+        : null;
+      const arenaSolved = solvedTopicProblems.length;
+      const arenaTotal = arenaProblems.length;
+      const reasons = [];
+      if (quizAverage !== null && quizAverage < 75) {
+        const moduleNames = [...new Set(quizzes.map(score => score.moduleId.title))].join(', ');
+        reasons.push(`${moduleNames} quiz average is ${quizAverage}%`);
+      }
+      if (arenaTotal && arenaSolved / arenaTotal < 0.6) {
+        reasons.push(`Solved ${arenaSolved} of ${arenaTotal} tagged Coding Arena problems`);
+      }
+      const quizWeakness = quizAverage === null ? 0 : (100 - quizAverage) * 0.55;
+      const arenaWeakness = arenaTotal ? (1 - arenaSolved / arenaTotal) * 30 : 0;
+      const hasEvidence = quizAverage !== null || arenaTotal > 0;
+      const priority = hasEvidence ? quizWeakness + arenaWeakness : 5;
+      return [topic, { quizAverage, arenaSolved, arenaTotal, priority, reasons }];
+    }));
+
+    const profile = user.externalProfiles || {};
+    const [cfProfile, lcStats] = await Promise.all([
+      profile.codeforces
+        ? cached(`cf:${profile.codeforces.toLowerCase()}`, () => fetchCodeforcesUser(profile.codeforces)).catch(() => null)
+        : null,
+      profile.leetcode
+        ? cached(`lc:${profile.leetcode}`, () => fetchLeetCodeStats(profile.leetcode)).catch(() => null)
+        : null,
+    ]);
+    const easySolved = solvedProblems.filter(problem => problem.difficulty === 'Easy').length;
+    const mediumSolved = solvedProblems.filter(problem => problem.difficulty === 'Medium').length;
+    const signals = [
+      (cfProfile?.rating || 0) >= 1600 || (lcStats?.mediumSolved || 0) >= 20 || mediumSolved >= 3,
+      (cfProfile?.rating || 0) >= 1000 || (lcStats?.easySolved || 0) >= 20 || easySolved >= 6,
+    ];
+    const difficulty = signals[0] ? 'Hard' : signals[1] ? 'Medium' : 'Easy';
+    const difficultyReason = cfProfile?.rating
+      ? `Based on your Codeforces rating (${cfProfile.rating}) and solved-problem history.`
+      : lcStats
+        ? `Based on your LeetCode difficulty counts and Coding Arena history.`
+        : mediumSolved >= 3 || easySolved >= 6
+          ? `Based on ${easySolved} Easy and ${mediumSolved} Medium Coding Arena solves.`
+          : 'Starting at Easy until more linked-profile or Coding Arena history is available.';
+
+    const difficultyOrder = difficulty === 'Hard' ? ['Hard', 'Medium', 'Easy'] : difficulty === 'Medium' ? ['Medium', 'Easy'] : ['Easy'];
+    const targetDifficulty = difficultyOrder.find(level => curatedProblems.some(problem =>
+      problem.difficulty === level && !completed.has(problem.id)
+    )) || difficulty;
+    const recommendations = curatedProblems
+      .filter(problem => problem.difficulty === targetDifficulty && !completed.has(problem.id))
+      .map(problem => {
+        const insight = topicInsights[problem.topic];
+        return {
+          ...problem,
+          reason: insight.reasons.length
+            ? insight.reasons.join(' · ')
+            : insight.arenaTotal || insight.quizAverage !== null
+              ? 'Keep building your skills in this topic.'
+              : 'Try a new topic to build a stronger practice history.',
+          topicPriority: insight.priority,
+        };
+      })
+      .sort((a, b) => b.topicPriority - a.topicPriority)
+      .slice(0, 4)
+      .map(({ topicPriority, ...problem }) => problem);
+
+    res.json({
+      success: true,
+      data: {
+        difficulty: targetDifficulty,
+        difficultyReason,
+        recommendations,
+        topicInsights,
+        history: { attemptedArenaProblems: attemptedIds.size, solvedArenaProblems: acceptedIds.size, easySolved, mediumSolved },
+      },
+    });
   } catch (err) {
     next(err);
   }

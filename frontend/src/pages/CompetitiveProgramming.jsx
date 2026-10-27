@@ -1,6 +1,6 @@
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { CalendarDays, Check, ExternalLink, RefreshCw, Code2, Flame, Target, Clock3, ListChecks } from 'lucide-react';
-import { fetchCodeforcesContests, fetchCodeforcesLeaderboard, fetchCuratedProblems, fetchDailyChallenge, fetchExternalStats, syncCodeforcesSubmissions, toggleCuratedProblem } from '../api/client';
+import { fetchCodeforcesContests, fetchCodeforcesLeaderboard, fetchCuratedProblems, fetchDailyChallenge, fetchExternalStats, fetchPracticeRecommendations, syncCodeforcesSubmissions, toggleCuratedProblem } from '../api/client';
 import { useAuth } from '../context/AuthContext';
 
 function countdown(timestamp, nowMs = Date.now()) {
@@ -18,6 +18,7 @@ export default function CompetitiveProgramming() {
   const [contests, setContests] = useState([]);
   const [leaderboard, setLeaderboard] = useState([]);
   const [problems, setProblems] = useState([]);
+  const [recommendation, setRecommendation] = useState(null);
   const [errors, setErrors] = useState({});
   const [busy, setBusy] = useState(false);
   const [syncMessage, setSyncMessage] = useState('');
@@ -28,8 +29,9 @@ export default function CompetitiveProgramming() {
   const refresh = async () => {
     const results = await Promise.allSettled([
       fetchExternalStats(), fetchDailyChallenge(), fetchCodeforcesContests(),
-      fetchCodeforcesLeaderboard(), fetchCuratedProblems(),
-    ]);    const nextErrors = {};
+      fetchCodeforcesLeaderboard(), fetchCuratedProblems(), fetchPracticeRecommendations(),
+    ]);
+    const nextErrors = {};
     if (results[0].status === 'fulfilled') setStats(results[0].value);
     else nextErrors.stats = results[0].reason.message;
     if (results[1].status === 'fulfilled') setDaily(results[1].value);
@@ -40,6 +42,8 @@ export default function CompetitiveProgramming() {
     else nextErrors.leaderboard = results[3].reason.message;
     if (results[4].status === 'fulfilled') setProblems(results[4].value);
     else nextErrors.problems = results[4].reason.message;
+    if (results[5].status === 'fulfilled') setRecommendation(results[5].value);
+    else nextErrors.recommendation = results[5].reason.message;
     setErrors(nextErrors);
   };
 
@@ -61,13 +65,6 @@ export default function CompetitiveProgramming() {
   }, [contests]);
 
   const solvedCount = problems.filter(problem => problem.completed).length;
-  const recommended = useMemo(() => {
-    const lc = stats?.stats?.leetcode;
-    const cf = stats?.stats?.codeforces;
-    const level = (cf?.rating || 0) >= 1600 || (lc?.mediumSolved || 0) >= 20 ? 'Hard'
-      : (cf?.rating || 0) >= 1000 || (lc?.easySolved || 0) >= 20 ? 'Medium' : 'Easy';
-    return { level, problems: problems.filter(problem => !problem.completed && problem.difficulty === level).slice(0, 4) };
-  }, [stats, problems]);
 
   const markDone = async (id) => {
     try {
@@ -134,8 +131,10 @@ export default function CompetitiveProgramming() {
       </section>
 
       <section className="card" style={{ marginBottom: '1.5rem' }}>
-        <h3 style={{ marginBottom: 12 }}><Target size={18} style={{ verticalAlign: 'middle', marginRight: 7 }} />Recommended next ({recommended.level})</h3>
-        {recommended.problems.length ? <div className="card-grid">{recommended.problems.map(problem => <article key={problem.id} style={{ border: '2px solid var(--border)', padding: 12, display: 'flex', justifyContent: 'space-between', gap: 8, alignItems: 'center' }}><div><strong>{problem.title}</strong><p style={{ fontSize: 12 }}>{problem.topic} · {problem.platform}</p></div><a href={problem.url} target="_blank" rel="noreferrer" aria-label={`Solve ${problem.title}`}><ExternalLink size={17} /></a></article>)}</div> : <p>{problems.length ? 'You have completed this level’s starter recommendations. Keep practicing!' : errors.problems || 'Loading recommendations…'}</p>}
+        <h3 style={{ marginBottom: 12 }}><Target size={18} style={{ verticalAlign: 'middle', marginRight: 7 }} />Personalized next problems{recommendation && ` (${recommendation.difficulty})`}</h3>
+        {recommendation?.difficultyReason && <p style={{ marginBottom: 12, fontSize: 13 }}>{recommendation.difficultyReason}</p>}
+        {recommendation?.recommendations?.length ? <div className="card-grid">{recommendation.recommendations.map(problem => <article key={problem.id} style={{ border: '2px solid var(--border)', padding: 12, display: 'flex', flexDirection: 'column', justifyContent: 'space-between', gap: 8 }}><div><div style={{ display: 'flex', justifyContent: 'space-between', gap: 8 }}><strong>{problem.title}</strong><span className="badge badge-blue">{problem.difficulty}</span></div><p style={{ fontSize: 12 }}>{problem.topic} · {problem.platform}</p><p style={{ fontSize: 12, marginTop: 6 }}>{problem.reason}</p></div><a className="btn btn-sm" href={problem.url} target="_blank" rel="noreferrer">Practice <ExternalLink size={14} /></a></article>)}</div> : <p>{errors.recommendation || (recommendation ? 'No unfinished curated problems found at this difficulty.' : 'Loading recommendations…')}</p>}
+        {recommendation?.topicInsights && <div style={{ marginTop: 16 }}><strong style={{ fontSize: 13 }}>Topic signals</strong><div style={{ display: 'flex', flexWrap: 'wrap', gap: 8, marginTop: 8 }}>{Object.entries(recommendation.topicInsights).filter(([, insight]) => insight.reasons.length).sort((a, b) => b[1].priority - a[1].priority).slice(0, 4).map(([topic, insight]) => <span key={topic} className="badge badge-purple" title={insight.reasons.join(' · ')}>{topic}: {insight.reasons[0]}</span>)}</div></div>}
       </section>
 
       <section className="card" style={{ marginBottom: '1.5rem' }}>

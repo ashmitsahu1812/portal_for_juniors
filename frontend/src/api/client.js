@@ -73,6 +73,9 @@ export const fetchDailyChallenge = () =>
 export const fetchCuratedProblems = () =>
   api.get('/practice/problems').then((r) => r.data.data);
 
+export const fetchPracticeRecommendations = () =>
+  api.get('/practice/recommendations').then((r) => r.data.data);
+
 export const toggleCuratedProblem = (id) =>
   api.post(`/practice/problems/${encodeURIComponent(id)}/toggle`).then((r) => r.data);
 
