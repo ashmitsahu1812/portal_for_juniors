@@ -25,13 +25,16 @@ const rawProblems = [
   },
   {
     title: "Max of two Numbers",
-    description: `Implement a function that accepts two integers as arguments and returns the larger value.`,
+    description: `Read two integers **A** and **B** from one line. Complete the provided max_of_two(a, b) function so it returns the larger value. The driver code calls the function and prints its return value.\n\n### Input Format\nOne line containing two space-separated integers, A and B.\n\n### Output Format\nPrint the larger of A and B.\n\n### Example\nInput: 15 42\nOutput: 42`,
     difficulty: 'Easy',
     constraints: '-10^4 <= A, B <= 10^4',
     tags: ['Return statement'],
     testCases: [
       { input: '15 42\n', expectedOutput: '42', isHidden: false, label: 'Sample Output 1' },
-      { input: '-10 -5\n', expectedOutput: '-5', isHidden: true, label: 'Hidden Test Case 2' }
+      { input: '-10 -5\n', expectedOutput: '-5', isHidden: true, label: 'Hidden Test Case 2' },
+      { input: '42 15\n', expectedOutput: '42', isHidden: true, label: 'Hidden Test Case 3' },
+      { input: '0 0\n', expectedOutput: '0', isHidden: true, label: 'Hidden Test Case 4' },
+      { input: '-100 50\n', expectedOutput: '50', isHidden: true, label: 'Hidden Test Case 5' }
     ],
     starterCode: {
       'Python': `def max_of_two(a, b):
@@ -109,13 +112,17 @@ public class Main {
   },
   {
     title: "Enough Chocolates for Everyone",
-    description: `You have $C$ chocolates and $P$ people. Write a program to determine if the chocolates can be distributed equally among all people such that everyone gets at least one chocolate and no chocolates are left over. Print \`Yes\` or \`No\`.`,
+    description: `You have C chocolates and P people. Decide whether it is possible to give each person the same positive whole number of chocolates, using every chocolate. Print Yes if it is possible; otherwise print No.\n\n### Input Format\nOne line containing C (the number of chocolates) and P (the number of people).\n\n### Output Format\nPrint Yes or No.\n\n### Examples\nInput: 12 4\nOutput: Yes\n\nInput: 10 3\nOutput: No`,
     difficulty: 'Easy',
     constraints: '1 <= C, P <= 1000',
     tags: ['Python if-else'],
     testCases: [
       { input: '12 4\n', expectedOutput: 'Yes', isHidden: false, label: 'Sample Output 1' },
-      { input: '10 3\n', expectedOutput: 'No', isHidden: false, label: 'Sample Output 2' }
+      { input: '10 3\n', expectedOutput: 'No', isHidden: false, label: 'Sample Output 2' },
+      { input: '8 4\n', expectedOutput: 'Yes', isHidden: false, label: 'Sample Output 3' },
+      { input: '3 5\n', expectedOutput: 'No', isHidden: true, label: 'Hidden Test Case 4' },
+      { input: '999 1\n', expectedOutput: 'Yes', isHidden: true, label: 'Hidden Test Case 5' },
+      { input: '1000 999\n', expectedOutput: 'No', isHidden: true, label: 'Hidden Test Case 6' }
     ],
     starterCode: {
       'Python': '# Write your Python solution here\n',
@@ -126,13 +133,17 @@ public class Main {
   },
   {
     title: "Second Largest Divisor",
-    description: `Given an integer $N$, find its second largest divisor (excluding the number $N$ itself). If $N$ is 1 or prime, its second largest divisor is 1.`,
+    description: `Given an integer N, find its largest proper divisor: the largest positive divisor smaller than N. For example, the largest proper divisor of 12 is 6. If N is 1 or prime, print 1.\n\n### Input Format\nA single integer N.\n\n### Output Format\nPrint the largest proper divisor of N.\n\n### Examples\nInput: 12\nOutput: 6\n\nInput: 25\nOutput: 5`,
     difficulty: 'Medium',
-    constraints: '2 <= N <= 10^6',
+    constraints: '1 <= N <= 10^6',
     tags: ['Python:math', 'Python Loops'],
     testCases: [
       { input: '12\n', expectedOutput: '6', isHidden: false, label: 'Sample Output 1' },
-      { input: '25\n', expectedOutput: '5', isHidden: true, label: 'Hidden Test Case 2' }
+      { input: '25\n', expectedOutput: '5', isHidden: false, label: 'Sample Output 2' },
+      { input: '1\n', expectedOutput: '1', isHidden: true, label: 'Hidden Test Case 3' },
+      { input: '2\n', expectedOutput: '1', isHidden: true, label: 'Hidden Test Case 4' },
+      { input: '16\n', expectedOutput: '8', isHidden: true, label: 'Hidden Test Case 5' },
+      { input: '999983\n', expectedOutput: '1', isHidden: true, label: 'Hidden Test Case 6' }
     ],
     starterCode: {
       'Python': '# Write your Python solution here\n',
@@ -143,12 +154,16 @@ public class Main {
   },
   {
     title: "Print Multiples of 3 in a Given Range",
-    description: `Given two space-separated integers, \`Start\` and \`End\`, use a \`for\` loop to print all numbers between \`Start\` and \`End\` (inclusive) that are perfectly divisible by 3, each on a separate line.`,
+    description: `Read two integers, **Start** and **End**. Print every number in the inclusive range from Start to End that is divisible by 3, one number per line. If there are no such numbers, print nothing.\n\n### Input Format\nOne line containing Start and End.\n\n### Output Format\nPrint each multiple of 3 in the range on its own line.\n\n### Example\nInput:\n4 12\nOutput:\n6\n9\n12`,
     difficulty: 'Easy',
     constraints: '1 <= Start <= End <= 500',
     tags: ['The for loop'],
     testCases: [
-      { input: '4 12\n', expectedOutput: '6\n9\n12', isHidden: false, label: 'Sample Output 1' }
+      { input: '4 12\n', expectedOutput: '6\n9\n12', isHidden: false, label: 'Sample Output 1' },
+      { input: '1 2\n', expectedOutput: '', isHidden: true, label: 'Hidden Test Case 2' },
+      { input: '3 3\n', expectedOutput: '3', isHidden: true, label: 'Hidden Test Case 3' },
+      { input: '6 10\n', expectedOutput: '6\n9', isHidden: true, label: 'Hidden Test Case 4' },
+      { input: '9 9\n', expectedOutput: '9', isHidden: true, label: 'Hidden Test Case 5' }
     ],
     starterCode: {
       'Python': '# Write your Python solution here\n',

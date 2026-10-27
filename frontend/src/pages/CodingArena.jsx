@@ -13,21 +13,48 @@ import {
 } from 'lucide-react';
 
 const diffClass = { Easy: 'badge-easy', Medium: 'badge-medium', Hard: 'badge-hard' };
+
+function normalizeMathNotation(text = '') {
+  return text
+    .replace(/\\\[([\s\S]*?)\\\]/g, '\n```text\n$1\n```')
+    .replace(/\\\(([\s\S]*?)\\\)/g, '`$1`')
+    .replace(/\$\$([\s\S]*?)\$\$/g, '\n```text\n$1\n```')
+    .replace(/\$([^$\n]+)\$/g, '`$1`')
+    .replace(/\\frac\s*\{([^{}]+)\}\s*\{([^{}]+)\}/g, '$1/$2')
+    .replace(/\\sqrt\s*\{([^{}]+)\}/g, '√$1')
+    .replace(/\\(?:leq?|le)(?![a-z])/g, '≤')
+    .replace(/\\(?:geq?|ge)(?![a-z])/g, '≥')
+    .replace(/\\times(?![a-z])/g, '×')
+    .replace(/\\cdot(?![a-z])/g, '·')
+    .replace(/\\neq(?![a-z])/g, '≠')
+    .replace(/\\notin(?![a-z])/g, '∉')
+    .replace(/\\in(?![a-z])/g, '∈')
+    .replace(/\\(?:infty|infinity)(?![a-z])/g, '∞')
+    .replace(/\\pi(?![a-z])/g, 'π')
+    .replace(/\\pm(?![a-z])/g, '±')
+    .replace(/\\approx(?![a-z])/g, '≈')
+    .replace(/\\%/g, '%')
+    .replace(/\\(?:left|right)(?![a-z])/g, '')
+    .replace(/\\(?:text|mathrm)\{([^{}]*)\}/g, '$1');
+}
+
 const OPTION_LABELS = ['A', 'B', 'C', 'D'];
 
 /* ── Test case panel shown in the left pane ─────────────────────────────────── */
-function TestCasePanel({ testCases }) {
+function TestCasePanel({ testCases, hiddenTestCaseCount = 0 }) {
   const [activeIdx, setActiveIdx] = useState(0);
-  if (!testCases || testCases.length === 0) return null;
+  if (!testCases || testCases.length === 0) {
+    return <p style={{ marginTop: '1rem', color: 'var(--text-muted)', fontSize: '0.82rem' }}>No sample input/output is available for this problem yet. Submit runs against {hiddenTestCaseCount} hidden test case{hiddenTestCaseCount === 1 ? '' : 's'}.</p>;
+  }
 
   const tc = testCases[activeIdx];
-  return (
-    <div style={{ marginTop: '1.5rem' }}>
+  return (      <div style={{ marginTop: '1.5rem' }}>
       <h4 style={{ fontSize: '0.82rem', fontWeight: 700, color: 'var(--text-secondary)', textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: '0.6rem' }}>
         Sample Test Cases
       </h4>
 
       {/* Tabs */}
+      {hiddenTestCaseCount > 0 && <p style={{ marginBottom: '0.5rem', fontSize: '0.75rem', color: 'var(--text-muted)' }}>{hiddenTestCaseCount} additional hidden test case{hiddenTestCaseCount === 1 ? '' : 's'} run on submission.</p>}
       <div className="tab-bar" style={{ padding: '0.4rem 0', background: 'none', border: 'none', marginBottom: '0.75rem' }}>
         {testCases.map((_, i) => (
           <button key={i} className={`tab ${activeIdx === i ? 'active' : ''}`} onClick={() => setActiveIdx(i)}>
@@ -925,7 +952,7 @@ export default function CodingArena() {
           {/* Markdown description */}
           <div className="md-body">
             <ReactMarkdown remarkPlugins={[remarkGfm]}>
-              {problem.description}
+              {normalizeMathNotation(problem.description)}
             </ReactMarkdown>
           </div>
 
@@ -946,7 +973,7 @@ export default function CodingArena() {
           )}
 
           {/* Sample test cases */}
-          <TestCasePanel testCases={problem.testCases} />
+          <TestCasePanel key={problem._id} testCases={problem.testCases} hiddenTestCaseCount={problem.hiddenTestCaseCount} />
 
           {/* Related problems */}
           {allProbs.length > 1 && (
@@ -962,7 +989,7 @@ export default function CodingArena() {
 
       {/* ═══ RIGHT PANE — Monaco Editor ══════════════════════════════════════ */}
       <div className="arena-right">
-        <CodeEditor problem={problem} />
+        <CodeEditor key={problem._id} problem={problem} />
       </div>
     </div>
   );

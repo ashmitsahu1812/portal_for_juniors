@@ -29,10 +29,11 @@ const verdictMeta = {
    CodeEditor — Monaco + terminal console + verdict banner
 ───────────────────────────────────────────────────────────────────────────── */
 export default function CodeEditor({ problem, onSuccess }) {
-  const allowedLangs  = problem?.allowedLanguages ?? Object.keys(LANGUAGE_CONFIG);
-  const [language, setLanguage]       = useState(allowedLangs[0] || 'Python');
-  const [code, setCode]               = useState(
-    problem?.starterCode?.[allowedLangs[0]] ?? DEFAULT_CODE[allowedLangs[0]] ?? ''
+  const allowedLangs = problem?.allowedLanguages ?? Object.keys(LANGUAGE_CONFIG);
+  const defaultLanguage = allowedLangs.includes('Python') ? 'Python' : (allowedLangs[0] || 'Python');
+  const [language, setLanguage] = useState(defaultLanguage);
+  const [code, setCode] = useState(
+    problem?.starterCode?.[defaultLanguage] ?? DEFAULT_CODE[defaultLanguage] ?? ''
   );
   const [status, setStatus]           = useState('idle'); // idle | running | done | error
   const [verdict, setVerdict]         = useState(null);   // null | overallVerdict string

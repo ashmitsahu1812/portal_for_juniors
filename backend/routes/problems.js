@@ -71,9 +71,12 @@ router.get('/:id', async (req, res, next) => {
       return res.status(404).json({ success: false, message: 'Problem not found.' });
     }
 
-    // Strip hidden test cases before sending to client
+    // Never expose hidden inputs/outputs; report their count without returning them.
     const problemObj = problem.toObject();
-    problemObj.testCases = problemObj.testCases.filter((tc) => !tc.isHidden);
+    const testCases = problemObj.testCases || [];
+    const publicCases = testCases.filter((tc) => !tc.isHidden);
+    problemObj.hiddenTestCaseCount = testCases.length - publicCases.length;
+    problemObj.testCases = publicCases;
 
     res.json({ success: true, data: problemObj });
   } catch (err) {
