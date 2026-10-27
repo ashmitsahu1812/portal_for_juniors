@@ -35,6 +35,7 @@ import pathwayRoutes from './routes/pathways.js';
 import communityRoutes from './routes/community.js';
 import gameRoutes from './routes/games.js';
 import assignmentRoutes from './routes/assignments.js';
+import practiceRoutes from './routes/practice.js';
 
 // ── Bootstrap ─────────────────────────────────────────────────────────────────
 dotenv.config();
@@ -131,6 +132,7 @@ app.use('/api/pathways', pathwayRoutes);
 app.use('/api/community', communityRoutes);
 app.use('/api/games', gameRoutes);
 app.use('/api/assignments', assignmentRoutes);
+app.use('/api/practice', practiceRoutes);
 
 // ── Health Check ──────────────────────────────────────────────────────────────
 app.get('/api/health', (_req, res) => {

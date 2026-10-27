@@ -54,6 +54,31 @@ export const compileCode = (payload) =>
 export const fetchLeaderboard = () =>
   api.get('/progress/leaderboard').then((r) => r.data.data);
 
+// ── Competitive programming integrations ──────────────────────────────────────
+export const saveExternalProfiles = (profiles) =>
+  api.put('/practice/profiles', profiles).then((r) => r.data.data);
+
+export const fetchExternalStats = () =>
+  api.get('/practice/stats').then((r) => r.data);
+
+export const fetchCodeforcesLeaderboard = () =>
+  api.get('/practice/leaderboard').then((r) => r.data.data);
+
+export const fetchCodeforcesContests = () =>
+  api.get('/practice/contests').then((r) => r.data.data);
+
+export const fetchDailyChallenge = () =>
+  api.get('/practice/daily').then((r) => r.data.data);
+
+export const fetchCuratedProblems = () =>
+  api.get('/practice/problems').then((r) => r.data.data);
+
+export const toggleCuratedProblem = (id) =>
+  api.post(`/practice/problems/${encodeURIComponent(id)}/toggle`).then((r) => r.data);
+
+export const syncCodeforcesSubmissions = () =>
+  api.post('/practice/sync-codeforces').then((r) => r.data.data);
+
 // ── Pathways ──────────────────────────────────────────────────────────────────
 export const fetchPathways = () =>
   api.get('/pathways').then((r) => r.data.data);

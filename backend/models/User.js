@@ -23,6 +23,11 @@ const UserSchema = new mongoose.Schema({
     enum: ['student', 'admin'],
     default: 'student',
   },
+  externalProfiles: {
+    leetcode: { type: String, default: '' },
+    codeforces: { type: String, default: '' },
+  },
+  externalPracticeDone: [{ type: String }],
   progress: {
     completedModules: [{
       type: mongoose.Schema.Types.ObjectId,

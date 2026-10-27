@@ -171,6 +171,12 @@ const ProblemSchema = new mongoose.Schema(
       index: true,
     },
 
+    // Optional link to a Codeforces problem for external submission sync.
+    externalCodeforces: {
+      contestId: { type: Number },
+      index: { type: String, trim: true },
+    },
+
     // Publish toggle
     isPublished: {
       type: Boolean,

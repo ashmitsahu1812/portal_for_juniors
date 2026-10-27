@@ -10,6 +10,7 @@ import QuizPage from './pages/QuizPage';
 import CodingArena from './pages/CodingArena';
 import ProgressTracker from './pages/ProgressTracker';
 import Leaderboard from './pages/Leaderboard';
+import CompetitiveProgramming from './pages/CompetitiveProgramming';
 import Pathways from './pages/Pathways';
 import PathwayDetail from './pages/PathwayDetail';
 import Community from './pages/Community';
@@ -117,6 +118,7 @@ export default function App() {
 
                   {/* Leaderboard */}
                   <Route path="/leaderboard" element={<Leaderboard />} />
+                  <Route path="/competitive-programming" element={<CompetitiveProgramming />} />
 
                   {/* Community */}
                   <Route path="/community" element={<Community />} />

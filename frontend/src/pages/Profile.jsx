@@ -1,10 +1,17 @@
-import React from 'react';
+import { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
-import { UserCircle, Mail, Shield, Zap, Swords } from 'lucide-react';
+import { fetchExternalStats } from '../api/client';
+import { UserCircle, Mail, Shield, Zap, Swords, ExternalLink } from 'lucide-react';
 import Heatmap from '../components/Heatmap';
 
 export default function Profile() {
   const { user } = useAuth();
+  const [external, setExternal] = useState(null);
+
+  useEffect(() => {
+    fetchExternalStats().then(setExternal).catch(() => setExternal(null));
+  }, []);
 
   if (!user) return null;
 
@@ -50,6 +57,18 @@ export default function Profile() {
             <div className="stat-label">Battle Rating</div>
           </div>
         </div>
+
+        <section className="card" style={{ marginBottom: '2rem' }}>
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '0.75rem', marginBottom: '1rem' }}>
+            <div><h3>Competitive Programming Stats</h3><p style={{ fontSize: '0.82rem' }}>Stats for your linked public accounts.</p></div>
+            <Link className="btn btn-sm" to="/settings">Manage links</Link>
+          </div>
+          <div className="card-grid">
+            <div style={{ padding: '1rem', border: '2px solid var(--border)' }}><strong>LeetCode</strong><div style={{ fontSize: '1.6rem', fontWeight: 800, marginTop: 6 }}>{external?.stats?.leetcode?.totalSolved ?? '—'}</div><span style={{ color: 'var(--text-muted)', fontSize: 12 }}>problems solved</span><p style={{ fontSize: 12, marginTop: 5 }}>{external?.profiles?.leetcode ? `@${external.profiles.leetcode}` : 'Not linked'}</p></div>
+            <div style={{ padding: '1rem', border: '2px solid var(--border)' }}><strong>Codeforces</strong><div style={{ fontSize: '1.6rem', fontWeight: 800, marginTop: 6 }}>{external?.stats?.codeforces?.rating ?? '—'}</div><span style={{ color: 'var(--text-muted)', fontSize: 12 }}>{external?.stats?.codeforces?.rank || 'rating'} · max {external?.stats?.codeforces?.maxRating ?? '—'}</span><p style={{ fontSize: 12, marginTop: 5 }}>{external?.profiles?.codeforces ? `@${external.profiles.codeforces}` : 'Not linked'}</p></div>
+          </div>
+          <Link to="/competitive-programming" className="btn btn-primary btn-sm" style={{ marginTop: 14 }}>Open CP hub <ExternalLink size={14} /></Link>
+        </section>
 
         {/* Heatmap */}
         <Heatmap activeDays={user.progress?.activity?.activeDays || []} />
