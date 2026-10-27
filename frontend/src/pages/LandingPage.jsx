@@ -17,7 +17,7 @@ export default function LandingPage() {
   // If already logged in, redirect to dashboard
   useEffect(() => {
     if (user) {
-      navigate('/');
+      navigate('/', { replace: true });
     }
   }, [user, navigate]);
 

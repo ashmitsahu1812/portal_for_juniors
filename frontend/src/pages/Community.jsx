@@ -124,7 +124,7 @@ export default function Community() {
                   <button 
                     className="btn btn-success" 
                     style={{ flex: 1, justifyContent: 'center' }}
-                    onClick={() => navigate(`/arena/${prob._id}`)}
+                    onClick={() => navigate(`/arena/${prob._id}`, { state: { from: '/community' } })}
                   >
                     <Code2 size={16} />
                     Solve Challenge

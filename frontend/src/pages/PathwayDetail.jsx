@@ -156,7 +156,7 @@ export default function PathwayDetail() {
                                 {prob.title}
                               </span>
                             </div>
-                            <Link to={`/arena/${prob._id}`} className="btn btn-primary" style={{ padding: '0.4rem 1rem', fontSize: '0.8rem', background: isProbSolved ? 'transparent' : '', border: isProbSolved ? '1px solid var(--accent-green)' : '', color: isProbSolved ? 'var(--accent-green)' : '' }}>
+                            <Link to={`/arena/${prob._id}`} state={{ from: `/paths/${id}` }} className="btn btn-primary" style={{ padding: '0.4rem 1rem', fontSize: '0.8rem', background: isProbSolved ? 'transparent' : '', border: isProbSolved ? '1px solid var(--accent-green)' : '', color: isProbSolved ? 'var(--accent-green)' : '' }}>
                               {isProbSolved ? 'Solved' : 'Solve'}
                             </Link>
                           </div>

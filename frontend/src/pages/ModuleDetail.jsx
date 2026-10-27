@@ -1,9 +1,10 @@
 import { useEffect, useState } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import { fetchModule, fetchProblemsByModule } from '../api/client';
+import { useAuth } from '../context/AuthContext';
 import {
   ArrowLeft, ExternalLink, Code2, ChevronRight,
-  BookOpen, Lightbulb, Download,
+  BookOpen, Lightbulb, Download, CheckCircle,
 } from 'lucide-react';
 
 const diffClass = { Easy: 'badge-easy', Medium: 'badge-medium', Hard: 'badge-hard' };
@@ -11,6 +12,7 @@ const diffClass = { Easy: 'badge-easy', Medium: 'badge-medium', Hard: 'badge-har
 export default function ModuleDetail() {
   const { id } = useParams();
   const navigate = useNavigate();
+  const { user } = useAuth();
   const [module,   setModule]   = useState(null);
   const [problems, setProblems] = useState([]);
   const [loading,  setLoading]  = useState(true);
@@ -124,26 +126,36 @@ export default function ModuleDetail() {
           <div style={{ marginTop: '2rem' }}>
             <h3 style={{ fontSize: '1.2rem', marginBottom: '1rem' }}>Coding Questions</h3>
             <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
-              {problems.map(p => (
-                <Link key={p._id} to={`/arena/${p._id}`} style={{ textDecoration: 'none' }}>
-                  <div className="card" style={{ display: 'flex', alignItems: 'center', gap: '1rem', padding: '1rem', border: '1px solid var(--border)' }}>
-                    <div style={{
-                      width: 40, height: 40, borderRadius: 10,
-                      background: 'rgba(255,255,255,0.08)', border: '1px solid rgba(255,255,255,0.15)',
-                      display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0,
+              {problems.map(p => {
+                const isSolved = user?.progress?.solvedProblems?.some(sp => sp.problemId === p._id && sp.verdict === 'Accepted');
+                return (
+                  <Link key={p._id} to={`/arena/${p._id}`} state={{ from: `/modules/${id}` }} style={{ textDecoration: 'none' }}>
+                    <div className="card" style={{
+                      display: 'flex', alignItems: 'center', gap: '1rem', padding: '1rem',
+                      border: isSolved ? '2px solid var(--accent-green, #10b981)' : '1px solid var(--border)'
                     }}>
-                      <Code2 size={18} color="var(--accent-blue)" />
-                    </div>
-                    <div style={{ flex: 1 }}>
-                      <div style={{ fontWeight: 600, color: 'var(--text-primary)' }}>{p.title}</div>
-                      <div style={{ display: 'flex', gap: '0.5rem', marginTop: '0.25rem' }}>
-                        <span className={`badge ${diffClass[p.difficulty] ?? ''}`}>{p.difficulty}</span>
+                      <div style={{
+                        width: 40, height: 40, borderRadius: 10,
+                        background: isSolved ? 'rgba(16, 185, 129, 0.1)' : 'rgba(255,255,255,0.08)',
+                        border: isSolved ? '1px solid rgba(16, 185, 129, 0.3)' : '1px solid rgba(255,255,255,0.15)',
+                        display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0,
+                      }}>
+                        {isSolved ? <CheckCircle size={18} color="var(--accent-green, #10b981)" /> : <Code2 size={18} color="var(--accent-blue)" />}
                       </div>
+                      <div style={{ flex: 1 }}>
+                        <div style={{ fontWeight: 600, color: 'var(--text-primary)' }}>{p.title}</div>
+                        <div style={{ display: 'flex', gap: '0.5rem', marginTop: '0.25rem', alignItems: 'center', flexWrap: 'wrap' }}>
+                          <span className={`badge ${diffClass[p.difficulty] ?? ''}`}>{p.difficulty}</span>
+                          {p.tags?.slice(0, 3).map(t => (
+                            <span key={t} style={{ fontSize: '0.72rem', color: 'var(--text-muted)' }}>#{t}</span>
+                          ))}
+                        </div>
+                      </div>
+                      <ChevronRight size={16} color="var(--text-muted)" />
                     </div>
-                    <ChevronRight size={16} color="var(--text-muted)" />
-                  </div>
-                </Link>
-              ))}
+                  </Link>
+                );
+              })}
             </div>
           </div>
         )}
